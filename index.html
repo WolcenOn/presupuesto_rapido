@@ -3,6 +3,649 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AntenaManager v7.5</title>
+    <style>
+        :root { --p: #1e293b; --accent: #3b82f6; --bg: #f1f5f9; --text: #334155; --danger: #ef4444; }
+        * { box-sizing: border-box; font-family: sans-serif; }
+        body { background: var(--bg); margin: 0; padding: 0; color: var(--text); }
+
+        /* Navegación */
+        .nav { display: flex; background: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .tab-btn { flex: 1; padding: 15px; border: none; background: none; font-weight: bold; cursor: pointer; color: #64748b; border-bottom: 3px solid transparent; }
+        .tab-btn.active { color: var(--accent); border-bottom: 3px solid var(--accent); }
+
+        /* Secciones */
+        .section { display: none; padding: 15px; max-width: 850px; margin: auto; }
+        .section.active { display: block; }
+
+        /* Tarjetas de formulario */
+        .card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } .span-2 { grid-column: span 2; } }
+
+        label { font-size: 11px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--p); }
+        input, select, textarea { padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 16px; width: 100%; }
+
+        /* Botones */
+        .btn { padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; display: block; width: 100%; text-align: center; text-decoration: none; }
+        .btn-blue { background: var(--accent); }
+        .btn-dark { background: var(--p); }
+        .btn-red { background: var(--danger); }
+
+        /* LA HOJA (Solo una vez en el HTML) */
+        #hoja-presupuesto { background: white; padding: 25px; border-radius: 2px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-top: 20px; min-height: 800px; width: 100%; }
+        .header-doc { display: flex; justify-content: space-between; border-bottom: 3px solid var(--p); padding-bottom: 10px; margin-bottom: 20px; }
+        #logo-v { max-width: 140px; height: auto; }
+
+        /* Tabla Presupuesto */
+        .table-container { width: 100%; overflow-x: auto; margin: 15px 0; }
+        table { width: 100%; border-collapse: collapse; min-width: 450px; }
+        th { background: #f1f5f9; text-align: left; padding: 8px; font-size: 11px; }
+        td { padding: 10px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+
+        .resumen { margin-left: auto; width: 250px; background: #f8fafc; padding: 10px; border-radius: 5px; }
+        .total-final { font-size: 1.4em; font-weight: bold; color: var(--accent); border-top: 2px solid #ddd; margin-top: 5px; padding-top: 5px; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; }
+            .section { padding: 0; max-width: 100%; }
+            #hoja-presupuesto { box-shadow: none; margin: 0; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav no-print">
+        <button class="tab-btn active" onclick="verTab('tab-crear', this)">📝 Crear</button>
+        <button class="tab-btn" onclick="verTab('tab-tarifas', this)">📚 Tarifas</button>
+        <button class="tab-btn" onclick="verTab('tab-config', this)">⚙️ Config</button>
+    </nav>
+
+    <div id="tab-crear" class="section active">
+        <div class="card no-print">
+            <div class="grid">
+                <div>
+                    <label>Categoría</label>
+                    <select id="sel-cat" onchange="cargarItems()"></select>
+                </div>
+                <div>
+                    <label>Elegir Concepto</label>
+                    <select id="sel-item" onchange="rellenar()"></select>
+                </div>
+                <div class="span-2">
+                    <label>Descripción</label>
+                    <input type="text" id="in-desc" placeholder="Nombre del trabajo">
+                </div>
+                <div><label>Cantidad</label><input type="number" id="in-cant" value="1"></div>
+                <div><label>Precio Unitario</label><input type="number" id="in-prec" step="0.01"></div>
+                <div class="span-2">
+                    <label>Impuestos</label>
+                    <select id="in-iva">
+                        <option value="con">PVP (IVA Ya incluido)</option>
+                        <option value="sin">Base (+21% IVA aparte)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-blue" style="margin-top:15px" onclick="agregarFila()">+ Añadir al Presupuesto</button>
+        </div>
+
+        <div id="hoja-presupuesto">
+            <div class="header-doc">
+                <img id="v-logo" src="https://via.placeholder.com/140x60?text=LOGO" alt="">
+                <div style="text-align:right; font-size:12px">
+                    <strong id="v-nom" style="font-size:16px">Mi Empresa S.L.</strong><br>
+                    <span id="v-cif">CIF: ---</span><br>
+                    <span id="v-dir">---</span><br>
+                    <span id="v-tel">Telf: ---</span>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px">
+                <div><h2 style="margin:0">PRESUPUESTO</h2><small id="v-num">REF: ---</small></div>
+                <div style="text-align:right"><small id="v-fec">--/--/--</small></div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>Cant.</th><th>Descripción</th><th>Precio</th><th>Total</th><th class="no-print"></th></tr>
+                    </thead>
+                    <tbody id="v-body"></tbody>
+                </table>
+            </div>
+
+            <div class="resumen">
+                <div style="display:flex; justify-content:space-between"><span>Base:</span> <span id="r-base">0.00€</span></div>
+                <div style="display:flex; justify-content:space-between; margin:5px 0"><span>Dto (%):</span> <input type="number" id="r-dto" value="0" style="width:50px" onchange="calcular()"></div>
+                <div style="display:flex; justify-content:space-between"><span>IVA (21%):</span> <span id="r-iva">0.00€</span></div>
+                <div class="total-final" style="display:flex; justify-content:space-between"><span>TOTAL:</span> <span id="r-total">0.00€</span></div>
+            </div>
+
+            <div style="margin-top:30px; font-size:11px; color:#666; border-top:1px solid #eee; padding-top:10px">
+                <strong>Notas:</strong>
+                <div id="v-notas" contenteditable="true"></div>
+            </div>
+        </div>
+
+        <div class="no-print" style="margin-top:20px; display:flex; gap:10px; margin-bottom:50px">
+            <button class="btn btn-dark" onclick="window.print()">🖨️ Imprimir PDF</button>
+            <button class="btn btn-red" onclick="if(confirm('¿Borrar?')) location.reload()">🗑️ Nuevo</button>
+        </div>
+    </div>
+
+    <div id="tab-tarifas" class="section">
+        <div class="card">
+            <h3>Nueva Tarifa</h3>
+            <div class="grid">
+                <input type="text" id="lib-n" placeholder="Nombre Concepto">
+                <input type="number" id="lib-p" placeholder="Precio €">
+                <select id="lib-c">
+                    <option value="Antenas">Antenas</option>
+                    <option value="Porteros">Porteros</option>
+                    <option value="Varios">Varios</option>
+                </select>
+            </div>
+            <button class="btn btn-blue" style="margin-top:10px" onclick="guardarLib()">Guardar en Lista</button>
+        </div>
+        <div id="lista-tarifas"></div>
+    </div>
+
+    <div id="tab-config" class="section">
+        <div class="card">
+            <h3>Sincronizar con Jefe</h3>
+            <div class="grid">
+                <button class="btn btn-dark" onclick="exportarTodo()">💾 Exportar Pack</button>
+                <button class="btn btn-dark" onclick="document.getElementById('f-imp').click()">📂 Cargar Pack</button>
+                <input type="file" id="f-imp" style="display:none" onchange="importarTodo(event)">
+            </div>
+        </div>
+        <div class="card">
+            <h3>Datos de Empresa</h3>
+            <div class="grid">
+                <input type="text" id="c-nom" placeholder="Nombre Empresa">
+                <input type="text" id="c-cif" placeholder="CIF">
+                <input type="text" id="c-tel" placeholder="Teléfono">
+                <input type="text" id="c-dir" placeholder="Dirección">
+                <label>Logo:</label><input type="file" onchange="subirLogo(this)">
+                <textarea id="c-not" placeholder="Condiciones al pie..." rows="3"></textarea>
+            </div>
+            <button class="btn btn-blue" style="margin-top:10px" onclick="guardarConfig()">Guardar Perfil</button>
+        </div>
+    </div>
+
+    <script>
+        let db = JSON.parse(localStorage.getItem('am_db')) || { Antenas: {}, Porteros: {}, Varios: {} };
+        let cfg = JSON.parse(localStorage.getItem('am_cfg')) || {};
+
+        function init() {
+            document.getElementById('v-fec').innerText = new Date().toLocaleDateString();
+            document.getElementById('v-num').innerText = "REF: " + Date.now().toString().slice(-6);
+            aplicarCfg();
+            actualizarCategorias();
+        }
+
+        function verTab(id, btn) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+            if(id === 'tab-tarifas') renderizarTarifas();
+        }
+
+        // --- LÓGICA DE EMPRESA ---
+        function subirLogo(el) {
+            const r = new FileReader();
+            r.onload = e => { cfg.logo = e.target.result; document.getElementById('v-logo').src = e.target.result; };
+            r.readAsDataURL(el.files[0]);
+        }
+
+        function guardarConfig() {
+            cfg.nombre = document.getElementById('c-nom').value;
+            cfg.cif = document.getElementById('c-cif').value;
+            cfg.tel = document.getElementById('c-tel').value;
+            cfg.dir = document.getElementById('c-dir').value;
+            cfg.notas = document.getElementById('c-not').value;
+            localStorage.setItem('am_cfg', JSON.stringify(cfg));
+            aplicarCfg();
+            alert("Perfil actualizado.");
+        }
+
+        function aplicarCfg() {
+            document.getElementById('v-nom').innerText = cfg.nombre || "Tu Empresa";
+            document.getElementById('v-cif').innerText = "CIF: " + (cfg.cif || "---");
+            document.getElementById('v-tel').innerText = "Telf: " + (cfg.tel || "---");
+            document.getElementById('v-dir').innerText = cfg.dir || "---";
+            document.getElementById('v-notas').innerText = cfg.notas || "";
+            if(cfg.logo) document.getElementById('v-logo').src = cfg.logo;
+
+            document.getElementById('c-nom').value = cfg.nombre || "";
+            document.getElementById('c-cif').value = cfg.cif || "";
+            document.getElementById('c-tel').value = cfg.tel || "";
+            document.getElementById('c-dir').value = cfg.dir || "";
+            document.getElementById('c-not').value = cfg.notas || "";
+        }
+
+        // --- LÓGICA DE SINCRONIZACIÓN ---
+        function exportarTodo() {
+            const pack = JSON.stringify({db, cfg});
+            const blob = new Blob([pack], {type:'application/json'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "Pack_Jefe.json";
+            a.click();
+        }
+
+        function importarTodo(e) {
+            const r = new FileReader();
+            r.onload = ev => {
+                const data = JSON.parse(ev.target.result);
+                if(confirm("¿Actualizar precios y datos?")) {
+                    db = data.db; cfg = data.cfg;
+                    localStorage.setItem('am_db', JSON.stringify(db));
+                    localStorage.setItem('am_cfg', JSON.stringify(cfg));
+                    location.reload();
+                }
+            };
+            r.readAsText(e.target.files[0]);
+        }
+
+        // --- BIBLIOTECA ---
+        function actualizarCategorias() {
+            const s = document.getElementById('sel-cat');
+            s.innerHTML = "";
+            Object.keys(db).forEach(c => s.innerHTML += `<option value="${c}">${c}</option>`);
+            cargarItems();
+        }
+
+        function cargarItems() {
+            const cat = document.getElementById('sel-cat').value;
+            const s = document.getElementById('sel-item');
+            s.innerHTML = '<option value="">-- Buscar... --</option>';
+            Object.keys(db[cat] || {}).forEach(i => s.innerHTML += `<option value="${i}">${i}</option>`);
+        }
+
+        function rellenar() {
+            const cat = document.getElementById('sel-cat').value;
+            const it = document.getElementById('sel-item').value;
+            if(it) {
+                document.getElementById('in-desc').value = it;
+                document.getElementById('in-prec').value = db[cat][it];
+            }
+        }
+
+        function guardarLib() {
+            const n = document.getElementById('lib-n').value;
+            const p = parseFloat(document.getElementById('lib-p').value);
+            const c = document.getElementById('lib-c').value;
+            if(n && !isNaN(p)) {
+                db[c][n] = p;
+                localStorage.setItem('am_db', JSON.stringify(db));
+                actualizarCategorias(); renderizarTarifas();
+                alert("Tarifa guardada.");
+            }
+        }
+
+        function renderizarTarifas() {
+            const div = document.getElementById('lista-tarifas');
+            div.innerHTML = "";
+            for(let cat in db) {
+                div.innerHTML += `<h4>${cat}</h4>`;
+                for(let item in db[cat]) {
+                    div.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; padding:10px; margin-bottom:5px">
+                        <span>${item} - <strong>${db[cat][item]}€</strong></span>
+                        <span style="color:red; cursor:pointer" onclick="borrarLib('${cat}','${item}')">✖</span>
+                    </div>`;
+                }
+            }
+        }
+
+        function borrarLib(c, i) {
+            delete db[c][i];
+            localStorage.setItem('am_db', JSON.stringify(db));
+            renderizarTarifas(); actualizarCategorias();
+        }
+
+        // --- CALCULADORA ---
+        function agregarFila() {
+            const desc = document.getElementById('in-desc').value;
+            const cant = parseFloat(document.getElementById('in-cant').value) || 1;
+            const prec = parseFloat(document.getElementById('in-prec').value);
+            const tipo = document.getElementById('in-iva').value;
+            if(!desc || isNaN(prec)) return;
+
+            const baseU = (tipo === 'con') ? (prec / 1.21) : prec;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td contenteditable="true" onblur="calcular()">${cant}</td>
+                <td contenteditable="true" onblur="calcular()">${desc}</td>
+                <td contenteditable="true" onblur="calcular()">${baseU.toFixed(2)}</td>
+                <td class="t-fila">0.00€</td>
+                <td class="no-print"><span onclick="this.parentElement.parentElement.remove(); calcular();" style="color:red; cursor:pointer">✖</span></td>
+            `;
+            document.getElementById('v-body').appendChild(tr);
+            calcular();
+            document.getElementById('in-desc').value = ""; document.getElementById('in-prec').value = "";
+        }
+
+        function calcular() {
+            let sub = 0;
+            document.querySelectorAll('#v-body tr').forEach(tr => {
+                const c = parseFloat(tr.cells[0].innerText) || 0;
+                const p = parseFloat(tr.cells[2].innerText) || 0;
+                const t = c * p;
+                tr.querySelector('.t-fila').innerText = t.toFixed(2) + "€";
+                sub += t;
+            });
+            const dto = parseFloat(document.getElementById('r-dto').value) || 0;
+            const bDto = sub * (1 - dto/100);
+            const iva = bDto * 0.21;
+            document.getElementById('r-base').innerText = sub.toFixed(2) + "€";
+            document.getElementById('r-iva').innerText = iva.toFixed(2) + "€";
+            document.getElementById('r-total').innerText = (bDto + iva).toFixed(2) + "€";
+        }
+
+        init();
+    </script>
+</body>
+</html>
+
+    <nav class="nav no-print">
+        <button class="tab-btn active" onclick="verTab('tab-crear', this)">📝 Crear</button>
+        <button class="tab-btn" onclick="verTab('tab-tarifas', this)">📚 Tarifas</button>
+        <button class="tab-btn" onclick="verTab('tab-config', this)">⚙️ Config</button>
+    </nav>
+
+    <div id="tab-crear" class="section active">
+        <div class="card no-print">
+            <div class="grid">
+                <div>
+                    <label>Categoría</label>
+                    <select id="sel-cat" onchange="cargarItems()"></select>
+                </div>
+                <div>
+                    <label>Elegir Concepto</label>
+                    <select id="sel-item" onchange="rellenar()"></select>
+                </div>
+                <div class="span-2">
+                    <label>Descripción</label>
+                    <input type="text" id="in-desc" placeholder="Nombre del trabajo">
+                </div>
+                <div><label>Cantidad</label><input type="number" id="in-cant" value="1"></div>
+                <div><label>Precio Unitario</label><input type="number" id="in-prec" step="0.01"></div>
+                <div class="span-2">
+                    <label>Impuestos</label>
+                    <select id="in-iva">
+                        <option value="con">PVP (IVA Ya incluido)</option>
+                        <option value="sin">Base (+21% IVA aparte)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-blue" style="margin-top:15px" onclick="agregarFila()">+ Añadir al Presupuesto</button>
+        </div>
+
+        <div id="hoja-presupuesto">
+            <div class="header-doc">
+                <img id="v-logo" src="https://via.placeholder.com/140x60?text=LOGO" alt="">
+                <div style="text-align:right; font-size:12px">
+                    <strong id="v-nom" style="font-size:16px">Mi Empresa S.L.</strong><br>
+                    <span id="v-cif">CIF: ---</span><br>
+                    <span id="v-dir">---</span><br>
+                    <span id="v-tel">Telf: ---</span>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px">
+                <div><h2 style="margin:0">PRESUPUESTO</h2><small id="v-num">REF: ---</small></div>
+                <div style="text-align:right"><small id="v-fec">--/--/--</small></div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>Cant.</th><th>Descripción</th><th>Precio</th><th>Total</th><th class="no-print"></th></tr>
+                    </thead>
+                    <tbody id="v-body"></tbody>
+                </table>
+            </div>
+
+            <div class="resumen">
+                <div style="display:flex; justify-content:space-between"><span>Base:</span> <span id="r-base">0.00€</span></div>
+                <div style="display:flex; justify-content:space-between; margin:5px 0"><span>Dto (%):</span> <input type="number" id="r-dto" value="0" style="width:50px" onchange="calcular()"></div>
+                <div style="display:flex; justify-content:space-between"><span>IVA (21%):</span> <span id="r-iva">0.00€</span></div>
+                <div class="total-final" style="display:flex; justify-content:space-between"><span>TOTAL:</span> <span id="r-total">0.00€</span></div>
+            </div>
+
+            <div style="margin-top:30px; font-size:11px; color:#666; border-top:1px solid #eee; padding-top:10px">
+                <strong>Notas:</strong>
+                <div id="v-notas" contenteditable="true"></div>
+            </div>
+        </div>
+
+        <div class="no-print" style="margin-top:20px; display:flex; gap:10px; margin-bottom:50px">
+            <button class="btn btn-dark" onclick="window.print()">🖨️ Imprimir PDF</button>
+            <button class="btn btn-red" onclick="if(confirm('¿Borrar?')) location.reload()">🗑️ Nuevo</button>
+        </div>
+    </div>
+
+    <div id="tab-tarifas" class="section">
+        <div class="card">
+            <h3>Nueva Tarifa</h3>
+            <div class="grid">
+                <input type="text" id="lib-n" placeholder="Nombre Concepto">
+                <input type="number" id="lib-p" placeholder="Precio €">
+                <select id="lib-c">
+                    <option value="Antenas">Antenas</option>
+                    <option value="Porteros">Porteros</option>
+                    <option value="Varios">Varios</option>
+                </select>
+            </div>
+            <button class="btn btn-blue" style="margin-top:10px" onclick="guardarLib()">Guardar en Lista</button>
+        </div>
+        <div id="lista-tarifas"></div>
+    </div>
+
+    <div id="tab-config" class="section">
+        <div class="card">
+            <h3>Sincronizar con Jefe</h3>
+            <div class="grid">
+                <button class="btn btn-dark" onclick="exportarTodo()">💾 Exportar Pack</button>
+                <button class="btn btn-dark" onclick="document.getElementById('f-imp').click()">📂 Cargar Pack</button>
+                <input type="file" id="f-imp" style="display:none" onchange="importarTodo(event)">
+            </div>
+        </div>
+        <div class="card">
+            <h3>Datos de Empresa</h3>
+            <div class="grid">
+                <input type="text" id="c-nom" placeholder="Nombre Empresa">
+                <input type="text" id="c-cif" placeholder="CIF">
+                <input type="text" id="c-tel" placeholder="Teléfono">
+                <input type="text" id="c-dir" placeholder="Dirección">
+                <label>Logo:</label><input type="file" onchange="subirLogo(this)">
+                <textarea id="c-not" placeholder="Condiciones al pie..." rows="3"></textarea>
+            </div>
+            <button class="btn btn-blue" style="margin-top:10px" onclick="guardarConfig()">Guardar Perfil</button>
+        </div>
+    </div>
+
+    <script>
+        let db = JSON.parse(localStorage.getItem('am_db')) || { Antenas: {}, Porteros: {}, Varios: {} };
+        let cfg = JSON.parse(localStorage.getItem('am_cfg')) || {};
+
+        function init() {
+            document.getElementById('v-fec').innerText = new Date().toLocaleDateString();
+            document.getElementById('v-num').innerText = "REF: " + Date.now().toString().slice(-6);
+            aplicarCfg();
+            actualizarCategorias();
+        }
+
+        function verTab(id, btn) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+            if(id === 'tab-tarifas') renderizarTarifas();
+        }
+
+        // --- LÓGICA DE EMPRESA ---
+        function subirLogo(el) {
+            const r = new FileReader();
+            r.onload = e => { cfg.logo = e.target.result; document.getElementById('v-logo').src = e.target.result; };
+            r.readAsDataURL(el.files[0]);
+        }
+
+        function guardarConfig() {
+            cfg.nombre = document.getElementById('c-nom').value;
+            cfg.cif = document.getElementById('c-cif').value;
+            cfg.tel = document.getElementById('c-tel').value;
+            cfg.dir = document.getElementById('c-dir').value;
+            cfg.notas = document.getElementById('c-not').value;
+            localStorage.setItem('am_cfg', JSON.stringify(cfg));
+            aplicarCfg();
+            alert("Perfil actualizado.");
+        }
+
+        function aplicarCfg() {
+            document.getElementById('v-nom').innerText = cfg.nombre || "Tu Empresa";
+            document.getElementById('v-cif').innerText = "CIF: " + (cfg.cif || "---");
+            document.getElementById('v-tel').innerText = "Telf: " + (cfg.tel || "---");
+            document.getElementById('v-dir').innerText = cfg.dir || "---";
+            document.getElementById('v-notas').innerText = cfg.notas || "";
+            if(cfg.logo) document.getElementById('v-logo').src = cfg.logo;
+
+            document.getElementById('c-nom').value = cfg.nombre || "";
+            document.getElementById('c-cif').value = cfg.cif || "";
+            document.getElementById('c-tel').value = cfg.tel || "";
+            document.getElementById('c-dir').value = cfg.dir || "";
+            document.getElementById('c-not').value = cfg.notas || "";
+        }
+
+        // --- LÓGICA DE SINCRONIZACIÓN ---
+        function exportarTodo() {
+            const pack = JSON.stringify({db, cfg});
+            const blob = new Blob([pack], {type:'application/json'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "Pack_Jefe.json";
+            a.click();
+        }
+
+        function importarTodo(e) {
+            const r = new FileReader();
+            r.onload = ev => {
+                const data = JSON.parse(ev.target.result);
+                if(confirm("¿Actualizar precios y datos?")) {
+                    db = data.db; cfg = data.cfg;
+                    localStorage.setItem('am_db', JSON.stringify(db));
+                    localStorage.setItem('am_cfg', JSON.stringify(cfg));
+                    location.reload();
+                }
+            };
+            r.readAsText(e.target.files[0]);
+        }
+
+        // --- BIBLIOTECA ---
+        function actualizarCategorias() {
+            const s = document.getElementById('sel-cat');
+            s.innerHTML = "";
+            Object.keys(db).forEach(c => s.innerHTML += `<option value="${c}">${c}</option>`);
+            cargarItems();
+        }
+
+        function cargarItems() {
+            const cat = document.getElementById('sel-cat').value;
+            const s = document.getElementById('sel-item');
+            s.innerHTML = '<option value="">-- Buscar... --</option>';
+            Object.keys(db[cat] || {}).forEach(i => s.innerHTML += `<option value="${i}">${i}</option>`);
+        }
+
+        function rellenar() {
+            const cat = document.getElementById('sel-cat').value;
+            const it = document.getElementById('sel-item').value;
+            if(it) {
+                document.getElementById('in-desc').value = it;
+                document.getElementById('in-prec').value = db[cat][it];
+            }
+        }
+
+        function guardarLib() {
+            const n = document.getElementById('lib-n').value;
+            const p = parseFloat(document.getElementById('lib-p').value);
+            const c = document.getElementById('lib-c').value;
+            if(n && !isNaN(p)) {
+                db[c][n] = p;
+                localStorage.setItem('am_db', JSON.stringify(db));
+                actualizarCategorias(); renderizarTarifas();
+                alert("Tarifa guardada.");
+            }
+        }
+
+        function renderizarTarifas() {
+            const div = document.getElementById('lista-tarifas');
+            div.innerHTML = "";
+            for(let cat in db) {
+                div.innerHTML += `<h4>${cat}</h4>`;
+                for(let item in db[cat]) {
+                    div.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; padding:10px; margin-bottom:5px">
+                        <span>${item} - <strong>${db[cat][item]}€</strong></span>
+                        <span style="color:red; cursor:pointer" onclick="borrarLib('${cat}','${item}')">✖</span>
+                    </div>`;
+                }
+            }
+        }
+
+        function borrarLib(c, i) {
+            delete db[c][i];
+            localStorage.setItem('am_db', JSON.stringify(db));
+            renderizarTarifas(); actualizarCategorias();
+        }
+
+        // --- CALCULADORA ---
+        function agregarFila() {
+            const desc = document.getElementById('in-desc').value;
+            const cant = parseFloat(document.getElementById('in-cant').value) || 1;
+            const prec = parseFloat(document.getElementById('in-prec').value);
+            const tipo = document.getElementById('in-iva').value;
+            if(!desc || isNaN(prec)) return;
+
+            const baseU = (tipo === 'con') ? (prec / 1.21) : prec;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td contenteditable="true" onblur="calcular()">${cant}</td>
+                <td contenteditable="true" onblur="calcular()">${desc}</td>
+                <td contenteditable="true" onblur="calcular()">${baseU.toFixed(2)}</td>
+                <td class="t-fila">0.00€</td>
+                <td class="no-print"><span onclick="this.parentElement.parentElement.remove(); calcular();" style="color:red; cursor:pointer">✖</span></td>
+            `;
+            document.getElementById('v-body').appendChild(tr);
+            calcular();
+            document.getElementById('in-desc').value = ""; document.getElementById('in-prec').value = "";
+        }
+
+        function calcular() {
+            let sub = 0;
+            document.querySelectorAll('#v-body tr').forEach(tr => {
+                const c = parseFloat(tr.cells[0].innerText) || 0;
+                const p = parseFloat(tr.cells[2].innerText) || 0;
+                const t = c * p;
+                tr.querySelector('.t-fila').innerText = t.toFixed(2) + "€";
+                sub += t;
+            });
+            const dto = parseFloat(document.getElementById('r-dto').value) || 0;
+            const bDto = sub * (1 - dto/100);
+            const iva = bDto * 0.21;
+            document.getElementById('r-base').innerText = sub.toFixed(2) + "€";
+            document.getElementById('r-iva').innerText = iva.toFixed(2) + "€";
+            document.getElementById('r-total').innerText = (bDto + iva).toFixed(2) + "€";
+        }
+
+        init();
+    </script>
+</body>
+</html>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AntenaManager Pro v7.4</title>
     <style>
         :root { --p: #1e293b; --accent: #3b82f6; --bg: #f1f5f9; --text: #334155; --success: #10b981; --danger: #ef4444; }
@@ -413,7 +1056,358 @@
 </html>
 
         label { font-size: 11px; font-weight: 800; color: var(--p); text-transform: uppercase; margin-bottom: 4px; display: block; }
-        input, select, textarea { padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 15px; width: 100%; outline: none; background: #fff; }
+        input, select, textarea { padding: 12px; bor<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AntenaManager v7.5</title>
+    <style>
+        :root { --p: #1e293b; --accent: #3b82f6; --bg: #f1f5f9; --text: #334155; --danger: #ef4444; }
+        * { box-sizing: border-box; font-family: sans-serif; }
+        body { background: var(--bg); margin: 0; padding: 0; color: var(--text); }
+
+        /* Navegación */
+        .nav { display: flex; background: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .tab-btn { flex: 1; padding: 15px; border: none; background: none; font-weight: bold; cursor: pointer; color: #64748b; border-bottom: 3px solid transparent; }
+        .tab-btn.active { color: var(--accent); border-bottom: 3px solid var(--accent); }
+
+        /* Secciones */
+        .section { display: none; padding: 15px; max-width: 850px; margin: auto; }
+        .section.active { display: block; }
+
+        /* Tarjetas de formulario */
+        .card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } .span-2 { grid-column: span 2; } }
+
+        label { font-size: 11px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--p); }
+        input, select, textarea { padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 16px; width: 100%; }
+
+        /* Botones */
+        .btn { padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; display: block; width: 100%; text-align: center; text-decoration: none; }
+        .btn-blue { background: var(--accent); }
+        .btn-dark { background: var(--p); }
+        .btn-red { background: var(--danger); }
+
+        /* LA HOJA (Solo una vez en el HTML) */
+        #hoja-presupuesto { background: white; padding: 25px; border-radius: 2px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-top: 20px; min-height: 800px; width: 100%; }
+        .header-doc { display: flex; justify-content: space-between; border-bottom: 3px solid var(--p); padding-bottom: 10px; margin-bottom: 20px; }
+        #logo-v { max-width: 140px; height: auto; }
+
+        /* Tabla Presupuesto */
+        .table-container { width: 100%; overflow-x: auto; margin: 15px 0; }
+        table { width: 100%; border-collapse: collapse; min-width: 450px; }
+        th { background: #f1f5f9; text-align: left; padding: 8px; font-size: 11px; }
+        td { padding: 10px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+
+        .resumen { margin-left: auto; width: 250px; background: #f8fafc; padding: 10px; border-radius: 5px; }
+        .total-final { font-size: 1.4em; font-weight: bold; color: var(--accent); border-top: 2px solid #ddd; margin-top: 5px; padding-top: 5px; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; }
+            .section { padding: 0; max-width: 100%; }
+            #hoja-presupuesto { box-shadow: none; margin: 0; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav no-print">
+        <button class="tab-btn active" onclick="verTab('tab-crear', this)">📝 Crear</button>
+        <button class="tab-btn" onclick="verTab('tab-tarifas', this)">📚 Tarifas</button>
+        <button class="tab-btn" onclick="verTab('tab-config', this)">⚙️ Config</button>
+    </nav>
+
+    <div id="tab-crear" class="section active">
+        <div class="card no-print">
+            <div class="grid">
+                <div>
+                    <label>Categoría</label>
+                    <select id="sel-cat" onchange="cargarItems()"></select>
+                </div>
+                <div>
+                    <label>Elegir Concepto</label>
+                    <select id="sel-item" onchange="rellenar()"></select>
+                </div>
+                <div class="span-2">
+                    <label>Descripción</label>
+                    <input type="text" id="in-desc" placeholder="Nombre del trabajo">
+                </div>
+                <div><label>Cantidad</label><input type="number" id="in-cant" value="1"></div>
+                <div><label>Precio Unitario</label><input type="number" id="in-prec" step="0.01"></div>
+                <div class="span-2">
+                    <label>Impuestos</label>
+                    <select id="in-iva">
+                        <option value="con">PVP (IVA Ya incluido)</option>
+                        <option value="sin">Base (+21% IVA aparte)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-blue" style="margin-top:15px" onclick="agregarFila()">+ Añadir al Presupuesto</button>
+        </div>
+
+        <div id="hoja-presupuesto">
+            <div class="header-doc">
+                <img id="v-logo" src="https://via.placeholder.com/140x60?text=LOGO" alt="">
+                <div style="text-align:right; font-size:12px">
+                    <strong id="v-nom" style="font-size:16px">Mi Empresa S.L.</strong><br>
+                    <span id="v-cif">CIF: ---</span><br>
+                    <span id="v-dir">---</span><br>
+                    <span id="v-tel">Telf: ---</span>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px">
+                <div><h2 style="margin:0">PRESUPUESTO</h2><small id="v-num">REF: ---</small></div>
+                <div style="text-align:right"><small id="v-fec">--/--/--</small></div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>Cant.</th><th>Descripción</th><th>Precio</th><th>Total</th><th class="no-print"></th></tr>
+                    </thead>
+                    <tbody id="v-body"></tbody>
+                </table>
+            </div>
+
+            <div class="resumen">
+                <div style="display:flex; justify-content:space-between"><span>Base:</span> <span id="r-base">0.00€</span></div>
+                <div style="display:flex; justify-content:space-between; margin:5px 0"><span>Dto (%):</span> <input type="number" id="r-dto" value="0" style="width:50px" onchange="calcular()"></div>
+                <div style="display:flex; justify-content:space-between"><span>IVA (21%):</span> <span id="r-iva">0.00€</span></div>
+                <div class="total-final" style="display:flex; justify-content:space-between"><span>TOTAL:</span> <span id="r-total">0.00€</span></div>
+            </div>
+
+            <div style="margin-top:30px; font-size:11px; color:#666; border-top:1px solid #eee; padding-top:10px">
+                <strong>Notas:</strong>
+                <div id="v-notas" contenteditable="true"></div>
+            </div>
+        </div>
+
+        <div class="no-print" style="margin-top:20px; display:flex; gap:10px; margin-bottom:50px">
+            <button class="btn btn-dark" onclick="window.print()">🖨️ Imprimir PDF</button>
+            <button class="btn btn-red" onclick="if(confirm('¿Borrar?')) location.reload()">🗑️ Nuevo</button>
+        </div>
+    </div>
+
+    <div id="tab-tarifas" class="section">
+        <div class="card">
+            <h3>Nueva Tarifa</h3>
+            <div class="grid">
+                <input type="text" id="lib-n" placeholder="Nombre Concepto">
+                <input type="number" id="lib-p" placeholder="Precio €">
+                <select id="lib-c">
+                    <option value="Antenas">Antenas</option>
+                    <option value="Porteros">Porteros</option>
+                    <option value="Varios">Varios</option>
+                </select>
+            </div>
+            <button class="btn btn-blue" style="margin-top:10px" onclick="guardarLib()">Guardar en Lista</button>
+        </div>
+        <div id="lista-tarifas"></div>
+    </div>
+
+    <div id="tab-config" class="section">
+        <div class="card">
+            <h3>Sincronizar con Jefe</h3>
+            <div class="grid">
+                <button class="btn btn-dark" onclick="exportarTodo()">💾 Exportar Pack</button>
+                <button class="btn btn-dark" onclick="document.getElementById('f-imp').click()">📂 Cargar Pack</button>
+                <input type="file" id="f-imp" style="display:none" onchange="importarTodo(event)">
+            </div>
+        </div>
+        <div class="card">
+            <h3>Datos de Empresa</h3>
+            <div class="grid">
+                <input type="text" id="c-nom" placeholder="Nombre Empresa">
+                <input type="text" id="c-cif" placeholder="CIF">
+                <input type="text" id="c-tel" placeholder="Teléfono">
+                <input type="text" id="c-dir" placeholder="Dirección">
+                <label>Logo:</label><input type="file" onchange="subirLogo(this)">
+                <textarea id="c-not" placeholder="Condiciones al pie..." rows="3"></textarea>
+            </div>
+            <button class="btn btn-blue" style="margin-top:10px" onclick="guardarConfig()">Guardar Perfil</button>
+        </div>
+    </div>
+
+    <script>
+        let db = JSON.parse(localStorage.getItem('am_db')) || { Antenas: {}, Porteros: {}, Varios: {} };
+        let cfg = JSON.parse(localStorage.getItem('am_cfg')) || {};
+
+        function init() {
+            document.getElementById('v-fec').innerText = new Date().toLocaleDateString();
+            document.getElementById('v-num').innerText = "REF: " + Date.now().toString().slice(-6);
+            aplicarCfg();
+            actualizarCategorias();
+        }
+
+        function verTab(id, btn) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+            if(id === 'tab-tarifas') renderizarTarifas();
+        }
+
+        // --- LÓGICA DE EMPRESA ---
+        function subirLogo(el) {
+            const r = new FileReader();
+            r.onload = e => { cfg.logo = e.target.result; document.getElementById('v-logo').src = e.target.result; };
+            r.readAsDataURL(el.files[0]);
+        }
+
+        function guardarConfig() {
+            cfg.nombre = document.getElementById('c-nom').value;
+            cfg.cif = document.getElementById('c-cif').value;
+            cfg.tel = document.getElementById('c-tel').value;
+            cfg.dir = document.getElementById('c-dir').value;
+            cfg.notas = document.getElementById('c-not').value;
+            localStorage.setItem('am_cfg', JSON.stringify(cfg));
+            aplicarCfg();
+            alert("Perfil actualizado.");
+        }
+
+        function aplicarCfg() {
+            document.getElementById('v-nom').innerText = cfg.nombre || "Tu Empresa";
+            document.getElementById('v-cif').innerText = "CIF: " + (cfg.cif || "---");
+            document.getElementById('v-tel').innerText = "Telf: " + (cfg.tel || "---");
+            document.getElementById('v-dir').innerText = cfg.dir || "---";
+            document.getElementById('v-notas').innerText = cfg.notas || "";
+            if(cfg.logo) document.getElementById('v-logo').src = cfg.logo;
+
+            document.getElementById('c-nom').value = cfg.nombre || "";
+            document.getElementById('c-cif').value = cfg.cif || "";
+            document.getElementById('c-tel').value = cfg.tel || "";
+            document.getElementById('c-dir').value = cfg.dir || "";
+            document.getElementById('c-not').value = cfg.notas || "";
+        }
+
+        // --- LÓGICA DE SINCRONIZACIÓN ---
+        function exportarTodo() {
+            const pack = JSON.stringify({db, cfg});
+            const blob = new Blob([pack], {type:'application/json'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "Pack_Jefe.json";
+            a.click();
+        }
+
+        function importarTodo(e) {
+            const r = new FileReader();
+            r.onload = ev => {
+                const data = JSON.parse(ev.target.result);
+                if(confirm("¿Actualizar precios y datos?")) {
+                    db = data.db; cfg = data.cfg;
+                    localStorage.setItem('am_db', JSON.stringify(db));
+                    localStorage.setItem('am_cfg', JSON.stringify(cfg));
+                    location.reload();
+                }
+            };
+            r.readAsText(e.target.files[0]);
+        }
+
+        // --- BIBLIOTECA ---
+        function actualizarCategorias() {
+            const s = document.getElementById('sel-cat');
+            s.innerHTML = "";
+            Object.keys(db).forEach(c => s.innerHTML += `<option value="${c}">${c}</option>`);
+            cargarItems();
+        }
+
+        function cargarItems() {
+            const cat = document.getElementById('sel-cat').value;
+            const s = document.getElementById('sel-item');
+            s.innerHTML = '<option value="">-- Buscar... --</option>';
+            Object.keys(db[cat] || {}).forEach(i => s.innerHTML += `<option value="${i}">${i}</option>`);
+        }
+
+        function rellenar() {
+            const cat = document.getElementById('sel-cat').value;
+            const it = document.getElementById('sel-item').value;
+            if(it) {
+                document.getElementById('in-desc').value = it;
+                document.getElementById('in-prec').value = db[cat][it];
+            }
+        }
+
+        function guardarLib() {
+            const n = document.getElementById('lib-n').value;
+            const p = parseFloat(document.getElementById('lib-p').value);
+            const c = document.getElementById('lib-c').value;
+            if(n && !isNaN(p)) {
+                db[c][n] = p;
+                localStorage.setItem('am_db', JSON.stringify(db));
+                actualizarCategorias(); renderizarTarifas();
+                alert("Tarifa guardada.");
+            }
+        }
+
+        function renderizarTarifas() {
+            const div = document.getElementById('lista-tarifas');
+            div.innerHTML = "";
+            for(let cat in db) {
+                div.innerHTML += `<h4>${cat}</h4>`;
+                for(let item in db[cat]) {
+                    div.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; padding:10px; margin-bottom:5px">
+                        <span>${item} - <strong>${db[cat][item]}€</strong></span>
+                        <span style="color:red; cursor:pointer" onclick="borrarLib('${cat}','${item}')">✖</span>
+                    </div>`;
+                }
+            }
+        }
+
+        function borrarLib(c, i) {
+            delete db[c][i];
+            localStorage.setItem('am_db', JSON.stringify(db));
+            renderizarTarifas(); actualizarCategorias();
+        }
+
+        // --- CALCULADORA ---
+        function agregarFila() {
+            const desc = document.getElementById('in-desc').value;
+            const cant = parseFloat(document.getElementById('in-cant').value) || 1;
+            const prec = parseFloat(document.getElementById('in-prec').value);
+            const tipo = document.getElementById('in-iva').value;
+            if(!desc || isNaN(prec)) return;
+
+            const baseU = (tipo === 'con') ? (prec / 1.21) : prec;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td contenteditable="true" onblur="calcular()">${cant}</td>
+                <td contenteditable="true" onblur="calcular()">${desc}</td>
+                <td contenteditable="true" onblur="calcular()">${baseU.toFixed(2)}</td>
+                <td class="t-fila">0.00€</td>
+                <td class="no-print"><span onclick="this.parentElement.parentElement.remove(); calcular();" style="color:red; cursor:pointer">✖</span></td>
+            `;
+            document.getElementById('v-body').appendChild(tr);
+            calcular();
+            document.getElementById('in-desc').value = ""; document.getElementById('in-prec').value = "";
+        }
+
+        function calcular() {
+            let sub = 0;
+            document.querySelectorAll('#v-body tr').forEach(tr => {
+                const c = parseFloat(tr.cells[0].innerText) || 0;
+                const p = parseFloat(tr.cells[2].innerText) || 0;
+                const t = c * p;
+                tr.querySelector('.t-fila').innerText = t.toFixed(2) + "€";
+                sub += t;
+            });
+            const dto = parseFloat(document.getElementById('r-dto').value) || 0;
+            const bDto = sub * (1 - dto/100);
+            const iva = bDto * 0.21;
+            document.getElementById('r-base').innerText = sub.toFixed(2) + "€";
+            document.getElementById('r-iva').innerText = iva.toFixed(2) + "€";
+            document.getElementById('r-total').innerText = (bDto + iva).toFixed(2) + "€";
+        }
+
+        init();
+    </script>
+</body>
+</html>
+der: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 15px; width: 100%; outline: none; background: #fff; }
 
         /* Hoja de Presupuesto (Simulado A4) */
         .a4-sheet { 

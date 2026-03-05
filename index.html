@@ -1,40 +1,403 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AntenaManager V13</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+<meta charset="UTF-8">
+<title>Gestor de Presupuestos</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f2f2f2;
+}
+
+header{
+background:#222;
+color:white;
+padding:15px;
+display:flex;
+gap:10px;
+}
+
+header button{
+padding:10px 20px;
+border:none;
+cursor:pointer;
+background:#444;
+color:white;
+}
+
+section{
+display:none;
+padding:20px;
+}
+
+.active{
+display:block;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:6px;
+margin-bottom:20px;
+}
+
+input,select{
+padding:8px;
+margin:5px;
+width:200px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+table th,table td{
+border:1px solid #ccc;
+padding:8px;
+text-align:left;
+}
+
+.total{
+text-align:right;
+margin-top:20px;
+}
+
+.print{
+background:#2c7;
+padding:10px 20px;
+border:none;
+cursor:pointer;
+}
+
+@media print{
+
+header{
+display:none;
+}
+
+body{
+background:white;
+}
+
+section{
+display:block !important;
+}
+
+}
+
+</style>
 </head>
+
 <body>
 
-    <nav class="no-print">
-        <button id="btn-n" class="tab-btn active" onclick="tab('sec-n', this)">📝 NUEVO</button>
-        <button id="btn-l" class="tab-btn" onclick="tab('sec-l', this)">📚 LISTA</button>
-        <button id="btn-c" class="tab-btn" onclick="tab('sec-c', this)">⚙️ CONFIG</button>
-    </nav>
+<header>
+<button onclick="mostrar('nuevo')">NUEVO</button>
+<button onclick="mostrar('lista')">LISTA</button>
+<button onclick="mostrar('config')">CONFIG</button>
+</header>
 
-    <main class="container">
-        
-        <section id="sec-n" class="page active">
-            <div class="card no-print">
-                <h3>Añadir Concepto</h3>
-                <div class="field">
-                    <label>Elegir de lista</label>
-                    <select id="sel-item" onchange="auto()"></select>
-                </div>
-                <div class="field">
-                    <label>Descripción</label>
-                    <input type="text" id="in-d" placeholder="Trabajo realizado...">
-                </div>
-                <div class="row">
-                    <div class="field"><label>Cant.</label><input type="number" id="in-q" value="1"></div>
-                    <div class="field"><label>Precio (€)</label><input type="number" id="in-p" step="0.01"></div>
-                </div>
-                <div class="field">
-                    <label>IVA</label>
-                    <select id="in-iva">
+<!-- NUEVO PRESUPUESTO -->
+
+<section id="nuevo" class="active">
+
+<div class="card">
+
+<h2>Datos cliente</h2>
+
+<input id="clienteNombre" placeholder="Nombre cliente">
+<input id="clienteTel" placeholder="Teléfono">
+<input id="clienteEmail" placeholder="Email">
+<input id="clienteDir" placeholder="Dirección">
+
+</div>
+
+<div class="card">
+
+<h2>Servicios</h2>
+
+<select id="serviciosSelect"></select>
+<button onclick="addServicio()">Añadir</button>
+
+<table id="tablaServicios">
+<tr>
+<th>Concepto</th>
+<th>Precio</th>
+<th></th>
+</tr>
+</table>
+
+</div>
+
+<div class="card">
+
+IVA
+<select id="tipoIVA">
+<option value="sumar">Sumar 21%</option>
+<option value="desglosar">Desglosar desde total</option>
+</select>
+
+<div class="total">
+<p>Base: <span id="base">0</span> €</p>
+<p>IVA: <span id="iva">0</span> €</p>
+<p>IRPF: <span id="irpf">0</span> €</p>
+<h3>Total: <span id="total">0</span> €</h3>
+</div>
+
+<button onclick="guardarPresupuesto()">Guardar</button>
+<button class="print" onclick="window.print()">Imprimir / PDF</button>
+
+</div>
+
+</section>
+
+<!-- LISTA -->
+
+<section id="lista">
+
+<div class="card">
+
+<h2>Presupuestos guardados</h2>
+
+<table id="tablaLista">
+<tr>
+<th>Nº</th>
+<th>Cliente</th>
+<th>Total</th>
+</tr>
+</table>
+
+</div>
+
+</section>
+
+<!-- CONFIG -->
+
+<section id="config">
+
+<div class="card">
+
+<h2>Datos empresa</h2>
+
+<input id="empNombre" placeholder="Nombre empresa">
+<input id="empCIF" placeholder="CIF">
+<input id="empDir" placeholder="Dirección">
+<input id="empTel" placeholder="Teléfono">
+<input id="empEmail" placeholder="Email">
+<input id="empIBAN" placeholder="IBAN">
+
+<select id="empIRPF">
+<option value="0">IRPF 0%</option>
+<option value="7">IRPF 7%</option>
+<option value="15">IRPF 15%</option>
+</select>
+
+<input type="file" id="logoUpload">
+
+<button onclick="guardarEmpresa()">Guardar</button>
+
+</div>
+
+<div class="card">
+
+<h2>Biblioteca de servicios</h2>
+
+<input id="servNombre" placeholder="Servicio">
+<input id="servPrecio" placeholder="Precio">
+
+<button onclick="guardarServicio()">Añadir</button>
+
+<ul id="listaServicios"></ul>
+
+</div>
+
+</section>
+
+<script>
+
+let servicios = JSON.parse(localStorage.getItem("servicios")) || [];
+let presupuestos = JSON.parse(localStorage.getItem("pres")) || [];
+let empresa = JSON.parse(localStorage.getItem("empresa")) || {};
+
+let serviciosActual=[];
+
+function mostrar(id){
+
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+
+document.getElementById(id).classList.add("active");
+
+if(id==="lista") cargarLista()
+
+}
+
+function guardarEmpresa(){
+
+empresa={
+nombre:empNombre.value,
+cif:empCIF.value,
+dir:empDir.value,
+tel:empTel.value,
+email:empEmail.value,
+iban:empIBAN.value,
+irpf:empIRPF.value
+}
+
+localStorage.setItem("empresa",JSON.stringify(empresa))
+
+alert("Guardado")
+
+}
+
+function guardarServicio(){
+
+let s={
+nombre:servNombre.value,
+precio:parseFloat(servPrecio.value)
+}
+
+servicios.push(s)
+
+localStorage.setItem("servicios",JSON.stringify(servicios))
+
+renderServicios()
+
+}
+
+function renderServicios(){
+
+serviciosSelect.innerHTML=""
+
+listaServicios.innerHTML=""
+
+servicios.forEach((s,i)=>{
+
+let op=document.createElement("option")
+
+op.value=i
+op.text=s.nombre+" - "+s.precio+"€"
+
+serviciosSelect.appendChild(op)
+
+let li=document.createElement("li")
+li.innerText=s.nombre+" - "+s.precio+"€"
+
+listaServicios.appendChild(li)
+
+})
+
+}
+
+function addServicio(){
+
+let s=servicios[serviciosSelect.value]
+
+serviciosActual.push(s)
+
+renderTabla()
+
+}
+
+function renderTabla(){
+
+tablaServicios.innerHTML="<tr><th>Concepto</th><th>Precio</th><th></th></tr>"
+
+serviciosActual.forEach((s,i)=>{
+
+let tr=document.createElement("tr")
+
+tr.innerHTML=
+"<td>"+s.nombre+"</td>"+
+"<td>"+s.precio+"</td>"+
+"<td><button onclick='del("+i+")'>X</button></td>"
+
+tablaServicios.appendChild(tr)
+
+})
+
+calcular()
+
+}
+
+function del(i){
+
+serviciosActual.splice(i,1)
+
+renderTabla()
+
+}
+
+function calcular(){
+
+let base=0
+
+serviciosActual.forEach(s=>base+=s.precio)
+
+let iva=0
+
+if(tipoIVA.value==="sumar"){
+iva=base*0.21
+}else{
+let sin=base/1.21
+iva=base-sin
+base=sin
+}
+
+let irpf=base*(empresa.irpf||0)/100
+
+let total=base+iva-irpf
+
+document.getElementById("base").innerText=base.toFixed(2)
+document.getElementById("iva").innerText=iva.toFixed(2)
+document.getElementById("irpf").innerText=irpf.toFixed(2)
+document.getElementById("total").innerText=total.toFixed(2)
+
+}
+
+function guardarPresupuesto(){
+
+let num="P-"+new Date().getFullYear()+"-"+(presupuestos.length+1)
+
+let p={
+num,
+cliente:clienteNombre.value,
+total:total.innerText
+}
+
+presupuestos.push(p)
+
+localStorage.setItem("pres",JSON.stringify(presupuestos))
+
+alert("Guardado")
+
+}
+
+function cargarLista(){
+
+tablaLista.innerHTML="<tr><th>Nº</th><th>Cliente</th><th>Total</th></tr>"
+
+presupuestos.forEach(p=>{
+
+let tr=document.createElement("tr")
+
+tr.innerHTML="<td>"+p.num+"</td><td>"+p.cliente+"</td><td>"+p.total+"€</td>"
+
+tablaLista.appendChild(tr)
+
+})
+
+}
+
+renderServicios()
+
+</script>
+
+</body>
+</html>                    <select id="in-iva">
                         <option value="no">Precio sin IVA (+21% al final)</option>
                         <option value="si">Precio con IVA incluido</option>
                     </select>

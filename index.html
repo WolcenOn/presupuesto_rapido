@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AntenaManager Sync v7.2</title>
+    <style>
+        :root { --p: #1e293b; --accent: #3b82f6; --bg: #f1f5f9; --text: #334155; --success: #10b981; --danger: #ef4444; }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); margin: 0; padding: 10px; color: var(--text); overflow-x: hidden; }
+
+        .page-container { width: 100%; max-width: 850px; margin: auto; display: flex; flex-direction: column; gap: 15px; }
+
+        /* Navegación */
+        .nav-tabs { display: flex; background: white; padding: 5px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; }
+        .tab-btn { flex: 1; min-width: 100px; padding: 12px; border: none; background: none; cursor: pointer; border-radius: 8px; font-weight: 600; font-size: 13px; white-space: nowrap; }
+        .tab-btn.active { background: var(--accent); color: white; }
+
+        /* Paneles */
+        .control-panel { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        @media (min-width: 600px) { .form-grid { grid-template-columns: repeat(2, 1fr); } .full { grid-column: span 2; } }
+
+        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 11px; font-weight: 800; color: var(--p); text-transform: uppercase; }
+        input, select, textarea { padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 15px; width: 100%; outline: none; }
+
+        /* Hoja A4 */
+        .a4-sheet { width: 100%; background: white; padding: 20px; border-radius: 8px; shadow: 0 10px 25px rgba(0,0,0,0.05); min-height: 1000px; }
+        @media (min-width: 800px) { .a4-sheet { padding: 40px; } }
+
+        /* Botones */
+        .btn { padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; color: white; transition: 0.2s; }
+        .btn-p { background: var(--accent); width: 100%; }
+        .btn-sync { background: var(--p); flex: 1; }
+        .btn-danger { background: var(--danger); }
+
+        /* Tablas */
+        .table-container { width: 100%; overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        th { background: #f8fafc; text-align: left; padding: 10px; font-size: 11px; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+
+        .summary-box { margin-top: 30px; background: #f8fafc; padding: 15px; border-radius: 8px; width: 100%; max-width: 320px; margin-left: auto; }
+        .summary-row { display: flex; justify-content: space-between; padding: 6px 0; }
+        .total-final { font-size: 1.5em; font-weight: 800; color: var(--accent); border-top: 2px solid #e2e8f0; margin-top: 10px; padding-top: 10px; }
+
+        .doc-header { display: flex; flex-direction: column; gap: 15px; border-bottom: 3px solid var(--p); padding-bottom: 20px; margin-bottom: 30px; }
+        @media (min-width: 500px) { .doc-header { flex-direction: row; justify-content: space-between; align-items: center; } }
+        .logo-box img { max-width: 150px; height: auto; }
+
+        @media print { .no-print { display: none !important; } body { padding: 0; background: white; } .a4-sheet { box-shadow: none; border: none; padding: 0; } }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    
+    <div class="nav-tabs no-print">
+        <button class="tab-btn active" onclick="switchTab('panel-factura', this)">📝 Presupuesto</button>
+        <button class="tab-btn" onclick="switchTab('panel-biblio', this)">📚 Tarifas</button>
+        <button class="tab-btn" onclick="switchTab('panel-config', this)">⚙️ Config/Sincro</button>
+    </div>
+
+    <div id="panel-factura" class="control-panel no-print">
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Categoría</label>
+                <select id="sel-cat" onchange="loadCategoryItems()"></select>
+            </div>
+            <div class="input-group">
+                <label>Seleccionar Concepto</label>
+                <select id="sel-item" onchange="autoFillItem()"></select>
+            </div>
+            <div class="input-group full">
+                <label>Descripción</label>
+                <input type="text" id="inp-desc" placeholder="Descripción del trabajo">
+            </div>
+            <div class="input-group">
+                <label>Cant.</label>
+                <input type="number" id="inp-cant" value="1">
+            </div>
+            <div class="input-group">
+                <label>Precio Unitario</label>
+                <input type="number" id="inp-precio" step="0.01">
+            </div>
+            <div class="input-group full">
+                <label>Impuestos</label>
+                <select id="inp-tipo-iva">
+                    <option value="con">PVP (IVA Incluido)</option>
+                    <option value="sin">Base (+21% IVA)</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-p" style="margin-top:15px" onclick="addItemToTable()">+ Añadir al presupuesto</button>
+    </div>
+
+    <div id="panel-biblio" class="control-panel no-print" style="display:none">
+        <h3>Gestión de Tarifas</h3>
+        <div class="form-grid">
+            <input type="text" id="lib-name" placeholder="Nombre">
+            <input type="number" id="lib-price" placeholder="Precio €">
+            <select id="lib-cat">
+                <option value="Antenas">Antenas</option>
+                <option value="Porteros">Porteros</option>
+                <option value="Varios">Varios</option>
+            </select>
+            <button class="btn btn-p" onclick="saveToLibraryManual()">Guardar Concepto</button>
+        </div>
+        <div id="lib-display" style="margin-top:20px; max-height: 400px; overflow-y: auto;"></div>
+    </div>
+
+    <div id="panel-config" class="control-panel no-print" style="display:none">
+        <h3>Sincronización de Datos (Jefe ↔ Empleado)</h3>
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <button class="btn btn-sync" onclick="exportFullData()">💾 Exportar Pack (Jefe)</button>
+            <button class="btn btn-sync" onclick="document.getElementById('import-file').click()">📂 Cargar Pack (Empleado)</button>
+            <input type="file" id="import-file" style="display:none" onchange="importFullData(event)">
+        </div>
+        <hr>
+        <h3>Perfil de Empresa</h3>
+        <div class="form-grid">
+            <div class="input-group full"><label>Nombre Empresa</label><input type="text" id="cfg-name"></div>
+            <div class="input-group"><label>CIF</label><input type="text" id="cfg-cif"></div>
+            <div class="input-group"><label>Teléfono</label><input type="text" id="cfg-tel"></div>
+            <div class="input-group full"><label>Dirección</label><input type="text" id="cfg-dir"></div>
+            <div class="input-group full"><label>Logo</label><input type="file" onchange="saveLogo(this)"></div>
+            <div class="input-group full"><label>Condiciones Legales (Pie)</label><textarea id="cfg-notas" rows="3"></textarea></div>
+            <button class="btn btn-p" onclick="saveFullConfig()">Guardar Perfil Local</button>
+        </div>
+    </div>
+
+    <div class="a4-sheet" id="documento">
+        <div class="doc-header">
+            <div class="logo-box"><img id="view-logo" src="" alt=""></div>
+            <div class="company-data">
+                <strong id="view-name">MI EMPRESA S.L.</strong><br>
+                <span id="view-cif">CIF: ---</span><br>
+                <span id="view-dir">---</span><br>
+                <span id="view-tel">---</span>
+            </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px">
+            <div><h2 style="margin:0">PRESUPUESTO</h2><small>Nº: <span id="view-num">---</span></small></div>
+            <div style="text-align:right"><small>Fecha: <span id="view-date">--/--/--</span></small></div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead><tr><th style="width:50px">Cant.</th><th>Descripción</th><th style="width:90px">P. Ud.</th><th style="width:90px">Total</th><th class="no-print" style="width:30px"></th></tr></thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+
+        <div class="summary-box">
+            <div class="summary-row"><span>Base Imponible:</span> <span id="res-base">0.00€</span></div>
+            <div class="summary-row"><span>Descuento (%):</span> <input type="number" id="inp-dto" value="0" style="width:50px" onchange="recalcAll()"></div>
+            <div class="summary-row"><span>IVA (21%):</span> <span id="res-iva">0.00€</span></div>
+            <div class="total-final summary-row"><span>TOTAL:</span> <span id="res-total">0.00€</span></div>
+        </div>
+
+        <div style="margin-top:30px; font-size:11px; color:#666; border-top:1px solid #eee; padding-top:10px">
+            <strong>Condiciones:</strong>
+            <div id="view-notas" contenteditable="true"></div>
+        </div>
+    </div>
+
+    <div class="no-print" style="margin-bottom:50px; display:flex; gap:10px">
+        <button class="btn btn-p" style="background:var(--p)" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+        <button class="btn btn-danger btn" onclick="confirm('¿Borrar factura actual?') && location.reload()">🗑️ Nueva</button>
+    </div>
+</div>
+
+<script>
+    let library = JSON.parse(localStorage.getItem('antena_v72_lib')) || { Antenas: {}, Porteros: {}, Varios: {} };
+    let config = JSON.parse(localStorage.getItem('antena_v72_cfg')) || {};
+
+    function init() {
+        document.getElementById('view-date').innerText = new Date().toLocaleDateString();
+        document.getElementById('view-num').innerText = "PRE-" + Date.now().toString().slice(-6);
+        loadConfigUI();
+        loadCategoriesSelect();
+    }
+
+    function switchTab(id, btn) {
+        document.querySelectorAll('.control-panel').forEach(p => p.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if(id === 'panel-biblio') renderLibraryList();
+    }
+
+    // --- SISTEMA DE SINCRONIZACIÓN (EXPORT/IMPORT TOTAL) ---
+    function exportFullData() {
+        const pack = {
+            library: library,
+            config: config,
+            exportDate: new Date().toISOString()
+        };
+        const blob = new Blob([JSON.stringify(pack, null, 2)], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `Pack_Datos_Empresa_${new Date().toLocaleDateString()}.json`;
+        a.click();
+    }
+
+    function importFullData(e) {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const imported = JSON.parse(ev.target.result);
+                if(confirm("¿Estás seguro? Esto actualizará todas las tarifas y los datos de empresa con la información del jefe.")) {
+                    library = imported.library;
+                    config = imported.config;
+                    localStorage.setItem('antena_v72_lib', JSON.stringify(library));
+                    localStorage.setItem('antena_v72_cfg', JSON.stringify(config));
+                    alert("¡Sincronización completada con éxito!");
+                    location.reload();
+                }
+            } catch(err) { alert("Archivo de datos no válido."); }
+        };
+        reader.readAsText(e.target.files[0]);
+    }
+
+    // --- CONFIGURACIÓN ---
+    function saveLogo(input) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            config.logo = e.target.result;
+            document.getElementById('view-logo').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    function saveFullConfig() {
+        config.name = document.getElementById('cfg-name').value;
+        config.cif = document.getElementById('cfg-cif').value;
+        config.dir = document.getElementById('cfg-dir').value;
+        config.tel = document.getElementById('cfg-tel').value;
+        config.notas = document.getElementById('cfg-notas').value;
+        localStorage.setItem('antena_v72_cfg', JSON.stringify(config));
+        loadConfigUI();
+        alert("Configuración guardada localmente.");
+    }
+
+    function loadConfigUI() {
+        if(config.name) {
+            document.getElementById('view-name').innerText = config.name;
+            document.getElementById('cfg-name').value = config.name;
+        }
+        if(config.cif) {
+            document.getElementById('view-cif').innerText = "CIF: " + config.cif;
+            document.getElementById('cfg-cif').value = config.cif;
+        }
+        if(config.dir) {
+            document.getElementById('view-dir').innerText = config.dir;
+            document.getElementById('cfg-dir').value = config.dir;
+        }
+        if(config.tel) {
+            document.getElementById('view-tel').innerText = "Telf: " + config.tel;
+            document.getElementById('cfg-tel').value = config.tel;
+        }
+        if(config.logo) document.getElementById('view-logo').src = config.logo;
+        if(config.notas) {
+            document.getElementById('view-notas').innerText = config.notas;
+            document.getElementById('cfg-notas').value = config.notas;
+        }
+    }
+
+    // --- BIBLIOTECA ---
+    function loadCategoriesSelect() {
+        const sel = document.getElementById('sel-cat');
+        sel.innerHTML = "";
+        Object.keys(library).forEach(cat => {
+            sel.innerHTML += `<option value="${cat}">${cat}</option>`;
+        });
+        loadCategoryItems();
+    }
+
+    function loadCategoryItems() {
+        const cat = document.getElementById('sel-cat').value;
+        const sel = document.getElementById('sel-item');
+        sel.innerHTML = '<option value="">-- Seleccionar --</option>';
+        Object.keys(library[cat] || {}).forEach(item => {
+            sel.innerHTML += `<option value="${item}">${item}</option>`;
+        });
+    }
+
+    function autoFillItem() {
+        const cat = document.getElementById('sel-cat').value;
+        const name = document.getElementById('sel-item').value;
+        if(name) {
+            document.getElementById('inp-desc').value = name;
+            document.getElementById('inp-precio').value = library[cat][name];
+        }
+    }
+
+    function saveToLibraryManual() {
+        const n = document.getElementById('lib-name').value;
+        const p = parseFloat(document.getElementById('lib-price').value);
+        const c = document.getElementById('lib-cat').value;
+        if(!n || isNaN(p)) return;
+        library[c][n] = p;
+        localStorage.setItem('antena_v72_lib', JSON.stringify(library));
+        renderLibraryList();
+        loadCategoriesSelect();
+        alert("Concepto guardado en biblioteca.");
+    }
+
+    function renderLibraryList() {
+        const div = document.getElementById('lib-display');
+        div.innerHTML = "";
+        for(let cat in library) {
+            div.innerHTML += `<h4 style="margin:10px 0 5px">${cat}</h4>`;
+            for(let item in library[cat]) {
+                div.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; background:#f9f9f9; margin-bottom:4px; border-radius:4px; font-size:12px">
+                    <span>${item} (<strong>${library[cat][item]}€</strong>)</span>
+                    <span style="color:red; cursor:pointer" onclick="deleteFromLib('${cat}','${item}')">✖</span>
+                </div>`;
+            }
+        }
+    }
+
+    function deleteFromLib(c, i) {
+        if(confirm("¿Eliminar tarifa?")) {
+            delete library[c][i];
+            localStorage.setItem('antena_v72_lib', JSON.stringify(library));
+            renderLibraryList();
+            loadCategoriesSelect();
+        }
+    }
+
+    // --- FACTURACIÓN ---
+    function addItemToTable() {
+        const desc = document.getElementById('inp-desc').value;
+        const cant = parseFloat(document.getElementById('inp-cant').value) || 1;
+        const precio = parseFloat(document.getElementById('inp-precio').value);
+        const tipoIva = document.getElementById('inp-tipo-iva').value;
+
+        if(!desc || isNaN(precio)) return;
+
+        const baseUnit = (tipoIva === 'con') ? (precio / 1.21) : precio;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td contenteditable="true" onblur="recalcAll()">${cant}</td>
+            <td contenteditable="true" onblur="recalcAll()">${desc}</td>
+            <td contenteditable="true" onblur="recalcAll()">${baseUnit.toFixed(2)}</td>
+            <td class="row-total">0.00€</td>
+            <td class="no-print"><button onclick="this.parentElement.parentElement.remove(); recalcAll();" style="background:none; border:none; color:red; cursor:pointer">✖</button></td>
+        `;
+        document.getElementById('table-body').appendChild(tr);
+        recalcAll();
+        document.getElementById('inp-desc').value = "";
+        document.getElementById('inp-precio').value = "";
+    }
+
+    function recalcAll() {
+        let subtotal = 0;
+        document.querySelectorAll('#table-body tr').forEach(tr => {
+            const c = parseFloat(tr.cells[0].innerText) || 0;
+            const p = parseFloat(tr.cells[2].innerText) || 0;
+            const t = c * p;
+            tr.querySelector('.row-total').innerText = t.toFixed(2) + "€";
+            subtotal += t;
+        });
+        const dto = parseFloat(document.getElementById('inp-dto').value) || 0;
+        const baseConDto = subtotal * (1 - dto/100);
+        const iva = baseConDto * 0.21;
+        const total = baseConDto + iva;
+
+        document.getElementById('res-base').innerText = subtotal.toFixed(2) + "€";
+        document.getElementById('res-iva').innerText = iva.toFixed(2) + "€";
+        document.getElementById('res-total').innerText = total.toFixed(2) + "€";
+    }
+
+    init();
+</script>
+
+</body>
+</html>
+</label>
+                <select id="inp-tipo-iva">
+                    <option value="con">PVP (IVA Incluido)</option>
+                    <option value="sin">Base (+21% IVA)</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-p" style="margin-top:15px" onclick="addItemToTable()">+ Añadir al presupuesto</button>
+    </div>
+
+    <div id="panel-biblio" class="control-panel no-print" style="display:none">
+        <h3>Gestión de Tarifas</h3>
+        <div class="form-grid">
+            <input type="text" id="lib-name" placeholder="Nombre">
+            <input type="number" id="lib-price" placeholder="Precio €">
+            <select id="lib-cat">
+                <option value="Antenas">Antenas</option>
+                <option value="Porteros">Porteros</option>
+                <option value="Varios">Varios</option>
+            </select>
+            <button class="btn btn-p" onclick="saveToLibraryManual()">Guardar Concepto</button>
+        </div>
+        <div id="lib-display" style="margin-top:20px; max-height: 400px; overflow-y: auto;"></div>
+    </div>
+
+    <div id="panel-config" class="control-panel no-print" style="display:none">
+        <h3>Sincronización de Datos (Jefe ↔ Empleado)</h3>
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <button class="btn btn-sync" onclick="exportFullData()">💾 Exportar Pack (Jefe)</button>
+            <button class="btn btn-sync" onclick="document.getElementById('import-file').click()">📂 Cargar Pack (Empleado)</button>
+            <input type="file" id="import-file" style="display:none" onchange="importFullData(event)">
+        </div>
+        <hr>
+        <h3>Perfil de Empresa</h3>
+        <div class="form-grid">
+            <div class="input-group full"><label>Nombre Empresa</label><input type="text" id="cfg-name"></div>
+            <div class="input-group"><label>CIF</label><input type="text" id="cfg-cif"></div>
+            <div class="input-group"><label>Teléfono</label><input type="text" id="cfg-tel"></div>
+            <div class="input-group full"><label>Dirección</label><input type="text" id="cfg-dir"></div>
+            <div class="input-group full"><label>Logo</label><input type="file" onchange="saveLogo(this)"></div>
+            <div class="input-group full"><label>Condiciones Legales (Pie)</label><textarea id="cfg-notas" rows="3"></textarea></div>
+            <button class="btn btn-p" onclick="saveFullConfig()">Guardar Perfil Local</button>
+        </div>
+    </div>
+
+    <div class="a4-sheet" id="documento">
+        <div class="doc-header">
+            <div class="logo-box"><img id="view-logo" src="" alt=""></div>
+            <div class="company-data">
+                <strong id="view-name">MI EMPRESA S.L.</strong><br>
+                <span id="view-cif">CIF: ---</span><br>
+                <span id="view-dir">---</span><br>
+                <span id="view-tel">---</span>
+            </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px">
+            <div><h2 style="margin:0">PRESUPUESTO</h2><small>Nº: <span id="view-num">---</span></small></div>
+            <div style="text-align:right"><small>Fecha: <span id="view-date">--/--/--</span></small></div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead><tr><th style="width:50px">Cant.</th><th>Descripción</th><th style="width:90px">P. Ud.</th><th style="width:90px">Total</th><th class="no-print" style="width:30px"></th></tr></thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+
+        <div class="summary-box">
+            <div class="summary-row"><span>Base Imponible:</span> <span id="res-base">0.00€</span></div>
+            <div class="summary-row"><span>Descuento (%):</span> <input type="number" id="inp-dto" value="0" style="width:50px" onchange="recalcAll()"></div>
+            <div class="summary-row"><span>IVA (21%):</span> <span id="res-iva">0.00€</span></div>
+            <div class="total-final summary-row"><span>TOTAL:</span> <span id="res-total">0.00€</span></div>
+        </div>
+
+        <div style="margin-top:30px; font-size:11px; color:#666; border-top:1px solid #eee; padding-top:10px">
+            <strong>Condiciones:</strong>
+            <div id="view-notas" contenteditable="true"></div>
+        </div>
+    </div>
+
+    <div class="no-print" style="margin-bottom:50px; display:flex; gap:10px">
+        <button class="btn btn-p" style="background:var(--p)" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+        <button class="btn btn-danger btn" onclick="confirm('¿Borrar factura actual?') && location.reload()">🗑️ Nueva</button>
+    </div>
+</div>
+
+<script>
+    let library = JSON.parse(localStorage.getItem('antena_v72_lib')) || { Antenas: {}, Porteros: {}, Varios: {} };
+    let config = JSON.parse(localStorage.getItem('antena_v72_cfg')) || {};
+
+    function init() {
+        document.getElementById('view-date').innerText = new Date().toLocaleDateString();
+        document.getElementById('view-num').innerText = "PRE-" + Date.now().toString().slice(-6);
+        loadConfigUI();
+        loadCategoriesSelect();
+    }
+
+    function switchTab(id, btn) {
+        document.querySelectorAll('.control-panel').forEach(p => p.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if(id === 'panel-biblio') renderLibraryList();
+    }
+
+    // --- SISTEMA DE SINCRONIZACIÓN (EXPORT/IMPORT TOTAL) ---
+    function exportFullData() {
+        const pack = {
+            library: library,
+            config: config,
+            exportDate: new Date().toISOString()
+        };
+        const blob = new Blob([JSON.stringify(pack, null, 2)], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `Pack_Datos_Empresa_${new Date().toLocaleDateString()}.json`;
+        a.click();
+    }
+
+    function importFullData(e) {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const imported = JSON.parse(ev.target.result);
+                if(confirm("¿Estás seguro? Esto actualizará todas las tarifas y los datos de empresa con la información del jefe.")) {
+                    library = imported.library;
+                    config = imported.config;
+                    localStorage.setItem('antena_v72_lib', JSON.stringify(library));
+                    localStorage.setItem('antena_v72_cfg', JSON.stringify(config));
+                    alert("¡Sincronización completada con éxito!");
+                    location.reload();
+                }
+            } catch(err) { alert("Archivo de datos no válido."); }
+        };
+        reader.readAsText(e.target.files[0]);
+    }
+
+    // --- CONFIGURACIÓN ---
+    function saveLogo(input) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            config.logo = e.target.result;
+            document.getElementById('view-logo').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    function saveFullConfig() {
+        config.name = document.getElementById('cfg-name').value;
+        config.cif = document.getElementById('cfg-cif').value;
+        config.dir = document.getElementById('cfg-dir').value;
+        config.tel = document.getElementById('cfg-tel').value;
+        config.notas = document.getElementById('cfg-notas').value;
+        localStorage.setItem('antena_v72_cfg', JSON.stringify(config));
+        loadConfigUI();
+        alert("Configuración guardada localmente.");
+    }
+
+    function loadConfigUI() {
+        if(config.name) {
+            document.getElementById('view-name').innerText = config.name;
+            document.getElementById('cfg-name').value = config.name;
+        }
+        if(config.cif) {
+            document.getElementById('view-cif').innerText = "CIF: " + config.cif;
+            document.getElementById('cfg-cif').value = config.cif;
+        }
+        if(config.dir) {
+            document.getElementById('view-dir').innerText = config.dir;
+            document.getElementById('cfg-dir').value = config.dir;
+        }
+        if(config.tel) {
+            document.getElementById('view-tel').innerText = "Telf: " + config.tel;
+            document.getElementById('cfg-tel').value = config.tel;
+        }
+        if(config.logo) document.getElementById('view-logo').src = config.logo;
+        if(config.notas) {
+            document.getElementById('view-notas').innerText = config.notas;
+            document.getElementById('cfg-notas').value = config.notas;
+        }
+    }
+
+    // --- BIBLIOTECA ---
+    function loadCategoriesSelect() {
+        const sel = document.getElementById('sel-cat');
+        sel.innerHTML = "";
+        Object.keys(library).forEach(cat => {
+            sel.innerHTML += `<option value="${cat}">${cat}</option>`;
+        });
+        loadCategoryItems();
+    }
+
+    function loadCategoryItems() {
+        const cat = document.getElementById('sel-cat').value;
+        const sel = document.getElementById('sel-item');
+        sel.innerHTML = '<option value="">-- Seleccionar --</option>';
+        Object.keys(library[cat] || {}).forEach(item => {
+            sel.innerHTML += `<option value="${item}">${item}</option>`;
+        });
+    }
+
+    function autoFillItem() {
+        const cat = document.getElementById('sel-cat').value;
+        const name = document.getElementById('sel-item').value;
+        if(name) {
+            document.getElementById('inp-desc').value = name;
+            document.getElementById('inp-precio').value = library[cat][name];
+        }
+    }
+
+    function saveToLibraryManual() {
+        const n = document.getElementById('lib-name').value;
+        const p = parseFloat(document.getElementById('lib-price').value);
+        const c = document.getElementById('lib-cat').value;
+        if(!n || isNaN(p)) return;
+        library[c][n] = p;
+        localStorage.setItem('antena_v72_lib', JSON.stringify(library));
+        renderLibraryList();
+        loadCategoriesSelect();
+        alert("Concepto guardado en biblioteca.");
+    }
+
+    function renderLibraryList() {
+        const div = document.getElementById('lib-display');
+        div.innerHTML = "";
+        for(let cat in library) {
+            div.innerHTML += `<h4 style="margin:10px 0 5px">${cat}</h4>`;
+            for(let item in library[cat]) {
+                div.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; background:#f9f9f9; margin-bottom:4px; border-radius:4px; font-size:12px">
+                    <span>${item} (<strong>${library[cat][item]}€</strong>)</span>
+                    <span style="color:red; cursor:pointer" onclick="deleteFromLib('${cat}','${item}')">✖</span>
+                </div>`;
+            }
+        }
+    }
+
+    function deleteFromLib(c, i) {
+        if(confirm("¿Eliminar tarifa?")) {
+            delete library[c][i];
+            localStorage.setItem('antena_v72_lib', JSON.stringify(library));
+            renderLibraryList();
+            loadCategoriesSelect();
+        }
+    }
+
+    // --- FACTURACIÓN ---
+    function addItemToTable() {
+        const desc = document.getElementById('inp-desc').value;
+        const cant = parseFloat(document.getElementById('inp-cant').value) || 1;
+        const precio = parseFloat(document.getElementById('inp-precio').value);
+        const tipoIva = document.getElementById('inp-tipo-iva').value;
+
+        if(!desc || isNaN(precio)) return;
+
+        const baseUnit = (tipoIva === 'con') ? (precio / 1.21) : precio;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td contenteditable="true" onblur="recalcAll()">${cant}</td>
+            <td contenteditable="true" onblur="recalcAll()">${desc}</td>
+            <td contenteditable="true" onblur="recalcAll()">${baseUnit.toFixed(2)}</td>
+            <td class="row-total">0.00€</td>
+            <td class="no-print"><button onclick="this.parentElement.parentElement.remove(); recalcAll();" style="background:none; border:none; color:red; cursor:pointer">✖</button></td>
+        `;
+        document.getElementById('table-body').appendChild(tr);
+        recalcAll();
+        document.getElementById('inp-desc').value = "";
+        document.getElementById('inp-precio').value = "";
+    }
+
+    function recalcAll() {
+        let subtotal = 0;
+        document.querySelectorAll('#table-body tr').forEach(tr => {
+            const c = parseFloat(tr.cells[0].innerText) || 0;
+            const p = parseFloat(tr.cells[2].innerText) || 0;
+            const t = c * p;
+            tr.querySelector('.row-total').innerText = t.toFixed(2) + "€";
+            subtotal += t;
+        });
+        const dto = parseFloat(document.getElementById('inp-dto').value) || 0;
+        const baseConDto = subtotal * (1 - dto/100);
+        const iva = baseConDto * 0.21;
+        const total = baseConDto + iva;
+
+        document.getElementById('res-base').innerText = subtotal.toFixed(2) + "€";
+        document.getElementById('res-iva').innerText = iva.toFixed(2) + "€";
+        document.getElementById('res-total').innerText = total.toFixed(2) + "€";
+    }
+
+    init();
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AntenaManager Pro v7.1</title>
+    <style>
+        :root { --p: #1e293b; --accent: #3b82f6; --bg: #f1f5f9; --text: #334155; --success: #10b981; }
+        * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        
+        body { background: var(--bg); margin: 0; padding: 10px; color: var(--text); overflow-x: hidden; }
+
+        /* Contenedor Principal */
+        .page-container { width: 100%; max-width: 850px; margin: auto; display: flex; flex-direction: column; gap: 15px; }
+
+        /* NAVEGACIÓN - Ahora permite scroll lateral si hay muchos botones en móvil */
+        .nav-tabs { 
+            display: flex; 
+            background: white; 
+            padding: 5px; 
+            border-radius: 12px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        .tab-btn { flex: 1; min-width: 120px; padding: 12px; border: none; background: none; cursor: pointer; border-radius: 8px; font-weight: 600; color: var(--s); font-size: 13px; }
+        .tab-btn.active { background: var(--accent); color: white; }
+
+        /* PANEL DE CONTROL - EL CORAZÓN DEL AJUSTE */
+        .control-panel { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); 
+        }
+
+        /* Grid Inteligente: 1 columna en móvil, 2 o más en desktop */
+        .form-grid { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 12px; 
+        }
+
+        @media (min-width: 600px) {
+            .form-grid { grid-template-columns: repeat(2, 1fr); }
+            .full-width { grid-column: span 2; }
+            .grid-3-col { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 11px; font-weight: 800; color: var(--p); text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        input, select, textarea { 
+            padding: 12px; 
+            border: 1.5px solid #e2e8f0; 
+            border-radius: 8px; 
+            font-size: 15px; /* Evita que iOS haga zoom automático */
+            width: 100%;
+            outline: none;
+            background: #fff;
+        }
+
+        /* HOJA A4 AJUSTADA */
+        .a4-sheet { 
+            width: 100%; 
+            background: white; 
+            padding: 20px; /* Padding reducido para móvil */
+            border-radius: 8px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            min-height: 1000px;
+        }
+
+        @media (min-width: 800px) {
+            .a4-sheet { padding: 40px; }
+        }
+
+        /* TABLA QUE NO SE SALE */
+        .table-container { width: 100%; overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; min-width: 500px; } /* Mínimo para que no se amontone el texto */
+        th { background: #f8fafc; text-align: left; padding: 10px; font-size: 11px; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+
+        /* BOTONES */
+        .btn { padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: filter 0.2s; }
+        .btn-add { background: var(--accent); color: white; width: 100%; margin-top: 10px; font-size: 16px; }
+        .btn:active { filter: brightness(0.9); }
+
+        /* RESUMEN TOTALES */
+        .summary-box { margin-top: 30px; background: #f8fafc; padding: 15px; border-radius: 8px; width: 100%; max-width: 320px; margin-left: auto; }
+        .summary-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+        .total-final { font-size: 1.5em; font-weight: 800; color: var(--accent); border-top: 2px solid #e2e8f0; margin-top: 10px; padding-top: 10px; }
+
+        /* CABECERA DOCUMENTO */
+        .doc-header { display: flex; flex-direction: column; gap: 15px; border-bottom: 3px solid var(--p); padding-bottom: 20px; margin-bottom: 30px; }
+        @media (min-width: 500px) {
+            .doc-header { flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+        .logo-box img { max-width: 150px; height: auto; }
+        .company-data { font-size: 12px; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { padding: 0; background: white; }
+            .a4-sheet { box-shadow: none; border: none; padding: 0; }
+            .page-container { width: 100%; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    
+    <div class="nav-tabs no-print">
+        <button class="tab-btn active" onclick="switchTab('panel-factura', this)">📝 Presupuesto</button>
+        <button class="tab-btn" onclick="switchTab('panel-biblio', this)">📚 Biblioteca</button>
+        <button class="tab-btn" onclick="switchTab('panel-config', this)">⚙️ Config</button>
+    </div>
+
+    <div id="panel-factura" class="control-panel no-print">
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Categoría</label>
+                <select id="sel-cat" onchange="loadCategoryItems()">
+                    <option value="Antenas">Antenas</option>
+                    <option value="Porteros">Porteros</option>
+                    <option value="Varios">Varios</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Item de Biblioteca</label>
+                <select id="sel-item" onchange="autoFillItem()">
+                    <option value="">-- Seleccionar --</option>
+                </select>
+            </div>
+            <div class="input-group full-width">
+                <label>Descripción del Trabajo</label>
+                <input type="text" id="inp-desc" placeholder="Ej: Instalación portero Fermax">
+            </div>
+            <div class="input-group">
+                <label>Cantidad/Unidades</label>
+                <input type="number" id="inp-cant" value="1">
+            </div>
+            <div class="input-group">
+                <label>Precio Unitario</label>
+                <input type="number" id="inp-precio" step="0.01" placeholder="0.00">
+            </div>
+            <div class="input-group full-width">
+                <label>Tipo de Precio</label>
+                <select id="inp-tipo-iva">
+                    <option value="con">PVP (IVA Incluido)</option>
+                    <option value="sin">Base (+21% IVA)</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-add" onclick="addItemToTable()">+ Añadir Concepto</button>
+    </div>
+
+    <div id="panel-biblio" class="control-panel no-print" style="display:none">
+        <h3>Nueva Entrada Biblioteca</h3>
+        <div class="form-grid">
+            <input type="text" id="lib-name" placeholder="Nombre Concepto">
+            <input type="number" id="lib-price" placeholder="Precio €">
+            <select id="lib-cat">
+                <option value="Antenas">Antenas</option>
+                <option value="Porteros">Porteros</option>
+                <option value="Varios">Varios</option>
+            </select>
+            <button class="btn" style="background:var(--success); color:white" onclick="saveToLibraryManual()">Guardar</button>
+        </div>
+        <div id="lib-display" style="margin-top:20px; border-top: 1px solid #eee; padding-top:10px;"></div>
+    </div>
+
+    <div id="panel-config" class="control-panel no-print" style="display:none">
+        <h3>Datos de Empresa</h3>
+        <div class="form-grid">
+            <div class="input-group full-width"><label>Nombre</label><input type="text" id="cfg-name"></div>
+            <div class="input-group"><label>CIF</label><input type="text" id="cfg-cif"></div>
+            <div class="input-group"><label>Teléfono</label><input type="text" id="cfg-tel"></div>
+            <div class="input-group full-width"><label>Dirección</label><input type="text" id="cfg-dir"></div>
+            <div class="input-group full-width"><label>Logo</label><input type="file" onchange="saveLogo(this)"></div>
+            <div class="input-group full-width"><label>Notas Pie</label><textarea id="cfg-notas" rows="3"></textarea></div>
+            <button class="btn btn-add" onclick="saveFullConfig()">Guardar Perfil</button>
+        </div>
+    </div>
+
+    <div class="a4-sheet" id="documento">
+        <div class="doc-header">
+            <div class="logo-box">
+                <img id="view-logo" src="https://via.placeholder.com/150x60?text=Tu+Logo" alt="Logo">
+            </div>
+            <div class="company-data" id="v-data">
+                <strong id="view-name" style="font-size:16px">NOMBRE EMPRESA</strong><br>
+                <span id="view-cif">CIF: 0000000X</span><br>
+                <span id="view-dir">Dirección Postal</span><br>
+                <span id="view-tel">Telf: 600 000 000</span>
+            </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin: 20px 0;">
+            <div>
+                <h2 style="margin:0; color:var(--p)">PRESUPUESTO</h2>
+                <small>Nº: <span id="view-num">---</span></small>
+            </div>
+            <div style="text-align:right">
+                <small>Fecha: <span id="view-date">--/--/--</span></small>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="main-table">
+                <thead>
+                    <tr>
+                        <th style="width:50px">Cant.</th>
+                        <th>Descripción</th>
+                        <th style="width:90px">Precio Ud.</th>
+                        <th style="width:90px">Total</th>
+                        <th class="no-print" style="width:30px"></th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+
+        <div class="summary-box">
+            <div class="summary-row"><span>Subtotal (Base):</span> <span id="res-base">0.00€</span></div>
+            <div class="summary-row"><span>Dto (%):</span> <input type="number" id="inp-dto" value="0" style="width:50px; padding:2px" onchange="recalcAll()"></div>
+            <div class="summary-row"><span>IVA (21%):</span> <span id="res-iva">0.00€</span></div>
+            <div class="total-final summary-row"><span>TOTAL:</span> <span id="res-total">0.00€</span></div>
+        </div>
+
+        <div style="margin-top:40px; font-size:11px; color:#666;">
+            <strong>Observaciones y Condiciones:</strong>
+            <div id="view-notas" contenteditable="true" style="margin-top:5px; padding:10px; border: 1px dashed #eee;">
+                Presupuesto válido por 30 días.
+            </div>
+        </div>
+    </div>
+
+    <div class="no-print" style="margin: 20px 0 50px 0; display:flex; gap:10px">
+        <button class="btn btn-add" style="background:var(--p)" onclick="window.print()">🖨️ Imprimir PDF</button>
+        <button class="btn btn-add" style="background:#dc2626" onclick="if(confirm('¿Borrar todo?')) location.reload()">🗑️ Nuevo</button>
+    </div>
+
+</div>
+
+<script>
+    // Se mantienen las mismas funciones de la v7.0 pero adaptadas a los nuevos IDs
+    let library = JSON.parse(localStorage.getItem('antena_v71_lib')) || { Antenas: {}, Porteros: {}, Varios: {} };
+    let config = JSON.parse(localStorage.getItem('antena_v71_cfg')) || {};
+
+    function init() {
+        document.getElementById('view-date').innerText = new Date().toLocaleDateString();
+        document.getElementById('view-num').innerText = "PRE-" + Date.now().toString().slice(-6);
+        loadConfig();
+        loadCategoryItems();
+    }
+
+    function switchTab(id, btn) {
+        document.querySelectorAll('.control-panel').forEach(p => p.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if(id === 'panel-biblio') renderLibraryList();
+    }
+
+    function saveLogo(input) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            config.logo = e.target.result;
+            document.getElementById('view-logo').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    function saveFullConfig() {
+        config.name = document.getElementById('cfg-name').value;
+        config.cif = document.getElementById('cfg-cif').value;
+        config.dir = document.getElementById('cfg-dir').value;
+        config.tel = document.getElementById('cfg-tel').value;
+        config.notas = document.getElementById('cfg-notas').value;
+        localStorage.setItem('antena_v71_cfg', JSON.stringify(config));
+        loadConfig();
+        alert("Perfil guardado");
+    }
+
+    function loadConfig() {
+        if(config.name) {
+            document.getElementById('view-name').innerText = config.name;
+            document.getElementById('cfg-name').value = config.name;
+        }
+        if(config.cif) {
+            document.getElementById('view-cif').innerText = "CIF: " + config.cif;
+            document.getElementById('cfg-cif').value = config.cif;
+        }
+        if(config.dir) {
+            document.getElementById('view-dir').innerText = config.dir;
+            document.getElementById('cfg-dir').value = config.dir;
+        }
+        if(config.tel) {
+            document.getElementById('view-tel').innerText = "Telf: " + config.tel;
+            document.getElementById('cfg-tel').value = config.tel;
+        }
+        if(config.logo) document.getElementById('view-logo').src = config.logo;
+        if(config.notas) {
+            document.getElementById('view-notas').innerText = config.notas;
+            document.getElementById('cfg-notas').value = config.notas;
+        }
+    }
+
+    function loadCategoryItems() {
+        const cat = document.getElementById('sel-cat').value;
+        const sel = document.getElementById('sel-item');
+        sel.innerHTML = '<option value="">-- Seleccionar --</option>';
+        Object.keys(library[cat] || {}).forEach(item => {
+            sel.innerHTML += `<option value="${item}">${item}</option>`;
+        });
+    }
+
+    function autoFillItem() {
+        const cat = document.getElementById('sel-cat').value;
+        const name = document.getElementById('sel-item').value;
+        if(name) {
+            document.getElementById('inp-desc').value = name;
+            document.getElementById('inp-precio').value = library[cat][name];
+        }
+    }
+
+    function saveToLibraryManual() {
+        const n = document.getElementById('lib-name').value;
+        const p = parseFloat(document.getElementById('lib-price').value);
+        const c = document.getElementById('lib-cat').value;
+        if(!n || isNaN(p)) return;
+        library[c][n] = p;
+        localStorage.setItem('antena_v71_lib', JSON.stringify(library));
+        renderLibraryList();
+        loadCategoryItems();
+        alert("Guardado");
+    }
+
+    function renderLibraryList() {
+        const div = document.getElementById('lib-display');
+        div.innerHTML = "";
+        for(let cat in library) {
+            div.innerHTML += `<h4>${cat}</h4>`;
+            for(let item in library[cat]) {
+                div.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; background:#f9f9f9; margin-bottom:4px; border-radius:4px; font-size:12px">
+                    <span>${item} (${library[cat][item]}€)</span>
+                    <span style="color:red; cursor:pointer" onclick="deleteFromLib('${cat}','${item}')">✖</span>
+                </div>`;
+            }
+        }
+    }
+
+    function deleteFromLib(c, i) {
+        delete library[c][i];
+        localStorage.setItem('antena_v71_lib', JSON.stringify(library));
+        renderLibraryList();
+        loadCategoryItems();
+    }
+
+    function addItemToTable() {
+        const desc = document.getElementById('inp-desc').value;
+        const cant = parseFloat(document.getElementById('inp-cant').value) || 1;
+        const precio = parseFloat(document.getElementById('inp-precio').value);
+        const tipoIva = document.getElementById('inp-tipo-iva').value;
+        const cat = document.getElementById('sel-cat').value;
+
+        if(!desc || isNaN(precio)) return;
+
+        // Auto-guardar en biblioteca
+        if(!library[cat][desc]) {
+            library[cat][desc] = precio;
+            localStorage.setItem('antena_v71_lib', JSON.stringify(library));
+            loadCategoryItems();
+        }
+
+        const baseUnit = (tipoIva === 'con') ? (precio / 1.21) : precio;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td contenteditable="true" onblur="recalcAll()">${cant}</td>
+            <td contenteditable="true" onblur="recalcAll()">${desc}</td>
+            <td contenteditable="true" onblur="recalcAll()">${baseUnit.toFixed(2)}</td>
+            <td class="row-total">0.00€</td>
+            <td class="no-print"><button onclick="this.parentElement.parentElement.remove(); recalcAll();" style="border:none;background:none;color:red;font-size:1.2em;cursor:pointer">×</button></td>
+        `;
+        document.getElementById('table-body').appendChild(tr);
+        recalcAll();
+        document.getElementById('inp-desc').value = "";
+        document.getElementById('inp-precio').value = "";
+    }
+
+    function recalcAll() {
+        let subtotal = 0;
+        document.querySelectorAll('#table-body tr').forEach(tr => {
+            const c = parseFloat(tr.cells[0].innerText) || 0;
+            const p = parseFloat(tr.cells[2].innerText) || 0;
+            const t = c * p;
+            tr.querySelector('.row-total').innerText = t.toFixed(2) + "€";
+            subtotal += t;
+        });
+        const dto = parseFloat(document.getElementById('inp-dto').value) || 0;
+        const baseConDto = subtotal * (1 - dto/100);
+        const iva = baseConDto * 0.21;
+        const total = baseConDto + iva;
+
+        document.getElementById('res-base').innerText = subtotal.toFixed(2) + "€";
+        document.getElementById('res-iva').innerText = iva.toFixed(2) + "€";
+        document.getElementById('res-total').innerText = total.toFixed(2) + "€";
+    }
+
+    init();
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AntenaManager Pro 2026</title>
+    <style>
+        :root { --p: #1e293b; --accent: #3b82f6; --bg: #f1f5f9; --text: #334155; --success: #10b981; }
+        * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        body { background: var(--bg); margin: 0; padding: 10px; color: var(--text); }
+
+        /* Contenedor A4 */
+        .page-container { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .a4-sheet { width: 100%; max-width: 800px; background: white; padding: 40px; border-radius: 4px; shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; min-height: 1000px; }
+
+        /* Tabs de Navegación */
+        .nav-tabs { display: flex; background: white; padding: 5px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 10px; width: 100%; max-width: 800px; }
+        .tab-btn { flex: 1; padding: 12px; border: none; background: none; cursor: pointer; border-radius: 8px; font-weight: 600; color: var(--s); transition: 0.2s; }
+        .tab-btn.active { background: var(--accent); color: white; }
+
+        /* Paneles de Control */
+        .control-panel { width: 100%; max-width: 800px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 12px; font-weight: 700; color: var(--p); text-transform: uppercase; }
+        input, select, textarea { padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        input:focus { border-color: var(--accent); }
+
+        /* Cabecera Documento */
+        .doc-header { display: flex; justify-content: space-between; border-bottom: 3px solid var(--p); padding-bottom: 20px; margin-bottom: 30px; }
+        .logo-box img { max-width: 180px; max-height: 100px; object-fit: contain; }
+        .company-data { text-align: right; font-size: 13px; }
+
+        /* Tabla Estilizada */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #f8fafc; text-align: left; padding: 12px; font-size: 12px; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        .row-total { font-weight: 700; }
+
+        /* Totales */
+        .summary-box { margin-left: auto; width: 300px; margin-top: 30px; background: #f8fafc; padding: 15px; border-radius: 8px; }
+        .summary-row { display: flex; justify-content: space-between; padding: 5px 0; }
+        .total-final { font-size: 1.6em; font-weight: 800; color: var(--accent); border-top: 2px solid #cbd5e1; margin-top: 10px; padding-top: 10px; }
+
+        .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; }
+        .btn-add { background: var(--accent); color: white; width: 100%; margin-top: 10px; }
+
+        .category-badge { background: #e0e7ff; color: #4338ca; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; }
+            .a4-sheet { box-shadow: none; width: 100%; padding: 0; margin: 0; }
+            @page { size: A4; margin: 1.5cm; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    
+    <div class="nav-tabs no-print">
+        <button class="tab-btn active" onclick="switchTab('panel-factura', this)">📝 Crear Presupuesto</button>
+        <button class="tab-btn" onclick="switchTab('panel-biblio', this)">📚 Biblioteca</button>
+        <button class="tab-btn" onclick="switchTab('panel-config', this)">⚙️ Configuración</button>
+    </div>
+
+    <div id="panel-factura" class="control-panel no-print">
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Categoría</label>
+                <select id="sel-cat" onchange="loadCategoryItems()">
+                    <option value="Antenas">Antenas</option>
+                    <option value="Porteros">Porteros</option>
+                    <option value="Varios">Varios</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Concepto Guardado</label>
+                <select id="sel-item" onchange="autoFillItem()">
+                    <option value="">-- Seleccionar --</option>
+                </select>
+            </div>
+            <div class="input-group" style="grid-column: span 2;">
+                <label>Descripción Libre</label>
+                <input type="text" id="inp-desc" placeholder="Nombre del trabajo o material">
+            </div>
+            <div class="input-group">
+                <label>Unidades</label>
+                <input type="number" id="inp-cant" value="1">
+            </div>
+            <div class="input-group">
+                <label>Precio</label>
+                <input type="number" id="inp-precio" step="0.01">
+            </div>
+            <div class="input-group">
+                <label>Impuestos</label>
+                <select id="inp-tipo-iva">
+                    <option value="con">PVP (IVA Inc.)</option>
+                    <option value="sin">+21% IVA</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-add" onclick="addItemToTable()">+ Añadir a la lista</button>
+    </div>
+
+    <div id="panel-biblio" class="control-panel no-print" style="display:none">
+        <h3>Gestión de Conceptos</h3>
+        <div class="form-grid">
+            <input type="text" id="lib-name" placeholder="Nombre">
+            <input type="number" id="lib-price" placeholder="Precio">
+            <select id="lib-cat">
+                <option value="Antenas">Antenas</option>
+                <option value="Porteros">Porteros</option>
+                <option value="Varios">Varios</option>
+            </select>
+            <button class="btn" style="background:var(--success); color:white" onclick="saveToLibraryManual()">Guardar</button>
+        </div>
+        <div id="lib-display" style="margin-top:20px; max-height:300px; overflow-y:auto"></div>
+    </div>
+
+    <div id="panel-config" class="control-panel no-print" style="display:none">
+        <h3>Datos de Empresa</h3>
+        <div class="form-grid">
+            <input type="text" id="cfg-name" placeholder="Nombre Comercial">
+            <input type="text" id="cfg-cif" placeholder="CIF/NIF">
+            <input type="text" id="cfg-dir" placeholder="Dirección">
+            <input type="text" id="cfg-tel" placeholder="Teléfono">
+            <input type="file" onchange="saveLogo(this)" style="grid-column: span 2;">
+            <textarea id="cfg-notas" placeholder="Condiciones del presupuesto..." style="grid-column: span 2;"></textarea>
+        </div>
+        <button class="btn btn-add" onclick="saveFullConfig()">Guardar Perfil</button>
+    </div>
+
+    <div class="a4-sheet" id="documento">
+        <div class="doc-header">
+            <div class="logo-box">
+                <img id="view-logo" src="https://via.placeholder.com/180x80?text=Tu+Logo" alt="Logo">
+            </div>
+            <div class="company-data">
+                <h2 id="view-name" style="margin:0">NOMBRE DE EMPRESA</h2>
+                <div id="view-cif">CIF: 00000000A</div>
+                <div id="view-dir">Tu Dirección, Ciudad</div>
+                <div id="view-tel">Telf: 000 000 000</div>
+            </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-bottom:30px">
+            <div>
+                <h1 style="margin:0; color:var(--p); font-size:24px">PRESUPUESTO</h1>
+                <p>Nº: <strong id="view-num">0000</strong></p>
+            </div>
+            <div style="text-align:right">
+                <p>Fecha: <strong id="view-date">--/--/----</strong></p>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px">Cant.</th>
+                    <th>Concepto</th>
+                    <th style="width:100px">Precio Ud.</th>
+                    <th style="width:100px">Total</th>
+                    <th class="no-print" style="width:30px"></th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                </tbody>
+        </table>
+
+        <div class="summary-box">
+            <div class="summary-row"><span>Subtotal:</span> <span id="res-base">0.00€</span></div>
+            <div class="summary-row"><span>Descuento (%):</span> <input type="number" id="inp-dto" value="0" style="width:50px; padding:2px" onchange="recalcAll()"></div>
+            <div class="summary-row"><span>IVA (21%):</span> <span id="res-iva">0.00€</span></div>
+            <div class="summary-row total-final"><span>TOTAL:</span> <span id="res-total">0.00€</span></div>
+        </div>
+
+        <div class="footer-notes">
+            <p><strong>Observaciones:</strong></p>
+            <div id="view-notas" contenteditable="true">Condiciones estándar de servicio...</div>
+        </div>
+    </div>
+
+    <div class="no-print" style="margin-bottom:50px; display:flex; gap:10px">
+        <button class="btn" style="background:var(--p); color:white" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+        <button class="btn" style="background:#ef4444; color:white" onclick="confirm('¿Limpiar factura?') && location.reload()">🗑️ Nueva Factura</button>
+    </div>
+
+</div>
+
+<script>
+    // ESTADO DE LA APP
+    let library = JSON.parse(localStorage.getItem('antena_v7_lib')) || { Antenas: {}, Porteros: {}, Varios: {} };
+    let config = JSON.parse(localStorage.getItem('antena_v7_cfg')) || {};
+
+    function init() {
+        // 1. Fecha de hoy
+        document.getElementById('view-date').innerText = new Date().toLocaleDateString();
+        // 2. Número único (basado en timestamp)
+        document.getElementById('view-num').innerText = "PRE-" + Date.now().toString().slice(-6);
+        // 3. Cargar configuración
+        loadConfig();
+        // 4. Cargar biblioteca inicial
+        loadCategoryItems();
+    }
+
+    // NAVEGACIÓN
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab-content, .control-panel').forEach(p => {
+            if(p.id !== 'panel-factura' && p.id !== 'panel-biblio' && p.id !== 'panel-config') return;
+            p.style.display = 'none';
+        });
+        document.getElementById(tabId).style.display = 'block';
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if(tabId === 'panel-biblio') renderLibraryList();
+    }
+
+    // CONFIGURACIÓN
+    function saveLogo(input) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            config.logo = e.target.result;
+            document.getElementById('view-logo').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    function saveFullConfig() {
+        config.name = document.getElementById('cfg-name').value;
+        config.cif = document.getElementById('cfg-cif').value;
+        config.dir = document.getElementById('cfg-dir').value;
+        config.tel = document.getElementById('cfg-tel').value;
+        config.notas = document.getElementById('cfg-notas').value;
+        localStorage.setItem('antena_v7_cfg', JSON.stringify(config));
+        loadConfig();
+        alert("Perfil guardado correctamente");
+    }
+
+    function loadConfig() {
+        if(config.name) document.getElementById('view-name').innerText = config.name;
+        if(config.cif) document.getElementById('view-cif').innerText = "CIF: " + config.cif;
+        if(config.dir) document.getElementById('view-dir').innerText = config.dir;
+        if(config.tel) document.getElementById('view-tel').innerText = "Telf: " + config.tel;
+        if(config.logo) document.getElementById('view-logo').src = config.logo;
+        if(config.notas) document.getElementById('view-notas').innerText = config.notas;
+        
+        // Rellenar campos en panel config
+        document.getElementById('cfg-name').value = config.name || "";
+        document.getElementById('cfg-cif').value = config.cif || "";
+        document.getElementById('cfg-dir').value = config.dir || "";
+        document.getElementById('cfg-tel').value = config.tel || "";
+        document.getElementById('cfg-notas').value = config.notas || "";
+    }
+
+    // BIBLIOTECA
+    function loadCategoryItems() {
+        const cat = document.getElementById('sel-cat').value;
+        const sel = document.getElementById('sel-item');
+        sel.innerHTML = '<option value="">-- Seleccionar --</option>';
+        if(library[cat]) {
+            Object.keys(library[cat]).forEach(item => {
+                sel.innerHTML += `<option value="${item}">${item}</option>`;
+            });
+        }
+    }
+
+    function autoFillItem() {
+        const cat = document.getElementById('sel-cat').value;
+        const name = document.getElementById('sel-item').value;
+        if(name) {
+            document.getElementById('inp-desc').value = name;
+            document.getElementById('inp-precio').value = library[cat][name];
+        }
+    }
+
+    function saveToLibraryManual() {
+        const name = document.getElementById('lib-name').value;
+        const price = parseFloat(document.getElementById('lib-price').value);
+        const cat = document.getElementById('lib-cat').value;
+        if(!name || isNaN(price)) return;
+        
+        library[cat][name] = price;
+        localStorage.setItem('antena_v7_lib', JSON.stringify(library));
+        renderLibraryList();
+        loadCategoryItems();
+        alert("Concepto guardado");
+    }
+
+    function renderLibraryList() {
+        const div = document.getElementById('lib-display');
+        div.innerHTML = "";
+        for(let cat in library) {
+            let h = `<strong>${cat}</strong><br>`;
+            for(let item in library[cat]) {
+                h += `<div style="display:flex; justify-content:space-between; font-size:13px; background:white; padding:5px; margin:2px; border-radius:4px">
+                        <span>${item} (${library[cat][item]}€)</span>
+                        <span style="color:red; cursor:pointer" onclick="deleteFromLib('${cat}','${item}')">✖</span>
+                      </div>`;
+            }
+            div.innerHTML += h;
+        }
+    }
+
+    function deleteFromLib(cat, item) {
+        delete library[cat][item];
+        localStorage.setItem('antena_v7_lib', JSON.stringify(library));
+        renderLibraryList();
+        loadCategoryItems();
+    }
+
+    // FACTURACIÓN
+    function addItemToTable() {
+        const desc = document.getElementById('inp-desc').value;
+        const cant = parseFloat(document.getElementById('inp-cant').value) || 1;
+        const precio = parseFloat(document.getElementById('inp-precio').value);
+        const tipoIva = document.getElementById('inp-tipo-iva').value;
+        const cat = document.getElementById('sel-cat').value;
+
+        if(!desc || isNaN(precio)) return;
+
+        // Auto-guardar en biblioteca si no existe
+        if(!library[cat][desc]) {
+            library[cat][desc] = precio;
+            localStorage.setItem('antena_v7_lib', JSON.stringify(library));
+            loadCategoryItems();
+        }
+
+        const baseUnit = (tipoIva === 'con') ? (precio / 1.21) : precio;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td contenteditable="true" onblur="recalcAll()">${cant}</td>
+            <td contenteditable="true" onblur="recalcAll()">${desc}</td>
+            <td contenteditable="true" onblur="recalcAll()">${baseUnit.toFixed(2)}</td>
+            <td class="row-total">0.00€</td>
+            <td class="no-print"><button onclick="this.parentElement.parentElement.remove(); recalcAll();" style="border:none; background:none; color:red; cursor:pointer">✖</button></td>
+        `;
+        document.getElementById('table-body').appendChild(tr);
+        recalcAll();
+        
+        // Limpiar
+        document.getElementById('inp-desc').value = "";
+        document.getElementById('inp-precio').value = "";
+    }
+
+    function recalcAll() {
+        let subtotal = 0;
+        document.querySelectorAll('#table-body tr').forEach(tr => {
+            const c = parseFloat(tr.cells[0].innerText) || 0;
+            const p = parseFloat(tr.cells[2].innerText) || 0;
+            const t = c * p;
+            tr.querySelector('.row-total').innerText = t.toFixed(2) + "€";
+            subtotal += t;
+        });
+
+        const dtoPct = parseFloat(document.getElementById('inp-dto').value) || 0;
+        const totalBase = subtotal * (1 - dtoPct/100);
+        const iva = totalBase * 0.21;
+        const final = totalBase + iva;
+
+        document.getElementById('res-base').innerText = subtotal.toFixed(2) + "€";
+        document.getElementById('res-iva').innerText = iva.toFixed(2) + "€";
+        document.getElementById('res-total').innerText = final.toFixed(2) + "€";
+    }
+
+    init();
+</script>
+
+</body>
+</html>

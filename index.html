@@ -3,37 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AntenaManager v9.5</title>
+    <title>AntenaManager PRO</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <nav class="no-print">
-        <button class="tab active" onclick="showPanel('p-crear', this)">📝 NUEVO</button>
-        <button class="tab" onclick="showPanel('p-tarifas', this)">📚 LISTA</button>
-        <button class="tab" onclick="showPanel('p-config', this)">⚙️ CONFIG</button>
+    <nav class="no-print" id="main-nav">
+        <button class="tab-link active" onclick="openTab('tab-crear', this)">📝 NUEVO</button>
+        <button class="tab-link" onclick="openTab('tab-lista', this)">📚 LISTA</button>
+        <button class="tab-link" onclick="openTab('tab-conf', this)">⚙️ CONFIG</button>
     </nav>
 
-    <main class="container">
+    <main class="main-container">
         
-        <section id="p-crear" class="panel active">
-            <div class="card no-print">
-                <h3>Añadir Concepto</h3>
-                <div class="f-group">
-                    <label>Biblioteca de Precios</label>
-                    <select id="sel-item" onchange="autoFill()"></select>
+        <section id="tab-crear" class="tab-content active">
+            <div class="input-card no-print">
+                <h3>Añadir Trabajo</h3>
+                <div class="form-item">
+                    <label>Desde Biblioteca</label>
+                    <select id="sel-item-v10" onchange="autoFillV10()"></select>
                 </div>
-                <div class="f-group">
-                    <label>Descripción del Trabajo</label>
-                    <input type="text" id="in-desc" placeholder="Ej: Sustitución de amplificador...">
+                <div class="form-item">
+                    <label>Concepto</label>
+                    <input type="text" id="in-desc-v10" placeholder="Escribir descripción...">
                 </div>
-                <div class="row">
-                    <div class="f-group"><label>Cant.</label><input type="number" id="in-cant" value="1"></div>
-                    <div class="f-group"><label>Precio Ud. (€)</label><input type="number" id="in-prec" step="0.01"></div>
+                <div class="form-row">
+                    <div class="form-item"><label>Cant.</label><input type="number" id="in-cant-v10" value="1"></div>
+                    <div class="form-item"><label>Precio (€)</label><input type="number" id="in-prec-v10" step="0.01"></div>
                 </div>
-                <div class="f-group">
-                    <label>Modo de IVA</label>
-                    <select id="in-tipo-iva">
+                <div class="form-item">
+                    <label>Tipo de IVA</label>
+                    <select id="in-tipo-iva-v10">
+                        <option value="sin">Precio es BASE (+21% IVA)</option>
+                        <option value="con">Precio con IVA INCLUIDO</option>
+                    </select>
+                </div>
+                <button class="btn-action btn-blue" onclick="agregarLineaV10()">+ AÑADIR AL DOCUMENTO</button>
+            </div>
+
+            <div id="hoja-impresion" class="document-paper">
+                <div class="doc-header">
+                    <div class="doc-logo-area">
+                        <img id="logo-img" src="" style="display:none; max-height:70px;">
+                        <span id="logo-placeholder">MI EMPRESA</span>
+                    </div>
+                    <div class="doc-empresa-info">
+                        <strong id="doc-nombre-emp">EMPRESA</strong><br>
+                        <span id="doc-cif">CIF: ---</span><br>
+                        <span id="doc-tel">TEL: ---</span><br>
+                        <span id="doc-dir">DIR: ---</span>
+                    </div>
+                </div>
+
+                <div class="doc-meta">
+                    <div><strong>PRESUPUESTO</strong><br><small id="doc-ref">REF: --</small></div>
+                    <div style="text-align:right"><small id="doc-fecha">--/--/--</small></div>
+                </div>
+
+                <div class="table-container">
+                    <table id="tabla-principal">
+                        <thead>
+                            <tr>
+                                <th style="width:10%">Cant</th>
+                                <th>Descripción</th>
+                                <th style="width:15%">Ud.</th>
+                                <th style="width:20%">Total</th>
+                                <th class="no-print"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpo-tabla"></tbody>
+                    </table>
+                </div>
+
+                <div class="doc-resumen">
+                    <div class="res-row"><span>Base Imponible:</span> <span id="res-base">0.00€</span></div>
+                    <div class="res-row"><span>IVA (21%):</span> <span id="res-iva">0.00€</span></div>
+                    <div class="res-row res-total"><span>TOTAL:</span> <span id="res-total">0.00€</span></div>
+                </div>
+
+                <div class="doc-footer">
+                    <strong>Notas:</strong>
+                    <div id="doc-notas-texto" contenteditable="true" style="margin-top:5px; min-height:40px;"></div>
+                </div>
+            </div>
+
+            <div class="no-print main-actions">
+                <button class="btn-action btn-dark" onclick="window.print()">🖨️ IMPRIMIR / PDF</button>
+                <button class="btn-action btn-red" onclick="borrarHoja()">🗑️ VACIAR TODO</button>
+            </div>
+        </section>
+
+        <section id="tab-lista" class="tab-content">
+            <div class="input-card">
+                <h3>Guardar en Biblioteca</h3>
+                <div class="form-item"><label>Nombre</label><input type="text" id="lib-nombre"></div>
+                <div class="form-item"><label>Precio Base (€)</label><input type="number" id="lib-precio" step="0.01"></div>
+                <button class="btn-action btn-blue" onclick="guardarEnLib()">GUARDAR PRODUCTO</button>
+            </div>
+            <div id="lista-render"></div>
+        </section>
+
+        <section id="tab-conf" class="tab-content">
+            <div class="input-card">
+                <h3>Mis Datos de Empresa</h3>
+                <div class="form-item"><label>Nombre</label><input type="text" id="conf-nombre"></div>
+                <div class="form-item"><label>CIF</label><input type="text" id="conf-cif"></div>
+                <div class="form-item"><label>Teléfono</label><input type="text" id="conf-tel"></div>
+                <div class="form-item"><label>Dirección</label><input type="text" id="conf-dir"></div>
+                <div class="form-item"><label>Logo</label><input type="file" onchange="subirLogo(this)"></div>
+                <div class="form-item">
+                    <label>Nota Predeterminada (Garantía, etc.)</label>
+                    <textarea id="conf-nota" rows="3" style="width:100%"></textarea>
+                </div>
+                <button class="btn-action btn-blue" onclick="guardarConfig()">GUARDAR CAMBIOS</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
                         <option value="sin">Precio es BASE (Sumar 21% después)</option>
                         <option value="con">Precio ya incluye IVA (Desglosar)</option>
                     </select>

@@ -1,0 +1,51 @@
+:root { --blue: #2563eb; --dark: #0f172a; --bg: #f1f5f9; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+
+body { background: var(--bg); padding-bottom: 40px; }
+
+/* NAVEGACIÓN */
+nav { background: var(--dark); display: flex; position: sticky; top: 0; z-index: 100; }
+.tab { flex: 1; padding: 15px; border: none; background: none; color: #94a3b8; font-weight: bold; cursor: pointer; font-size: 12px; }
+.tab.active { color: white; border-bottom: 4px solid var(--blue); background: #1e293b; }
+
+.container { max-width: 800px; margin: 0 auto; padding: 15px; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* TARJETAS */
+.card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; }
+.f-group { margin-bottom: 12px; }
+.row { display: flex; gap: 10px; }
+label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 4px; color: var(--dark); }
+input, select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; }
+
+/* BOTONES */
+.btn { border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; padding: 14px; }
+.btn-main { background: var(--blue); color: white; }
+.btn-alt { background: var(--dark); color: white; }
+.btn-danger { background: #fee2e2; color: #ef4444; margin-top: 10px; }
+
+/* HOJA PRESUPUESTO */
+.paper { background: white; padding: 30px; border-radius: 4px; border: 1px solid #ddd; min-height: 800px; }
+.p-header { display: flex; justify-content: space-between; border-bottom: 2px solid var(--dark); padding-bottom: 15px; margin-bottom: 20px; }
+.p-meta { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 13px; }
+
+table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+th { background: #f8fafc; text-align: left; padding: 10px; border-bottom: 1px solid #ddd; font-size: 12px; }
+td { padding: 10px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+
+.p-resumen { margin-left: auto; width: 250px; background: #f8fafc; padding: 15px; border-radius: 8px; }
+.row-res { display: flex; justify-content: space-between; margin: 5px 0; }
+.total-big { font-size: 18px; font-weight: bold; color: var(--blue); border-top: 2px solid #ddd; padding-top: 10px; }
+
+@media print {
+    .no-print { display: none !important; }
+    body { background: white; }
+    .container { max-width: 100%; padding: 0; }
+    .paper { border: none; }
+}
+
+@media (max-width: 600px) {
+    .paper { padding: 15px; overflow-x: auto; }
+    table { min-width: 500px; } /* Permite scroll en móvil */
+}

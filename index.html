@@ -3,37 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AntenaManager PRO</title>
+    <title>AntenaManager V11</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <nav class="no-print" id="main-nav">
-        <button class="tab-link active" onclick="openTab('tab-crear', this)">📝 NUEVO</button>
-        <button class="tab-link" onclick="openTab('tab-lista', this)">📚 LISTA</button>
-        <button class="tab-link" onclick="openTab('tab-conf', this)">⚙️ CONFIG</button>
+    <nav class="no-print" id="menu-superior">
+        <button class="boton-nav activo" onclick="cambiarSeccion('seccion-crear', this)">📝 NUEVO</button>
+        <button class="boton-nav" onclick="cambiarSeccion('seccion-lista', this)">📚 LISTA</button>
+        <button class="boton-nav" onclick="cambiarSeccion('seccion-config', this)">⚙️ CONFIG</button>
     </nav>
 
-    <main class="main-container">
+    <main class="contenedor-principal">
         
-        <section id="tab-crear" class="tab-content active">
-            <div class="input-card no-print">
-                <h3>Añadir Trabajo</h3>
-                <div class="form-item">
-                    <label>Desde Biblioteca</label>
-                    <select id="sel-item-v10" onchange="autoFillV10()"></select>
+        <section id="seccion-crear" class="pantalla activa">
+            <div class="tarjeta-input no-print">
+                <h2 class="titulo-input">Añadir Concepto</h2>
+                <div class="campo">
+                    <label>Desde Lista</label>
+                    <select id="sel-item-v11" onchange="autoCompletarV11()"></select>
                 </div>
-                <div class="form-item">
-                    <label>Concepto</label>
-                    <input type="text" id="in-desc-v10" placeholder="Escribir descripción...">
+                <div class="campo">
+                    <label>Descripción del Trabajo</label>
+                    <input type="text" id="in-desc-v11" placeholder="Ej: Instalación antena UHF...">
                 </div>
-                <div class="form-row">
-                    <div class="form-item"><label>Cant.</label><input type="number" id="in-cant-v10" value="1"></div>
-                    <div class="form-item"><label>Precio (€)</label><input type="number" id="in-prec-v10" step="0.01"></div>
+                <div class="fila-campos">
+                    <div class="campo"><label>Cant.</label><input type="number" id="in-cant-v11" value="1"></div>
+                    <div class="campo"><label>Precio (€)</label><input type="number" id="in-prec-v11" step="0.01"></div>
                 </div>
-                <div class="form-item">
-                    <label>Tipo de IVA</label>
-                    <select id="in-tipo-iva-v10">
+                <div class="campo">
+                    <label>Impuestos</label>
+                    <select id="in-tipo-iva-v11">
+                        <option value="sin">Precio es BASE (+21% IVA)</option>
+                        <option value="con">Precio con IVA INCLUIDO</option>
+                    </select>
+                </div>
+                <button class="btn btn-azul" onclick="insertarFilaV11()">+ AÑADIR A LA HOJA</button>
+            </div>
+
+            <div id="documento-final" class="hoja-blanca">
+                <div class="cabecera-doc">
+                    <div class="bloque-logo">
+                        <img id="img-logo-v11" src="" style="display:none; max-height:70px;">
+                        <span id="txt-logo-v11" style="font-weight:bold; color:#2563eb;">MI EMPRESA</span>
+                    </div>
+                    <div class="bloque-datos-empresa">
+                        <strong id="v-nombre-v11">EMPRESA</strong><br>
+                        <span id="v-cif-v11">CIF: ---</span><br>
+                        <span id="v-tel-v11">TEL: ---</span><br>
+                        <span id="v-dir-v11">DIR: ---</span>
+                    </div>
+                </div>
+
+                <div class="info-meta">
+                    <div><strong>PRESUPUESTO</strong><br><span id="v-ref-v11">REF: --</span></div>
+                    <div style="text-align:right"><span id="v-fecha-v11">--/--/--</span></div>
+                </div>
+
+                <div class="zona-tabla">
+                    <table id="tabla-v11">
+                        <thead>
+                            <tr>
+                                <th style="width:10%">Cant</th>
+                                <th>Descripción</th>
+                                <th style="width:15%">Precio</th>
+                                <th style="width:20%">Total</th>
+                                <th class="no-print"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpo-tabla-v11"></tbody>
+                    </table>
+                </div>
+
+                <div class="contenedor-totales">
+                    <div class="linea-total"><span>Base Imponible:</span> <span id="tot-base-v11">0.00€</span></div>
+                    <div class="linea-total"><span>IVA (21%):</span> <span id="tot-iva-v11">0.00€</span></div>
+                    <div class="linea-total total-grande"><span>TOTAL:</span> <span id="tot-final-v11">0.00€</span></div>
+                </div>
+
+                <div class="pie-doc">
+                    <strong>Notas:</strong>
+                    <div id="v-notas-v11" contenteditable="true" style="margin-top:5px; min-height:50px; border:1px dashed transparent"></div>
+                </div>
+            </div>
+
+            <div class="no-print acciones-finales">
+                <button class="btn btn-negro" onclick="window.print()">🖨️ IMPRIMIR / PDF</button>
+                <button class="btn btn-rojo" onclick="resetearHojaV11()">🗑️ BORRAR HOJA</button>
+            </div>
+        </section>
+
+        <section id="seccion-lista" class="pantalla">
+            <div class="tarjeta-input">
+                <h2>Guardar Nueva Tarifa</h2>
+                <div class="campo"><label>Nombre</label><input type="text" id="lib-n-v11"></div>
+                <div class="campo"><label>Precio Base (€)</label><input type="number" id="lib-p-v11" step="0.01"></div>
+                <button class="btn btn-azul" onclick="guardarEnLibV11()">GUARDAR EN LISTA</button>
+            </div>
+            <div id="render-lista-v11"></div>
+        </section>
+
+        <section id="seccion-config" class="pantalla">
+            <div class="tarjeta-input">
+                <h2>Mis Datos de Empresa</h2>
+                <div class="campo"><label>Nombre</label><input type="text" id="cfg-n-v11"></div>
+                <div class="campo"><label>CIF</label><input type="text" id="cfg-c-v11"></div>
+                <div class="campo"><label>Teléfono</label><input type="text" id="cfg-t-v11"></div>
+                <div class="campo"><label>Dirección</label><input type="text" id="cfg-d-v11"></div>
+                <div class="campo"><label>Subir Logo</label><input type="file" onchange="cargarLogoV11(this)"></div>
+                <div class="campo">
+                    <label>Nota Fija (Garantía, Pago, etc.)</label>
+                    <textarea id="cfg-nota-v11" rows="4" style="width:100%"></textarea>
+                </div>
+                <button class="btn btn-azul" onclick="guardarConfigV11()">GUARDAR TODO</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
                         <option value="sin">Precio es BASE (+21% IVA)</option>
                         <option value="con">Precio con IVA INCLUIDO</option>
                     </select>

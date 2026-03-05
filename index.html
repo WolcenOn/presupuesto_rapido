@@ -3,37 +3,414 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AntenaManager Pro v7.3</title>
+    <title>AntenaManager Pro v7.4</title>
     <style>
         :root { --p: #1e293b; --accent: #3b82f6; --bg: #f1f5f9; --text: #334155; --success: #10b981; --danger: #ef4444; }
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); margin: 0; padding: 10px; color: var(--text); }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        
+        body { background: var(--bg); margin: 0; padding: 0; color: var(--text); overflow-x: hidden; }
 
-        .page-container { width: 100%; max-width: 850px; margin: auto; }
-
-        /* Navegación Superior */
+        /* Navegación Fija */
         .nav-tabs { 
-            display: flex; 
-            background: white; 
-            padding: 5px; 
-            border-radius: 12px; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-            margin-bottom: 15px;
-            position: sticky;
-            top: 10px;
-            z-index: 100;
+            display: flex; background: white; padding: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            position: sticky; top: 0; z-index: 1000; width: 100%;
         }
-        .tab-btn { flex: 1; padding: 12px; border: none; background: none; cursor: pointer; border-radius: 8px; font-weight: 600; font-size: 13px; color: #64748b; }
+        .tab-btn { 
+            flex: 1; padding: 12px; border: none; background: none; 
+            cursor: pointer; border-radius: 8px; font-weight: 700; 
+            font-size: 13px; color: #64748b; transition: 0.3s;
+        }
         .tab-btn.active { background: var(--accent); color: white; }
 
-        /* Paneles de Contenido */
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        /* Contenedores */
+        .main-content { max-width: 850px; margin: 15px auto; padding: 0 15px; }
+        .view-section { display: none; }
+        .view-section.active { display: block; }
 
-        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
         
-        .form-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        @media (min-width: 600px) { .form-grid { grid-template-columns: 1fr 1fr; } .span-2 { grid-column: span 2; } }
+        /* Formulario */
+        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        @media (min-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } .span-2 { grid-column: span 2; } }
+
+        label { font-size: 11px; font-weight: 800; color: var(--p); text-transform: uppercase; display: block; margin-bottom: 5px; }
+        input, select, textarea { 
+            padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; 
+            font-size: 16px; width: 100%; outline: none; background: #fff;
+        }
+
+        /* HOJA DE PRESUPUESTO (A4) */
+        .a4-container { margin-top: 20px; perspective: 1000px; }
+        .a4-sheet { 
+            background: white; padding: 30px; border-radius: 2px; 
+            box-shadow: 0 0 15px rgba(0,0,0,0.1); min-height: 1000px;
+            width: 100%; margin: 0 auto;
+        }
+
+        .doc-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid var(--p); padding-bottom: 15px; margin-bottom: 25px; }
+        #v-logo { max-width: 160px; max-height: 80px; object-fit: contain; }
+        
+        /* Tablas */
+        .table-responsive { width: 100%; overflow-x: auto; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        th { background: #f8fafc; text-align: left; padding: 12px; font-size: 12px; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+
+        .summary-box { background: #f8fafc; padding: 20px; border-radius: 8px; width: 100%; max-width: 300px; margin-left: auto; margin-top: 20px; }
+        .total-row { font-size: 1.5em; font-weight: 800; color: var(--accent); border-top: 2px solid #cbd5e1; margin-top: 10px; padding-top: 10px; }
+
+        /* Botones */
+        .btn { 
+            padding: 14px; border: none; border-radius: 8px; font-weight: bold; 
+            cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+        }
+        .btn-p { background: var(--accent); width: 100%; font-size: 16px; }
+        .btn-s { background: var(--p); }
+        .btn:active { transform: scale(0.98); }
+
+        /* Ajustes de Impresión */
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; }
+            .main-content { max-width: 100%; margin: 0; padding: 0; }
+            .view-section { display: none; }
+            .view-section.active { display: block; }
+            .a4-sheet { box-shadow: none; border: none; padding: 0; width: 100%; }
+            .card { box-shadow: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-tabs no-print">
+        <button class="tab-btn active" onclick="switchView('view-editor', this)">📝 Presupuesto</button>
+        <button class="tab-btn" onclick="switchView('view-tarifas', this)">📚 Tarifas</button>
+        <button class="tab-btn" onclick="switchView('view-config', this)">⚙️ Config</button>
+    </nav>
+
+    <main class="main-content">
+        
+        <section id="view-editor" class="view-section active">
+            <div class="card no-print">
+                <div class="grid">
+                    <div>
+                        <label>Categoría</label>
+                        <select id="sel-cat" onchange="loadItems()"></select>
+                    </div>
+                    <div>
+                        <label>Seleccionar de Biblioteca</label>
+                        <select id="sel-item" onchange="autoFill()"></select>
+                    </div>
+                    <div class="span-2">
+                        <label>Descripción del Trabajo</label>
+                        <input type="text" id="inp-desc" placeholder="¿Qué vamos a instalar?">
+                    </div>
+                    <div>
+                        <label>Unidades</label>
+                        <input type="number" id="inp-cant" value="1">
+                    </div>
+                    <div>
+                        <label>Precio</label>
+                        <input type="number" id="inp-precio" step="0.01">
+                    </div>
+                    <div class="span-2">
+                        <label>Modo Precio</label>
+                        <select id="inp-iva">
+                            <option value="con">PVP (Con IVA incluido)</option>
+                            <option value="sin">Base (Añadir +21% después)</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-p" style="margin-top:20px" onclick="addRow()">+ Añadir Concepto</button>
+            </div>
+
+            <div class="a4-container">
+                <div class="a4-sheet" id="print-area">
+                    <header class="doc-header">
+                        <img id="v-logo" src="https://via.placeholder.com/160x80?text=SIN+LOGO" alt="Logo">
+                        <div style="text-align:right; font-size:12px; line-height: 1.4;">
+                            <strong id="v-name" style="font-size:16px; color:var(--p)">MI EMPRESA</strong><br>
+                            <span id="v-cif">CIF: ---</span><br>
+                            <span id="v-dir">---</span><br>
+                            <span id="v-tel">---</span>
+                        </div>
+                    </header>
+
+                    <div style="display:flex; justify-content:space-between; margin-bottom:20px">
+                        <div>
+                            <h2 style="margin:0; color:var(--p)">PRESUPUESTO</h2>
+                            <small>Nº: <strong id="v-num">---</strong></small>
+                        </div>
+                        <div style="text-align:right">
+                            <small>Fecha: <strong id="v-date">--/--/--</strong></small>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width:50px">Cant.</th>
+                                    <th>Concepto</th>
+                                    <th style="width:90px">Precio Ud.</th>
+                                    <th style="width:90px">Total</th>
+                                    <th class="no-print" style="width:30px"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="v-body"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="summary-box">
+                        <div style="display:flex; justify-content:space-between"><span>Base:</span> <span id="r-base">0.00€</span></div>
+                        <div style="display:flex; justify-content:space-between; margin:8px 0">
+                            <span>Dto (%):</span> 
+                            <input type="number" id="i-dto" value="0" style="width:60px; padding:2px" onchange="recalc()">
+                        </div>
+                        <div style="display:flex; justify-content:space-between"><span>IVA (21%):</span> <span id="r-iva">0.00€</span></div>
+                        <div class="total-row" style="display:flex; justify-content:space-between">
+                            <span>TOTAL:</span> <span id="r-total">0.00€</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:40px; border-top:1px solid #eee; padding-top:15px; font-size:11px; color:#64748b">
+                        <strong>Condiciones y Observaciones:</strong>
+                        <div id="v-notas" contenteditable="true" style="margin-top:5px; min-height: 50px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="no-print" style="margin:30px 0 60px; display:flex; gap:10px">
+                <button class="btn btn-s" style="flex:1" onclick="window.print()">🖨️ Generar PDF</button>
+                <button class="btn" style="background:var(--danger)" onclick="if(confirm('¿Limpiar presupuesto?')) location.reload()">🗑️ Nuevo</button>
+            </div>
+        </section>
+
+        <section id="view-tarifas" class="view-section">
+            <div class="card">
+                <h3>Gestión de Tarifas</h3>
+                <div class="grid">
+                    <input type="text" id="lib-n" placeholder="Nombre Concepto">
+                    <input type="number" id="lib-p" placeholder="Precio €">
+                    <select id="lib-c">
+                        <option value="Antenas">Antenas</option>
+                        <option value="Porteros">Porteros</option>
+                        <option value="Varios">Varios</option>
+                    </select>
+                </div>
+                <button class="btn btn-p" style="margin-top:15px" onclick="saveToLib()">Guardar en Biblioteca</button>
+            </div>
+            <div id="lib-list"></div>
+        </section>
+
+        <section id="view-config" class="view-section">
+            <div class="card">
+                <h3>Sincronización (Archivo Jefe)</h3>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
+                    <button class="btn btn-s" onclick="exportData()">💾 Exportar Todo</button>
+                    <button class="btn btn-s" onclick="document.getElementById('file-in').click()">📂 Importar Pack</button>
+                    <input type="file" id="file-in" style="display:none" onchange="importData(event)">
+                </div>
+            </div>
+            <div class="card">
+                <h3>Datos de Empresa</h3>
+                <div class="grid">
+                    <div class="span-2"><label>Nombre Comercial</label><input type="text" id="cfg-n"></div>
+                    <div><label>CIF / NIF</label><input type="text" id="cfg-c"></div>
+                    <div><label>Teléfono</label><input type="text" id="cfg-t"></div>
+                    <div class="span-2"><label>Dirección Física</label><input type="text" id="cfg-d"></div>
+                    <div class="span-2"><label>Subir Logo</label><input type="file" onchange="handleLogo(this)"></div>
+                    <div class="span-2"><label>Condiciones Legales (Pie)</label><textarea id="cfg-l" rows="3"></textarea></div>
+                </div>
+                <button class="btn btn-p" style="margin-top:15px" onclick="saveConfig()">Guardar Perfil</button>
+            </div>
+        </section>
+
+    </main>
+
+<script>
+    // Variables Globales
+    let library = JSON.parse(localStorage.getItem('antena_v74_lib')) || { Antenas: {}, Porteros: {}, Varios: {} };
+    let config = JSON.parse(localStorage.getItem('antena_v74_cfg')) || {};
+
+    // Al iniciar
+    function init() {
+        document.getElementById('v-date').innerText = new Date().toLocaleDateString();
+        document.getElementById('v-num').innerText = "PRE-" + Date.now().toString().slice(-6);
+        applyConfig();
+        refreshCats();
+    }
+
+    // Navegación Blindada
+    function switchView(viewId, btn) {
+        document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        btn.classList.add('active');
+        if(viewId === 'view-tarifas') renderLibList();
+        window.scrollTo(0,0);
+    }
+
+    // Configuración & Sincro
+    function handleLogo(input) {
+        const reader = new FileReader();
+        reader.onload = e => { config.logo = e.target.result; document.getElementById('v-logo').src = e.target.result; };
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    function saveConfig() {
+        config.name = document.getElementById('cfg-n').value;
+        config.cif = document.getElementById('cfg-c').value;
+        config.tel = document.getElementById('cfg-t').value;
+        config.dir = document.getElementById('cfg-d').value;
+        config.notas = document.getElementById('cfg-l').value;
+        localStorage.setItem('antena_v74_cfg', JSON.stringify(config));
+        applyConfig();
+        alert("¡Datos guardados!");
+    }
+
+    function applyConfig() {
+        document.getElementById('v-name').innerText = config.name || "Tu Empresa";
+        document.getElementById('v-cif').innerText = "CIF: " + (config.cif || "---");
+        document.getElementById('v-dir').innerText = config.dir || "Tu Dirección";
+        document.getElementById('v-tel').innerText = "Telf: " + (config.tel || "---");
+        document.getElementById('v-notas').innerText = config.notas || "Válido por 30 días.";
+        if(config.logo) document.getElementById('v-logo').src = config.logo;
+        
+        document.getElementById('cfg-n').value = config.name || "";
+        document.getElementById('cfg-c').value = config.cif || "";
+        document.getElementById('cfg-t').value = config.tel || "";
+        document.getElementById('cfg-d').value = config.dir || "";
+        document.getElementById('cfg-l').value = config.notas || "";
+    }
+
+    function exportData() {
+        const data = { library, config };
+        const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = "Pack_Antenista_2026.json";
+        link.click();
+    }
+
+    function importData(e) {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            const data = JSON.parse(ev.target.result);
+            if(confirm("¿Cargar datos del jefe? Se borrarán tus tarifas actuales.")) {
+                library = data.library; config = data.config;
+                localStorage.setItem('antena_v74_lib', JSON.stringify(library));
+                localStorage.setItem('antena_v74_cfg', JSON.stringify(config));
+                location.reload();
+            }
+        };
+        reader.readAsText(e.target.files[0]);
+    }
+
+    // Biblioteca
+    function refreshCats() {
+        const s = document.getElementById('sel-cat');
+        s.innerHTML = "";
+        Object.keys(library).forEach(c => s.innerHTML += `<option value="${c}">${c}</option>`);
+        loadItems();
+    }
+
+    function loadItems() {
+        const cat = document.getElementById('sel-cat').value;
+        const s = document.getElementById('sel-item');
+        s.innerHTML = '<option value="">-- Buscar en lista --</option>';
+        Object.keys(library[cat] || {}).forEach(i => s.innerHTML += `<option value="${i}">${i}</option>`);
+    }
+
+    function autoFill() {
+        const cat = document.getElementById('sel-cat').value;
+        const item = document.getElementById('sel-item').value;
+        if(item) {
+            document.getElementById('inp-desc').value = item;
+            document.getElementById('inp-precio').value = library[cat][item];
+        }
+    }
+
+    function saveToLib() {
+        const n = document.getElementById('lib-n').value;
+        const p = parseFloat(document.getElementById('lib-p').value);
+        const c = document.getElementById('lib-c').value;
+        if(n && !isNaN(p)) {
+            library[c][n] = p;
+            localStorage.setItem('antena_v74_lib', JSON.stringify(library));
+            renderLibList(); refreshCats();
+            alert("Concepto guardado");
+        }
+    }
+
+    function renderLibList() {
+        const div = document.getElementById('lib-list');
+        div.innerHTML = "";
+        for(let cat in library) {
+            div.innerHTML += `<h4 style="margin:15px 0 5px">${cat}</h4>`;
+            for(let item in library[cat]) {
+                div.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; padding:10px; margin-bottom:5px">
+                    <span>${item} (<strong>${library[cat][item]}€</strong>)</span>
+                    <button onclick="delLib('${cat}','${item}')" style="background:none; border:none; color:red; cursor:pointer">✖</button>
+                </div>`;
+            }
+        }
+    }
+
+    function delLib(cat, item) {
+        delete library[cat][item];
+        localStorage.setItem('antena_v74_lib', JSON.stringify(library));
+        renderLibList(); refreshCats();
+    }
+
+    // El Presupuesto
+    function addRow() {
+        const desc = document.getElementById('inp-desc').value;
+        const cant = parseFloat(document.getElementById('inp-cant').value) || 1;
+        const precio = parseFloat(document.getElementById('inp-precio').value);
+        const tipoIva = document.getElementById('inp-iva').value;
+        if(!desc || isNaN(precio)) return;
+
+        const precioBase = (tipoIva === 'con') ? (precio / 1.21) : precio;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td contenteditable="true" onblur="recalc()">${cant}</td>
+            <td contenteditable="true" onblur="recalc()">${desc}</td>
+            <td contenteditable="true" onblur="recalc()">${precioBase.toFixed(2)}</td>
+            <td class="row-total">0.00€</td>
+            <td class="no-print"><button onclick="this.parentElement.parentElement.remove(); recalc();" style="border:none; background:none; color:red; cursor:pointer">✖</button></td>
+        `;
+        document.getElementById('v-body').appendChild(tr);
+        recalc();
+        document.getElementById('inp-desc').value = "";
+        document.getElementById('inp-precio').value = "";
+    }
+
+    function recalc() {
+        let subtotal = 0;
+        document.querySelectorAll('#v-body tr').forEach(tr => {
+            const c = parseFloat(tr.cells[0].innerText) || 0;
+            const p = parseFloat(tr.cells[2].innerText) || 0;
+            const t = c * p;
+            tr.querySelector('.row-total').innerText = t.toFixed(2) + "€";
+            subtotal += t;
+        });
+        const dto = parseFloat(document.getElementById('i-dto').value) || 0;
+        const baseFinal = subtotal * (1 - dto/100);
+        const iva = baseFinal * 0.21;
+        const total = baseFinal + iva;
+
+        document.getElementById('r-base').innerText = subtotal.toFixed(2) + "€";
+        document.getElementById('r-iva').innerText = iva.toFixed(2) + "€";
+        document.getElementById('r-total').innerText = total.toFixed(2) + "€";
+    }
+
+    init();
+</script>
+</body>
+</html>
 
         label { font-size: 11px; font-weight: 800; color: var(--p); text-transform: uppercase; margin-bottom: 4px; display: block; }
         input, select, textarea { padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 15px; width: 100%; outline: none; background: #fff; }

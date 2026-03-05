@@ -9,23 +9,22 @@
 body{
 font-family:Arial;
 margin:0;
-background:#f2f2f2;
+background:#f3f3f3;
 }
 
-header{
+nav{
 background:#222;
-color:white;
-padding:15px;
+padding:10px;
 display:flex;
 gap:10px;
 }
 
-header button{
-padding:10px 20px;
+nav button{
+padding:10px 15px;
 border:none;
-cursor:pointer;
 background:#444;
 color:white;
+cursor:pointer;
 }
 
 section{
@@ -35,6 +34,348 @@ padding:20px;
 
 .active{
 display:block;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:6px;
+margin-bottom:20px;
+}
+
+input,select{
+padding:8px;
+margin:5px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:8px;
+}
+
+.total{
+text-align:right;
+margin-top:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+<button onclick="show('nuevo')">NUEVO</button>
+<button onclick="show('lista')">LISTA</button>
+<button onclick="show('config')">CONFIG</button>
+</nav>
+
+<!-- NUEVO PRESUPUESTO -->
+
+<section id="nuevo" class="active">
+
+<div class="card">
+
+<h3>Cliente</h3>
+
+<input id="cliente" placeholder="Nombre cliente">
+
+</div>
+
+<div class="card">
+
+<h3>Añadir servicio</h3>
+
+<select id="selectServicio"></select>
+<button onclick="addServicio()">Añadir</button>
+
+<table id="tablaServicios">
+<tr>
+<th>Concepto</th>
+<th>Precio</th>
+<th></th>
+</tr>
+</table>
+
+</div>
+
+<div class="card">
+
+IVA
+
+<select id="tipoIVA" onchange="calcular()">
+<option value="sumar">Sumar 21%</option>
+<option value="desglosar">Precio incluye IVA</option>
+</select>
+
+<div class="total">
+
+<p>Base: <span id="base">0</span> €</p>
+<p>IVA: <span id="iva">0</span> €</p>
+<p>IRPF: <span id="irpf">0</span> €</p>
+
+<h3>Total: <span id="total">0</span> €</h3>
+
+</div>
+
+<button onclick="guardarPresupuesto()">Guardar presupuesto</button>
+
+</div>
+
+</section>
+
+<!-- LISTA -->
+
+<section id="lista">
+
+<div class="card">
+
+<h3>Presupuestos</h3>
+
+<table id="tablaLista">
+<tr>
+<th>Número</th>
+<th>Cliente</th>
+<th>Total</th>
+</tr>
+</table>
+
+</div>
+
+</section>
+
+<!-- CONFIG -->
+
+<section id="config">
+
+<div class="card">
+
+<h3>Datos empresa</h3>
+
+<input id="empNombre" placeholder="Empresa">
+
+<input id="empCIF" placeholder="CIF">
+
+<input id="empIBAN" placeholder="IBAN">
+
+<select id="empIRPF">
+<option value="0">IRPF 0%</option>
+<option value="7">IRPF 7%</option>
+<option value="15">IRPF 15%</option>
+</select>
+
+<button onclick="guardarEmpresa()">Guardar empresa</button>
+
+</div>
+
+<div class="card">
+
+<h3>Biblioteca servicios</h3>
+
+<input id="servNombre" placeholder="Servicio">
+<input id="servPrecio" placeholder="Precio">
+
+<button onclick="crearServicio()">Añadir</button>
+
+<ul id="listaServicios"></ul>
+
+</div>
+
+</section>
+
+<script>
+
+let servicios=JSON.parse(localStorage.getItem("servicios"))||[]
+let empresa=JSON.parse(localStorage.getItem("empresa"))||{irpf:0}
+let presupuestos=JSON.parse(localStorage.getItem("pres"))||[]
+
+let serviciosActual=[]
+
+function show(id){
+
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
+
+document.getElementById(id).classList.add("active")
+
+if(id==="lista")renderLista()
+
+}
+
+function crearServicio(){
+
+let s={
+nombre:servNombre.value,
+precio:parseFloat(servPrecio.value)
+}
+
+servicios.push(s)
+
+localStorage.setItem("servicios",JSON.stringify(servicios))
+
+renderServicios()
+
+servNombre.value=""
+servPrecio.value=""
+
+}
+
+function renderServicios(){
+
+selectServicio.innerHTML=""
+listaServicios.innerHTML=""
+
+servicios.forEach((s,i)=>{
+
+let op=document.createElement("option")
+op.value=i
+op.text=s.nombre+" - "+s.precio+"€"
+
+selectServicio.appendChild(op)
+
+let li=document.createElement("li")
+li.innerText=s.nombre+" - "+s.precio+"€"
+
+listaServicios.appendChild(li)
+
+})
+
+}
+
+function addServicio(){
+
+let s=servicios[selectServicio.value]
+
+serviciosActual.push({...s})
+
+renderTabla()
+
+}
+
+function renderTabla(){
+
+tablaServicios.innerHTML="<tr><th>Concepto</th><th>Precio</th><th></th></tr>"
+
+serviciosActual.forEach((s,i)=>{
+
+let tr=document.createElement("tr")
+
+tr.innerHTML=
+"<td>"+s.nombre+"</td>"+
+"<td>"+s.precio+"</td>"+
+"<td><button onclick='borrar("+i+")'>X</button></td>"
+
+tablaServicios.appendChild(tr)
+
+})
+
+calcular()
+
+}
+
+function borrar(i){
+
+serviciosActual.splice(i,1)
+
+renderTabla()
+
+}
+
+function calcular(){
+
+let base=serviciosActual.reduce((t,s)=>t+s.precio,0)
+
+let iva=0
+
+if(tipoIVA.value==="sumar"){
+
+iva=base*0.21
+
+}else{
+
+let baseSin=base/1.21
+iva=base-baseSin
+base=baseSin
+
+}
+
+let irpf=base*(empresa.irpf/100)
+
+let total=base+iva-irpf
+
+baseEl.innerText=base.toFixed(2)
+ivaEl.innerText=iva.toFixed(2)
+irpfEl.innerText=irpf.toFixed(2)
+totalEl.innerText=total.toFixed(2)
+
+}
+
+const baseEl=document.getElementById("base")
+const ivaEl=document.getElementById("iva")
+const irpfEl=document.getElementById("irpf")
+const totalEl=document.getElementById("total")
+
+function guardarEmpresa(){
+
+empresa={
+nombre:empNombre.value,
+cif:empCIF.value,
+iban:empIBAN.value,
+irpf:parseFloat(empIRPF.value)
+}
+
+localStorage.setItem("empresa",JSON.stringify(empresa))
+
+alert("Empresa guardada")
+
+}
+
+function guardarPresupuesto(){
+
+let num="P-"+new Date().getFullYear()+"-"+(presupuestos.length+1)
+
+let p={
+num:num,
+cliente:cliente.value,
+total:totalEl.innerText
+}
+
+presupuestos.push(p)
+
+localStorage.setItem("pres",JSON.stringify(presupuestos))
+
+alert("Presupuesto guardado")
+
+}
+
+function renderLista(){
+
+tablaLista.innerHTML="<tr><th>Número</th><th>Cliente</th><th>Total</th></tr>"
+
+presupuestos.forEach(p=>{
+
+let tr=document.createElement("tr")
+
+tr.innerHTML=
+"<td>"+p.num+"</td>"+
+"<td>"+p.cliente+"</td>"+
+"<td>"+p.total+" €</td>"
+
+tablaLista.appendChild(tr)
+
+})
+
+}
+
+renderServicios()
+
+</script>
+
+</body>
+</html>display:block;
 }
 
 .card{

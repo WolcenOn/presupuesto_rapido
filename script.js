@@ -1,39 +1,125 @@
-let db_v11 = JSON.parse(localStorage.getItem('db_v11')) || {};
-let cfg_v11 = JSON.parse(localStorage.getItem('cfg_v11')) || {};
+let db = JSON.parse(localStorage.getItem('ant_db_v13')) || {};
+let cfg = JSON.parse(localStorage.getItem('ant_cfg_v13')) || {};
 
-window.onload = () => {
-    document.getElementById('v-fecha-v11').innerText = new Date().toLocaleDateString();
-    document.getElementById('v-ref-v11').innerText = "REF: " + Math.floor(Math.random()*9000 + 1000);
-    actualizarInterfazV11();
-    actualizarSelectorV11();
-};
+// Al cargar la página
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('v-fec').innerText = new Date().toLocaleDateString();
+    document.getElementById('v-ref').innerText = "REF: " + Math.floor(Math.random()*9000+1000);
+    apply();
+    updateSel();
+});
 
-function cambiarSeccion(id, btn) {
-    document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
-    document.querySelectorAll('.boton-nav').forEach(t => t.classList.remove('activo'));
-    document.getElementById(id).classList.add('activa');
-    btn.classList.add('activo');
-    if(id === 'seccion-lista') dibujarBibliotecaV11();
+function tab(id, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    if(id === 'sec-l') renderL();
 }
 
-function guardarConfigV11() {
-    cfg_v11 = {
-        n: document.getElementById('cfg-n-v11').value,
-        c: document.getElementById('cfg-c-v11').value,
-        t: document.getElementById('cfg-t-v11').value,
-        d: document.getElementById('cfg-d-v11').value,
-        nota: document.getElementById('cfg-nota-v11').value,
-        l: cfg_v11.l || ""
+function saveC() {
+    cfg = {
+        n: document.getElementById('c-n').value,
+        c: document.getElementById('c-c').value,
+        t: document.getElementById('c-t').value,
+        d: document.getElementById('c-d').value,
+        not: document.getElementById('c-not').value,
+        l: cfg.l || ""
     };
-    localStorage.setItem('cfg_v11', JSON.stringify(cfg_v11));
-    actualizarInterfazV11();
-    alert("Datos guardados.");
+    localStorage.setItem('ant_cfg_v13', JSON.stringify(cfg));
+    apply();
+    alert("Guardado");
 }
 
-function cargarLogoV11(el) {
+function upL(el) {
     const r = new FileReader();
-    r.onload = e => { cfg_v11.l = e.target.result; actualizarInterfazV11(); };
+    r.onload = e => { cfg.l = e.target.result; apply(); };
     r.readAsDataURL(el.files[0]);
+}
+
+function apply() {
+    document.getElementById('v-nom').innerText = cfg.n || "NOMBRE EMPRESA";
+    document.getElementById('v-cif').innerText = "CIF: " + (cfg.c || "---");
+    document.getElementById('v-tel').innerText = "TEL: " + (cfg.t || "---");
+    document.getElementById('v-dir').innerText = cfg.d || "---";
+    document.getElementById('v-not').innerText = cfg.not || "Validez 30 días.";
+    
+    if(cfg.l) {
+        document.getElementById('v-logo').src = cfg.l;
+        document.getElementById('v-logo').style.display = 'block';
+        document.getElementById('v-logo-t').style.display = 'none';
+    }
+
+    document.getElementById('c-n').value = cfg.n || "";
+    document.getElementById('c-c').value = cfg.c || "";
+    document.getElementById('c-t').value = cfg.t || "";
+    document.getElementById('c-d').value = cfg.d || "";
+    document.getElementById('c-not').value = cfg.not || "";
+}
+
+function saveL() {
+    const n = document.getElementById('l-n').value;
+    const p = document.getElementById('l-p').value;
+    if(n && p) {
+        db[n] = p;
+        localStorage.setItem('ant_db_v13', JSON.stringify(db));
+        renderL(); updateSel();
+        document.getElementById('l-n').value = ""; document.getElementById('l-p').value = "";
+    }
+}
+
+function renderL() {
+    const c = document.getElementById('render-l');
+    c.innerHTML = "";
+    for(let k in db) {
+        c.innerHTML += `<div class="card" style="display:flex; justify-content:space-between">
+            <span>${k} (${db[k]}€)</span>
+            <span onclick="delL('${k}')" style="color:red; cursor:pointer">Eliminar</span>
+        </div>`;
+    }
+}
+
+function delL(k) { delete db[k]; localStorage.setItem('ant_db_v13', JSON.stringify(db)); renderL(); updateSel(); }
+
+function updateSel() {
+    const s = document.getElementById('sel-item');
+    s.innerHTML = '<option value="">-- Buscar --</option>';
+    for(let k in db) s.innerHTML += `<option value="${k}">${k}</option>`;
+}
+
+function auto() {
+    const v = document.getElementById('sel-item').value;
+    if(v) { document.getElementById('in-d').value = v; document.getElementById('in-p').value = db[v]; }
+}
+
+function add() {
+    const d = document.getElementById('in-d').value;
+    const q = parseFloat(document.getElementById('in-q').value) || 1;
+    let p = parseFloat(document.getElementById('in-p').value);
+    const i = document.getElementById('in-iva').value;
+
+    if(!d || isNaN(p)) return;
+
+    let b = (i === "si") ? (p / 1.21) : p;
+    let t = b * q;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${q}</td><td>${d}</td><td>${b.toFixed(2)}€</td><td class="sum">${t.toFixed(2)}€</td>
+    <td class="no-print"><span onclick="this.parentElement.parentElement.remove(); calc()" style="color:red; cursor:pointer">✖</span></td>`;
+    document.getElementById('v-body').appendChild(tr);
+    calc();
+    document.getElementById('in-d').value = ""; document.getElementById('in-p').value = "";
+}
+
+function calc() {
+    let b = 0; document.querySelectorAll('.sum').forEach(td => b += parseFloat(td.innerText));
+    let iva = b * 0.21;
+    document.getElementById('r-base').innerText = b.toFixed(2) + "€";
+    document.getElementById('r-iva').innerText = iva.toFixed(2) + "€";
+    document.getElementById('r-total').innerText = (b + iva).toFixed(2) + "€";
+}
+
+function clearH() { if(confirm('¿Borrar?')) { document.getElementById('v-body').innerHTML=''; calc(); } }
 }
 
 function actualizarInterfazV11() {

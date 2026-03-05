@@ -1,39 +1,146 @@
-let localDB = JSON.parse(localStorage.getItem('ant_db_v10')) || {};
-let localCFG = JSON.parse(localStorage.getItem('ant_cfg_v10')) || {};
+let db_v11 = JSON.parse(localStorage.getItem('db_v11')) || {};
+let cfg_v11 = JSON.parse(localStorage.getItem('cfg_v11')) || {};
 
 window.onload = () => {
-    document.getElementById('doc-fecha').innerText = new Date().toLocaleDateString();
-    document.getElementById('doc-ref').innerText = "REF: " + Math.floor(Math.random()*9000 + 1000);
-    aplicarConfigV10();
-    rellenarSelectV10();
+    document.getElementById('v-fecha-v11').innerText = new Date().toLocaleDateString();
+    document.getElementById('v-ref-v11').innerText = "REF: " + Math.floor(Math.random()*9000 + 1000);
+    actualizarInterfazV11();
+    actualizarSelectorV11();
 };
 
-function openTab(id, btn) {
-    document.querySelectorAll('.tab-content').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    btn.classList.add('active');
-    if(id === 'tab-lista') renderizarBiblioteca();
+function cambiarSeccion(id, btn) {
+    document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+    document.querySelectorAll('.boton-nav').forEach(t => t.classList.remove('activo'));
+    document.getElementById(id).classList.add('activa');
+    btn.classList.add('activo');
+    if(id === 'seccion-lista') dibujarBibliotecaV11();
 }
 
-function guardarConfig() {
-    localCFG = {
-        n: document.getElementById('conf-nombre').value,
-        c: document.getElementById('conf-cif').value,
-        t: document.getElementById('conf-tel').value,
-        d: document.getElementById('conf-dir').value,
-        nota: document.getElementById('conf-nota').value,
-        l: localCFG.l || ""
+function guardarConfigV11() {
+    cfg_v11 = {
+        n: document.getElementById('cfg-n-v11').value,
+        c: document.getElementById('cfg-c-v11').value,
+        t: document.getElementById('cfg-t-v11').value,
+        d: document.getElementById('cfg-d-v11').value,
+        nota: document.getElementById('cfg-nota-v11').value,
+        l: cfg_v11.l || ""
     };
-    localStorage.setItem('ant_cfg_v10', JSON.stringify(localCFG));
-    aplicarConfigV10();
-    alert("Configuración guardada correctamente");
+    localStorage.setItem('cfg_v11', JSON.stringify(cfg_v11));
+    actualizarInterfazV11();
+    alert("Datos guardados.");
 }
 
-function subirLogo(el) {
+function cargarLogoV11(el) {
     const r = new FileReader();
-    r.onload = e => { localCFG.l = e.target.result; aplicarConfigV10(); };
+    r.onload = e => { cfg_v11.l = e.target.result; actualizarInterfazV11(); };
     r.readAsDataURL(el.files[0]);
+}
+
+function actualizarInterfazV11() {
+    document.getElementById('v-nombre-v11').innerText = cfg_v11.n || "EMPRESA";
+    document.getElementById('v-cif-v11').innerText = "CIF: " + (cfg_v11.c || "---");
+    document.getElementById('v-tel-v11').innerText = "TEL: " + (cfg_v11.t || "---");
+    document.getElementById('v-dir-v11').innerText = cfg_v11.d || "---";
+    document.getElementById('v-notas-v11').innerText = cfg_v11.nota || "Validez del presupuesto: 30 días.";
+    
+    if(cfg_v11.l) {
+        document.getElementById('img-logo-v11').src = cfg_v11.l;
+        document.getElementById('img-logo-v11').style.display = 'block';
+        document.getElementById('txt-logo-v11').style.display = 'none';
+    }
+
+    document.getElementById('cfg-n-v11').value = cfg_v11.n || "";
+    document.getElementById('cfg-c-v11').value = cfg_v11.c || "";
+    document.getElementById('cfg-t-v11').value = cfg_v11.t || "";
+    document.getElementById('cfg-d-v11').value = cfg_v11.d || "";
+    document.getElementById('cfg-nota-v11').value = cfg_v11.nota || "";
+}
+
+function actualizarSelectorV11() {
+    const s = document.getElementById('sel-item-v11');
+    s.innerHTML = '<option value="">-- Buscar producto --</option>';
+    for(let k in db_v11) s.innerHTML += `<option value="${k}">${k}</option>`;
+}
+
+function autoCompletarV11() {
+    const v = document.getElementById('sel-item-v11').value;
+    if(v) {
+        document.getElementById('in-desc-v11').value = v;
+        document.getElementById('in-prec-v11').value = db_v11[v];
+    }
+}
+
+function insertarFilaV11() {
+    const d = document.getElementById('in-desc-v11').value;
+    const c = parseFloat(document.getElementById('in-cant-v11').value) || 1;
+    let p = parseFloat(document.getElementById('in-prec-v11').value);
+    const tipo = document.getElementById('in-tipo-iva-v11').value;
+
+    if(!d || isNaN(p)) { alert("Falta descripción o precio"); return; }
+
+    let baseU = (tipo === "con") ? (p / 1.21) : p;
+    let sub = baseU * c;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>${c}</td>
+        <td>${d} ${tipo === 'con' ? '<small>(IVA inc.)</small>' : ''}</td>
+        <td>${baseU.toFixed(2)}€</td>
+        <td class="suma-v11">${sub.toFixed(2)}€</td>
+        <td class="no-print"><span onclick="this.parentElement.parentElement.remove();recalcularV11()" style="color:red; cursor:pointer;">✖</span></td>
+    `;
+    document.getElementById('cuerpo-tabla-v11').appendChild(tr);
+    recalcularV11();
+    document.getElementById('in-desc-v11').value = "";
+    document.getElementById('in-prec-v11').value = "";
+}
+
+function recalcularV11() {
+    let b = 0;
+    document.querySelectorAll('.suma-v11').forEach(td => b += parseFloat(td.innerText));
+    let i = b * 0.21;
+    document.getElementById('tot-base-v11').innerText = b.toFixed(2) + "€";
+    document.getElementById('tot-iva-v11').innerText = i.toFixed(2) + "€";
+    document.getElementById('tot-final-v11').innerText = (b + i).toFixed(2) + "€";
+}
+
+function guardarEnLibV11() {
+    const n = document.getElementById('lib-n-v11').value;
+    const p = document.getElementById('lib-p-v11').value;
+    if(n && p) {
+        db_v11[n] = p;
+        localStorage.setItem('db_v11', JSON.stringify(db_v11));
+        dibujarBibliotecaV11();
+        actualizarSelectorV11();
+        document.getElementById('lib-n-v11').value = "";
+        document.getElementById('lib-p-v11').value = "";
+    }
+}
+
+function dibujarBibliotecaV11() {
+    const div = document.getElementById('render-lista-v11');
+    div.innerHTML = "";
+    for(let k in db_v11) {
+        div.innerHTML += `<div class="tarjeta-input" style="display:flex; justify-content:space-between">
+            <span>${k} (<strong>${db_v11[k]}€</strong>)</span>
+            <span onclick="borrarItemV11('${k}')" style="color:red; cursor:pointer">Eliminar</span>
+        </div>`;
+    }
+}
+
+function borrarItemV11(k) {
+    delete db_v11[k];
+    localStorage.setItem('db_v11', JSON.stringify(db_v11));
+    dibujarBibliotecaV11();
+    actualizarSelectorV11();
+}
+
+function resetearHojaV11() {
+    if(confirm("¿Borrar presupuesto actual?")) {
+        document.getElementById('cuerpo-tabla-v11').innerHTML = "";
+        recalcularV11();
+    }
+}
 }
 
 function aplicarConfigV10() {

@@ -1,39 +1,147 @@
-let db = JSON.parse(localStorage.getItem('ant_db')) || {};
-let cfg = JSON.parse(localStorage.getItem('ant_cfg')) || {};
+let localDB = JSON.parse(localStorage.getItem('ant_db_v10')) || {};
+let localCFG = JSON.parse(localStorage.getItem('ant_cfg_v10')) || {};
 
 window.onload = () => {
-    document.getElementById('v-fec').innerText = new Date().toLocaleDateString();
-    document.getElementById('v-ref').innerText = "REF: " + Math.floor(Math.random()*9000 + 1000);
-    applyCfg();
-    refreshSel();
+    document.getElementById('doc-fecha').innerText = new Date().toLocaleDateString();
+    document.getElementById('doc-ref').innerText = "REF: " + Math.floor(Math.random()*9000 + 1000);
+    aplicarConfigV10();
+    rellenarSelectV10();
 };
 
-function showPanel(id, btn) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+function openTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     btn.classList.add('active');
-    if(id === 'p-tarifas') renderLib();
+    if(id === 'tab-lista') renderizarBiblioteca();
 }
 
-function saveCfg() {
-    cfg.n = document.getElementById('c-nom').value;
-    cfg.c = document.getElementById('c-cif').value;
-    cfg.t = document.getElementById('c-tel').value;
-    cfg.d = document.getElementById('c-dir').value;
-    cfg.nota = document.getElementById('c-nota').value;
-    localStorage.setItem('ant_cfg', JSON.stringify(cfg));
-    applyCfg(); 
-    alert("¡Configuración guardada!");
+function guardarConfig() {
+    localCFG = {
+        n: document.getElementById('conf-nombre').value,
+        c: document.getElementById('conf-cif').value,
+        t: document.getElementById('conf-tel').value,
+        d: document.getElementById('conf-dir').value,
+        nota: document.getElementById('conf-nota').value,
+        l: localCFG.l || ""
+    };
+    localStorage.setItem('ant_cfg_v10', JSON.stringify(localCFG));
+    aplicarConfigV10();
+    alert("Configuración guardada correctamente");
 }
 
-function upLogo(el) {
+function subirLogo(el) {
     const r = new FileReader();
-    r.onload = e => { cfg.l = e.target.result; applyCfg(); };
+    r.onload = e => { localCFG.l = e.target.result; aplicarConfigV10(); };
     r.readAsDataURL(el.files[0]);
 }
 
-function applyCfg() {
+function aplicarConfigV10() {
+    document.getElementById('doc-nombre-emp').innerText = localCFG.n || "EMPRESA";
+    document.getElementById('doc-cif').innerText = "CIF: " + (localCFG.c || "---");
+    document.getElementById('doc-tel').innerText = "TEL: " + (localCFG.t || "---");
+    document.getElementById('doc-dir').innerText = localCFG.d || "---";
+    document.getElementById('doc-notas-texto').innerText = localCFG.nota || "Validez: 30 días.";
+    
+    if(localCFG.l) {
+        document.getElementById('logo-img').src = localCFG.l;
+        document.getElementById('logo-img').style.display = 'block';
+        document.getElementById('logo-placeholder').style.display = 'none';
+    }
+
+    // Rellenar inputs config
+    document.getElementById('conf-nombre').value = localCFG.n || "";
+    document.getElementById('conf-cif').value = localCFG.c || "";
+    document.getElementById('conf-tel').value = localCFG.t || "";
+    document.getElementById('conf-dir').value = localCFG.d || "";
+    document.getElementById('conf-nota').value = localCFG.nota || "";
+}
+
+function rellenarSelectV10() {
+    const s = document.getElementById('sel-item-v10');
+    s.innerHTML = '<option value="">-- Buscar en lista --</option>';
+    for(let k in localDB) s.innerHTML += `<option value="${k}">${k}</option>`;
+}
+
+function autoFillV10() {
+    const val = document.getElementById('sel-item-v10').value;
+    if(val) {
+        document.getElementById('in-desc-v10').value = val;
+        document.getElementById('in-prec-v10').value = localDB[val];
+    }
+}
+
+function agregarLineaV10() {
+    const desc = document.getElementById('in-desc-v10').value;
+    const cant = parseFloat(document.getElementById('in-cant-v10').value) || 1;
+    let prec = parseFloat(document.getElementById('in-prec-v10').value);
+    const tipo = document.getElementById('in-tipo-iva-v10').value;
+
+    if(!desc || isNaN(prec)) return;
+
+    let baseU = (tipo === "con") ? (prec / 1.21) : prec;
+    let subtotal = baseU * cant;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>${cant}</td>
+        <td>${desc} ${tipo === 'con' ? '<small>(IVA inc.)</small>' : ''}</td>
+        <td>${baseU.toFixed(2)}€</td>
+        <td class="line-sum">${subtotal.toFixed(2)}€</td>
+        <td class="no-print"><span onclick="this.parentElement.parentElement.remove();calcularV10()" style="color:red;cursor:pointer">✖</span></td>
+    `;
+    document.getElementById('cuerpo-tabla').appendChild(tr);
+    calcularV10();
+    document.getElementById('in-desc-v10').value = "";
+    document.getElementById('in-prec-v10').value = "";
+}
+
+function calcularV10() {
+    let base = 0;
+    document.querySelectorAll('.line-sum').forEach(td => base += parseFloat(td.innerText));
+    let iva = base * 0.21;
+    document.getElementById('res-base').innerText = base.toFixed(2) + "€";
+    document.getElementById('res-iva').innerText = iva.toFixed(2) + "€";
+    document.getElementById('res-total').innerText = (base + iva).toFixed(2) + "€";
+}
+
+function guardarEnLib() {
+    const n = document.getElementById('lib-nombre').value;
+    const p = document.getElementById('lib-precio').value;
+    if(n && p) {
+        localDB[n] = p;
+        localStorage.setItem('ant_db_v10', JSON.stringify(localDB));
+        renderizarBiblioteca();
+        rellenarSelectV10();
+        document.getElementById('lib-nombre').value = "";
+        document.getElementById('lib-precio').value = "";
+    }
+}
+
+function renderizarBiblioteca() {
+    const cont = document.getElementById('lista-render');
+    cont.innerHTML = "";
+    for(let k in localDB) {
+        cont.innerHTML += `<div class="input-card" style="display:flex; justify-content:space-between">
+            <span>${k} (<strong>${localDB[k]}€</strong>)</span>
+            <span onclick="borrarItemLib('${k}')" style="color:red; cursor:pointer">✖</span>
+        </div>`;
+    }
+}
+
+function borrarItemLib(k) {
+    delete localDB[k];
+    localStorage.setItem('ant_db_v10', JSON.stringify(localDB));
+    renderizarBiblioteca();
+    rellenarSelectV10();
+}
+
+function borrarHoja() {
+    if(confirm("¿Seguro que quieres borrar todo el presupuesto?")) {
+        document.getElementById('cuerpo-tabla').innerHTML = "";
+        calcularV10();
+    }
+}
     document.getElementById('v-emp').innerText = cfg.n || "NOMBRE EMPRESA";
     document.getElementById('v-cif').innerText = "CIF: " + (cfg.c || "---");
     document.getElementById('v-tel').innerText = "TEL: " + (cfg.t || "---");

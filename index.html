@@ -3,37 +3,391 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AntenaManager Sync v7.2</title>
+    <title>AntenaManager Pro v7.3</title>
     <style>
         :root { --p: #1e293b; --accent: #3b82f6; --bg: #f1f5f9; --text: #334155; --success: #10b981; --danger: #ef4444; }
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); margin: 0; padding: 10px; color: var(--text); overflow-x: hidden; }
+        body { background: var(--bg); margin: 0; padding: 10px; color: var(--text); }
 
-        .page-container { width: 100%; max-width: 850px; margin: auto; display: flex; flex-direction: column; gap: 15px; }
+        .page-container { width: 100%; max-width: 850px; margin: auto; }
 
-        /* Navegación */
-        .nav-tabs { display: flex; background: white; padding: 5px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; }
-        .tab-btn { flex: 1; min-width: 100px; padding: 12px; border: none; background: none; cursor: pointer; border-radius: 8px; font-weight: 600; font-size: 13px; white-space: nowrap; }
+        /* Navegación Superior */
+        .nav-tabs { 
+            display: flex; 
+            background: white; 
+            padding: 5px; 
+            border-radius: 12px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            margin-bottom: 15px;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+        }
+        .tab-btn { flex: 1; padding: 12px; border: none; background: none; cursor: pointer; border-radius: 8px; font-weight: 600; font-size: 13px; color: #64748b; }
         .tab-btn.active { background: var(--accent); color: white; }
 
-        /* Paneles */
-        .control-panel { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .form-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        @media (min-width: 600px) { .form-grid { grid-template-columns: repeat(2, 1fr); } .full { grid-column: span 2; } }
+        /* Paneles de Contenido */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-        .input-group { display: flex; flex-direction: column; gap: 5px; }
-        label { font-size: 11px; font-weight: 800; color: var(--p); text-transform: uppercase; }
-        input, select, textarea { padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 15px; width: 100%; outline: none; }
+        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 600px) { .form-grid { grid-template-columns: 1fr 1fr; } .span-2 { grid-column: span 2; } }
 
-        /* Hoja A4 */
-        .a4-sheet { width: 100%; background: white; padding: 20px; border-radius: 8px; shadow: 0 10px 25px rgba(0,0,0,0.05); min-height: 1000px; }
-        @media (min-width: 800px) { .a4-sheet { padding: 40px; } }
+        label { font-size: 11px; font-weight: 800; color: var(--p); text-transform: uppercase; margin-bottom: 4px; display: block; }
+        input, select, textarea { padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 15px; width: 100%; outline: none; background: #fff; }
 
-        /* Botones */
-        .btn { padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; color: white; transition: 0.2s; }
+        /* Hoja de Presupuesto (Simulado A4) */
+        .a4-sheet { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 4px; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.1); 
+            margin-top: 20px;
+            min-height: 800px;
+        }
+
+        .doc-header { display: flex; flex-direction: column; gap: 10px; border-bottom: 2px solid var(--p); padding-bottom: 15px; margin-bottom: 20px; }
+        @media (min-width: 500px) { .doc-header { flex-direction: row; justify-content: space-between; align-items: center; } }
+        #view-logo { max-width: 140px; height: auto; }
+
+        /* Tablas */
+        .table-wrap { width: 100%; overflow-x: auto; margin: 15px 0; }
+        table { width: 100%; border-collapse: collapse; min-width: 450px; }
+        th { background: #f8fafc; text-align: left; padding: 10px; font-size: 11px; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+
+        .summary-box { background: #f8fafc; padding: 15px; border-radius: 8px; width: 100%; max-width: 280px; margin-left: auto; }
+        .total-row { font-size: 1.4em; font-weight: 800; color: var(--accent); border-top: 2px solid #e2e8f0; margin-top: 10px; padding-top: 10px; }
+
+        .btn { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-p { background: var(--accent); width: 100%; }
-        .btn-sync { background: var(--p); flex: 1; }
-        .btn-danger { background: var(--danger); }
+        .btn-s { background: var(--p); }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { padding: 0; background: white; }
+            .a4-sheet { box-shadow: none; padding: 0; margin: 0; width: 100%; }
+            .tab-content.active { display: block !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    
+    <nav class="nav-tabs no-print">
+        <button class="tab-btn active" onclick="showTab('tab-presupuesto', this)">📝 Crear</button>
+        <button class="tab-btn" onclick="showTab('tab-tarifas', this)">📚 Tarifas</button>
+        <button class="tab-btn" onclick="showTab('tab-config', this)">⚙️ Config</button>
+    </nav>
+
+    <section id="tab-presupuesto" class="tab-content active">
+        <div class="card no-print">
+            <div class="form-grid">
+                <div>
+                    <label>Categoría</label>
+                    <select id="sel-cat" onchange="updateItems()"></select>
+                </div>
+                <div>
+                    <label>Concepto</label>
+                    <select id="sel-item" onchange="applyItem()"></select>
+                </div>
+                <div class="span-2">
+                    <label>Descripción detallada</label>
+                    <input type="text" id="inp-desc" placeholder="Nombre del trabajo...">
+                </div>
+                <div>
+                    <label>Cantidad</label>
+                    <input type="number" id="inp-cant" value="1">
+                </div>
+                <div>
+                    <label>Precio Unitario</label>
+                    <input type="number" id="inp-precio" step="0.01">
+                </div>
+                <div class="span-2">
+                    <label>Modo Impuestos</label>
+                    <select id="inp-iva">
+                        <option value="con">PVP (IVA Incluido)</option>
+                        <option value="sin">Base (+21% IVA)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-p" style="margin-top:15px;" onclick="addToDoc()">+ Añadir al documento</button>
+        </div>
+
+        <div class="a4-sheet" id="documento">
+            <header class="doc-header">
+                <img id="v-logo" src="https://via.placeholder.com/140x60?text=LOGO" alt="">
+                <div style="text-align:right; font-size:12px">
+                    <strong id="v-name">Nombre Empresa</strong><br>
+                    <span id="v-cif">CIF: ---</span><br>
+                    <span id="v-dir">---</span><br>
+                    <span id="v-tel">---</span>
+                </div>
+            </header>
+
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px">
+                <div>
+                    <h2 style="margin:0; color:var(--p)">PRESUPUESTO</h2>
+                    <small>Nº: <strong id="v-num">---</strong></small>
+                </div>
+                <div style="text-align:right">
+                    <small>Fecha: <strong id="v-date">--/--/--</strong></small>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:50px">Cant.</th>
+                            <th>Descripción</th>
+                            <th style="width:80px">P. Ud.</th>
+                            <th style="width:80px">Total</th>
+                            <th class="no-print" style="width:30px"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="v-body"></tbody>
+                </table>
+            </div>
+
+            <div class="summary-box">
+                <div style="display:flex; justify-content:space-between"><span>Base:</span> <span id="r-base">0.00€</span></div>
+                <div style="display:flex; justify-content:space-between; margin:5px 0"><span>Dto (%):</span> <input type="number" id="i-dto" value="0" style="width:50px; padding:2px" onchange="calc()"></div>
+                <div style="display:flex; justify-content:space-between"><span>IVA (21%):</span> <span id="r-iva">0.00€</span></div>
+                <div class="total-row" style="display:flex; justify-content:space-between"><span>TOTAL:</span> <span id="r-total">0.00€</span></div>
+            </div>
+
+            <div style="margin-top:30px; border-top:1px solid #eee; padding-top:10px; font-size:11px; color:#666">
+                <strong>Condiciones Legales:</strong>
+                <div id="v-notas" contenteditable="true" style="margin-top:5px"></div>
+            </div>
+        </div>
+
+        <div class="no-print" style="margin:20px 0 50px; display:flex; gap:10px">
+            <button class="btn btn-s" style="flex:1" onclick="window.print()">🖨️ PDF / Imprimir</button>
+            <button class="btn" style="background:var(--danger)" onclick="if(confirm('¿Borrar?')) location.reload()">🗑️ Nuevo</button>
+        </div>
+    </section>
+
+    <section id="tab-tarifas" class="tab-content">
+        <div class="card">
+            <h3>Gestión de Biblioteca</h3>
+            <div class="form-grid">
+                <input type="text" id="lib-n" placeholder="Nombre">
+                <input type="number" id="lib-p" placeholder="Precio €">
+                <select id="lib-c">
+                    <option value="Antenas">Antenas</option>
+                    <option value="Porteros">Porteros</option>
+                    <option value="Varios">Varios</option>
+                </select>
+            </div>
+            <button class="btn btn-p" style="margin-top:10px" onclick="saveLib()">Guardar Tarifa</button>
+        </div>
+        <div id="lib-list"></div>
+    </section>
+
+    <section id="tab-config" class="tab-content">
+        <div class="card">
+            <h3>Sincronización Jefe/Empleado</h3>
+            <div style="display:flex; gap:10px">
+                <button class="btn btn-s" style="flex:1" onclick="exportJSON()">💾 Exportar Todo</button>
+                <button class="btn btn-s" style="flex:1" onclick="document.getElementById('imp').click()">📂 Importar Pack</button>
+                <input type="file" id="imp" style="display:none" onchange="importJSON(event)">
+            </div>
+        </div>
+        <div class="card">
+            <h3>Perfil de Empresa</h3>
+            <div class="form-grid">
+                <div class="span-2"><label>Nombre</label><input type="text" id="cfg-n"></div>
+                <div><label>CIF</label><input type="text" id="cfg-c"></div>
+                <div><label>Tel</label><input type="text" id="cfg-t"></div>
+                <div class="span-2"><label>Dirección</label><input type="text" id="cfg-d"></div>
+                <div class="span-2"><label>Logo</label><input type="file" onchange="upLogo(this)"></div>
+                <div class="span-2"><label>Condiciones</label><textarea id="cfg-l" rows="3"></textarea></div>
+            </div>
+            <button class="btn btn-p" style="margin-top:10px" onclick="saveCfg()">Guardar Perfil</button>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    let db = JSON.parse(localStorage.getItem('antena_v73_lib')) || { Antenas: {}, Porteros: {}, Varios: {} };
+    let cfg = JSON.parse(localStorage.getItem('antena_v73_cfg')) || {};
+
+    function init() {
+        document.getElementById('v-date').innerText = new Date().toLocaleDateString();
+        document.getElementById('v-num').innerText = "PRE-" + Date.now().toString().slice(-6);
+        applyCfg();
+        updateCats();
+    }
+
+    function showTab(id, btn) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+        if(id === 'tab-tarifas') renderLib();
+    }
+
+    // CONFIG & SYNC
+    function upLogo(i) {
+        const r = new FileReader();
+        r.onload = e => { cfg.logo = e.target.result; document.getElementById('v-logo').src = e.target.result; };
+        r.readAsDataURL(i.files[0]);
+    }
+
+    function saveCfg() {
+        cfg.name = document.getElementById('cfg-n').value;
+        cfg.cif = document.getElementById('cfg-c').value;
+        cfg.tel = document.getElementById('cfg-t').value;
+        cfg.dir = document.getElementById('cfg-d').value;
+        cfg.notas = document.getElementById('cfg-l').value;
+        localStorage.setItem('antena_v73_cfg', JSON.stringify(cfg));
+        applyCfg();
+        alert("Configuración guardada");
+    }
+
+    function applyCfg() {
+        document.getElementById('v-name').innerText = cfg.name || "Mi Empresa S.L.";
+        document.getElementById('v-cif').innerText = "CIF: " + (cfg.cif || "---");
+        document.getElementById('v-dir').innerText = cfg.dir || "---";
+        document.getElementById('v-tel').innerText = "Telf: " + (cfg.tel || "---");
+        document.getElementById('v-notas').innerText = cfg.notas || "";
+        if(cfg.logo) document.getElementById('v-logo').src = cfg.logo;
+        
+        document.getElementById('cfg-n').value = cfg.name || "";
+        document.getElementById('cfg-c').value = cfg.cif || "";
+        document.getElementById('cfg-t').value = cfg.tel || "";
+        document.getElementById('cfg-d').value = cfg.dir || "";
+        document.getElementById('cfg-l').value = cfg.notas || "";
+    }
+
+    function exportJSON() {
+        const pack = { db, cfg };
+        const blob = new Blob([JSON.stringify(pack)], {type:'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = "Pack_Facturacion.json";
+        a.click();
+    }
+
+    function importJSON(e) {
+        const r = new FileReader();
+        r.onload = ev => {
+            const data = JSON.parse(ev.target.result);
+            if(confirm("¿Actualizar base de datos y empresa?")) {
+                db = data.db; cfg = data.cfg;
+                localStorage.setItem('antena_v73_lib', JSON.stringify(db));
+                localStorage.setItem('antena_v73_cfg', JSON.stringify(cfg));
+                location.reload();
+            }
+        };
+        r.readAsText(e.target.files[0]);
+    }
+
+    // BIBLIOTECA
+    function updateCats() {
+        const s = document.getElementById('sel-cat');
+        s.innerHTML = "";
+        Object.keys(db).forEach(c => s.innerHTML += `<option value="${c}">${c}</option>`);
+        updateItems();
+    }
+
+    function updateItems() {
+        const c = document.getElementById('sel-cat').value;
+        const s = document.getElementById('sel-item');
+        s.innerHTML = '<option value="">-- Seleccionar --</option>';
+        Object.keys(db[c] || {}).forEach(i => s.innerHTML += `<option value="${i}">${i}</option>`);
+    }
+
+    function applyItem() {
+        const c = document.getElementById('sel-cat').value;
+        const i = document.getElementById('sel-item').value;
+        if(i) {
+            document.getElementById('inp-desc').value = i;
+            document.getElementById('inp-precio').value = db[c][i];
+        }
+    }
+
+    function saveLib() {
+        const n = document.getElementById('lib-n').value;
+        const p = parseFloat(document.getElementById('lib-p').value);
+        const c = document.getElementById('lib-c').value;
+        if(n && !isNaN(p)) {
+            db[c][n] = p;
+            localStorage.setItem('antena_v73_lib', JSON.stringify(db));
+            renderLib(); updateCats();
+            alert("Guardado");
+        }
+    }
+
+    function renderLib() {
+        const l = document.getElementById('lib-list');
+        l.innerHTML = "";
+        for(let cat in db) {
+            l.innerHTML += `<h4>${cat}</h4>`;
+            for(let i in db[cat]) {
+                l.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; padding:8px; margin-bottom:5px">
+                    <span>${i} (<strong>${db[cat][i]}€</strong>)</span>
+                    <span style="color:red; cursor:pointer" onclick="delLib('${cat}','${i}')">✖</span>
+                </div>`;
+            }
+        }
+    }
+
+    function delLib(c, i) {
+        delete db[c][i];
+        localStorage.setItem('antena_v73_lib', JSON.stringify(db));
+        renderLib(); updateCats();
+    }
+
+    // DOCUMENTO
+    function addToDoc() {
+        const d = document.getElementById('inp-desc').value;
+        const c = parseFloat(document.getElementById('inp-cant').value) || 1;
+        const p = parseFloat(document.getElementById('inp-precio').value);
+        const t = document.getElementById('inp-iva').value;
+        if(!d || isNaN(p)) return;
+
+        const baseU = (t === 'con') ? (p / 1.21) : p;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td contenteditable="true" onblur="calc()">${c}</td>
+            <td contenteditable="true" onblur="calc()">${d}</td>
+            <td contenteditable="true" onblur="calc()">${baseU.toFixed(2)}</td>
+            <td class="row-total">0.00€</td>
+            <td class="no-print"><button onclick="this.parentElement.parentElement.remove(); calc();" style="border:none; background:none; color:red; cursor:pointer">✖</button></td>
+        `;
+        document.getElementById('v-body').appendChild(tr);
+        calc();
+    }
+
+    function calc() {
+        let sub = 0;
+        document.querySelectorAll('#v-body tr').forEach(tr => {
+            const c = parseFloat(tr.cells[0].innerText) || 0;
+            const p = parseFloat(tr.cells[2].innerText) || 0;
+            const t = c * p;
+            tr.querySelector('.row-total').innerText = t.toFixed(2) + "€";
+            sub += t;
+        });
+        const dto = parseFloat(document.getElementById('i-dto').value) || 0;
+        const bDto = sub * (1 - dto/100);
+        const iva = bDto * 0.21;
+        document.getElementById('r-base').innerText = sub.toFixed(2) + "€";
+        document.getElementById('r-iva').innerText = iva.toFixed(2) + "€";
+        document.getElementById('r-total').innerText = (bDto + iva).toFixed(2) + "€";
+    }
+
+    init();
+</script>
+
+</body>
+</html>
 
         /* Tablas */
         .table-container { width: 100%; overflow-x: auto; margin-top: 20px; }

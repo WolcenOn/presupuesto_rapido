@@ -2,38 +2,289 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AntenaManager v7.6</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AntenaManager v7.7</title>
     <style>
-        /* CSS RESET PARA EVITAR ERRORES */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        body { background: #f0f2f5; color: #333; line-height: 1.6; }
+        /* CSS BLINDADO PARA MÓVILES */
+        :root { --p: #0f172a; --accent: #2563eb; --bg: #f8fafc; }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+        
+        body { background: var(--bg); color: #334155; padding-bottom: 20px; }
 
-        /* NAVEGACIÓN */
-        .nav { display: flex; background: #1e293b; position: sticky; top: 0; z-index: 999; }
-        .tab-btn { flex: 1; padding: 15px; border: none; background: none; color: white; font-weight: bold; cursor: pointer; border-bottom: 4px solid transparent; }
-        .tab-btn.active { border-bottom: 4px solid #3b82f6; background: #334155; }
+        /* NAVEGACIÓN TIPO APP */
+        .nav { 
+            display: flex; background: var(--p); position: sticky; top: 0; z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2); 
+        }
+        .tab-btn { 
+            flex: 1; padding: 15px 5px; border: none; background: none; 
+            color: #94a3b8; font-size: 12px; font-weight: bold; cursor: pointer;
+            text-transform: uppercase;
+        }
+        .tab-btn.active { color: white; border-bottom: 4px solid var(--accent); background: #1e293b; }
 
-        /* CONTENEDORES */
-        .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+        /* CONTENEDORES RESPONSIVOS */
+        .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 10px; }
         .section { display: none; }
         .section.active { display: block; }
 
-        /* ESTILO TARJETAS */
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #1e293b; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
+        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        
+        /* FORMULARIOS ADAPTADOS A PULGAR */
+        .field { margin-bottom: 12px; }
+        label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 4px; color: var(--p); text-transform: uppercase; }
+        input, select, textarea { 
+            width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; 
+            font-size: 16px; /* Evita que el iPhone haga zoom al escribir */
+            background: #fff; appearance: none;
+        }
 
-        /* BOTONES */
-        .btn { display: block; width: 100%; padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; text-align: center; font-size: 16px; transition: 0.2s; }
-        .btn-blue { background: #3b82f6; color: white; }
-        .btn-dark { background: #1e293b; color: white; margin-top: 10px; }
+        .btn { 
+            width: 100%; padding: 15px; border: none; border-radius: 8px; 
+            font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-p { background: var(--accent); color: white; }
+        .btn-s { background: var(--p); color: white; margin-top: 10px; }
 
-        /* HOJA DE PRESUPUESTO */
-        #presupuesto-final { background: white; padding: 40px 20px; min-height: 1000px; border: 1px solid #ddd; margin-top: 20px; }
-        .header { display: flex; justify-content: space-between; border-bottom: 2px solid #1e293b; padding-bottom: 15px; margin-bottom: 20px; }
-        #logo-img { max-width: 150px; height: auto; }
+        /* EL DOCUMENTO (VISTA MÓVIL) */
+        .preview-wrapper { overflow-x: auto; background: white; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 15px; }
+        #doc-a4 { min-width: 600px; padding: 20px; background: white; }
+        
+        .doc-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--p); padding-bottom: 10px; margin-bottom: 15px; }
+        #v-logo { max-width: 120px; height: auto; }
+
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        th { text-align: left; font-size: 10px; padding: 8px; background: #f1f5f9; text-transform: uppercase; }
+        td { padding: 10px 8px; font-size: 13px; border-bottom: 1px solid #f1f5f9; }
+
+        .resumen { margin-left: auto; width: 220px; font-size: 14px; }
+        .resumen div { display: flex; justify-content: space-between; padding: 4px 0; }
+        .total-bold { font-size: 18px; font-weight: 800; color: var(--accent); border-top: 2px solid #e2e8f0; margin-top: 5px; padding-top: 5px; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; }
+            .container { max-width: 100%; padding: 0; margin: 0; }
+            .preview-wrapper { overflow: visible; border: none; }
+            #doc-a4 { min-width: 100%; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav no-print">
+        <button class="tab-btn active" onclick="tab('crear', this)">📝 Presupuesto</button>
+        <button class="tab-btn" onclick="tab('tarifas', this)">📚 Tarifas</button>
+        <button class="tab-btn" onclick="tab('config', this)">⚙️ Config</button>
+    </nav>
+
+    <div class="container">
+        
+        <section id="view-crear" class="section active">
+            <div class="card no-print">
+                <div class="field">
+                    <label>Elegir de Biblioteca</label>
+                    <select id="sel-item" onchange="autoFill()"></select>
+                </div>
+                <div class="field">
+                    <label>Descripción del trabajo</label>
+                    <input type="text" id="in-desc" placeholder="Ej: Instalación Antena">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="field" style="flex: 1;"><label>Cant.</label><input type="number" id="in-cant" value="1"></div>
+                    <div class="field" style="flex: 2;"><label>Precio (€)</label><input type="number" id="in-prec" step="0.01"></div>
+                </div>
+                <button class="btn btn-p" onclick="addLi()">+ AÑADIR CONCEPTO</button>
+            </div>
+
+            <p style="font-size: 11px; color: #64748b; text-align: center;" class="no-print">Desliza el documento para ver el total →</p>
+            
+            <div class="preview-wrapper">
+                <div id="doc-a4">
+                    <div class="doc-header">
+                        <img id="v-logo" src="https://via.placeholder.com/120x50?text=LOGO" alt="">
+                        <div style="text-align: right; font-size: 11px; line-height: 1.2;">
+                            <strong id="v-nom" style="font-size: 14px; color: var(--accent);">MI EMPRESA</strong><br>
+                            <span id="v-cif">CIF: ---</span><br>
+                            <span id="v-dir">---</span><br>
+                            <span id="v-tel">---</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <div><h4 style="margin:0">PRESUPUESTO</h4><small id="v-num">REF: --</small></div>
+                        <div style="text-align: right;"><small id="v-fec">--/--/----</small></div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr><th>Cant.</th><th>Descripción</th><th>Ud.</th><th>Total</th><th class="no-print"></th></tr>
+                        </thead>
+                        <tbody id="v-body"></tbody>
+                    </table>
+
+                    <div class="resumen">
+                        <div><span>Base:</span> <span id="r-base">0.00€</span></div>
+                        <div style="color: #64748b; font-size: 12px;"><span>Dto (%):</span> <input type="number" id="r-dto" value="0" style="width: 50px; padding: 2px;" onchange="calc()"></div>
+                        <div><span>IVA (21%):</span> <span id="r-iva">0.00€</span></div>
+                        <div class="total-bold"><span>TOTAL:</span> <span id="r-total">0.00€</span></div>
+                    </div>
+
+                    <div style="margin-top: 30px; font-size: 10px; color: #94a3b8; border-top: 1px solid #eee; padding-top: 10px;">
+                        <strong>Condiciones:</strong>
+                        <div id="v-notas" contenteditable="true">Validez: 30 días.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="no-print" style="margin-top: 15px; padding-bottom: 50px;">
+                <button class="btn btn-s" onclick="window.print()">🖨️ GENERAR PDF / IMPRIMIR</button>
+                <button class="btn" style="background: #f1f5f9; color: #ef4444; margin-top: 10px;" onclick="if(confirm('¿Borrar todo?')) location.reload()">🗑️ LIMPIAR TODO</button>
+            </div>
+        </section>
+
+        <section id="view-tarifas" class="section">
+            <div class="card">
+                <h3 style="margin-bottom: 10px;">Nueva Tarifa</h3>
+                <div class="field"><label>Nombre</label><input type="text" id="lib-n"></div>
+                <div class="field"><label>Precio (€)</label><input type="number" id="lib-p"></div>
+                <button class="btn btn-p" onclick="saveL()">GUARDAR EN BIBLIOTECA</button>
+            </div>
+            <div id="list-l"></div>
+        </section>
+
+        <section id="view-config" class="section">
+            <div class="card">
+                <h3 style="margin-bottom: 10px;">Datos de Empresa</h3>
+                <div class="field"><label>Nombre</label><input type="text" id="c-n"></div>
+                <div class="field"><label>CIF</label><input type="text" id="c-c"></div>
+                <div class="field"><label>Teléfono</label><input type="text" id="c-t"></div>
+                <div class="field"><label>Dirección</label><input type="text" id="c-d"></div>
+                <div class="field"><label>Logo</label><input type="file" onchange="upL(this)"></div>
+                <button class="btn btn-p" onclick="saveC()">GUARDAR PERFIL</button>
+            </div>
+            <div class="card">
+                <h3>Sincronización</h3>
+                <button class="btn btn-s" onclick="exp()">💾 EXPORTAR PARA JEFE</button>
+                <button class="btn btn-s" style="background: #64748b;" onclick="document.getElementById('f-i').click()">📂 CARGAR PACK JEFE</button>
+                <input type="file" id="f-i" style="display:none" onchange="imp(event)">
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        let lib = JSON.parse(localStorage.getItem('ant_l')) || {};
+        let cfg = JSON.parse(localStorage.getItem('ant_c')) || {};
+
+        function init() {
+            document.getElementById('v-fec').innerText = new Date().toLocaleDateString();
+            document.getElementById('v-num').innerText = "REF: " + Math.floor(Math.random()*9000 + 1000);
+            applyC();
+            upSel();
+        }
+
+        function tab(id, b) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('view-' + id).classList.add('active');
+            b.classList.add('active');
+            if(id === 'tarifas') renderL();
+        }
+
+        // --- LÓGICA EMPRESA ---
+        function saveC() {
+            cfg = { n: document.getElementById('c-n').value, c: document.getElementById('c-c').value, t: document.getElementById('c-t').value, d: document.getElementById('c-d').value, logo: cfg.logo };
+            localStorage.setItem('ant_c', JSON.stringify(cfg));
+            applyC(); alert("Guardado");
+        }
+
+        function upL(i) {
+            const r = new FileReader();
+            r.onload = e => { cfg.logo = e.target.result; document.getElementById('v-logo').src = e.target.result; };
+            r.readAsDataURL(i.files[0]);
+        }
+
+        function applyC() {
+            document.getElementById('v-nom').innerText = cfg.n || "EMPRESA";
+            document.getElementById('v-cif').innerText = "CIF: " + (cfg.c || "---");
+            document.getElementById('v-tel').innerText = "Telf: " + (cfg.t || "---");
+            document.getElementById('v-dir').innerText = cfg.d || "---";
+            if(cfg.logo) document.getElementById('v-logo').src = cfg.logo;
+            document.getElementById('c-n').value = cfg.n || "";
+            document.getElementById('c-c').value = cfg.c || "";
+            document.getElementById('c-t').value = cfg.t || "";
+            document.getElementById('c-d').value = cfg.d || "";
+        }
+
+        // --- BIBLIOTECA ---
+        function saveL() {
+            const n = document.getElementById('lib-n').value, p = document.getElementById('lib-p').value;
+            if(n && p) { lib[n] = p; localStorage.setItem('ant_l', JSON.stringify(lib)); renderL(); upSel(); }
+        }
+
+        function renderL() {
+            const d = document.getElementById('list-l'); d.innerHTML = "";
+            for(let k in lib) {
+                d.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; padding:10px;"><span>${k} (<strong>${lib[k]}€</strong>)</span><button onclick="delL('${k}')" style="color:red; background:none; border:none;">✖</button></div>`;
+            }
+        }
+
+        function delL(k) { delete lib[k]; localStorage.setItem('ant_l', JSON.stringify(lib)); renderL(); upSel(); }
+        
+        function upSel() {
+            const s = document.getElementById('sel-item'); s.innerHTML = '<option value="">-- Buscar --</option>';
+            for(let k in lib) s.innerHTML += `<option value="${k}">${k}</option>`;
+        }
+
+        function autoFill() {
+            const v = document.getElementById('sel-item').value;
+            if(v) { document.getElementById('in-desc').value = v; document.getElementById('in-prec').value = lib[v]; }
+        }
+
+        // --- PRESUPUESTO ---
+        function addLi() {
+            const d = document.getElementById('in-desc').value, c = parseFloat(document.getElementById('in-cant').value), p = parseFloat(document.getElementById('in-prec').value);
+            if(!d || !p) return;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${c}</td><td contenteditable="true">${d}</td><td>${p.toFixed(2)}€</td><td class="t-line">${(c*p).toFixed(2)}€</td><td class="no-print" onclick="this.parentElement.remove();calc()" style="color:red; cursor:pointer">✖</td>`;
+            document.getElementById('v-body').appendChild(tr);
+            calc(); document.getElementById('in-desc').value = ""; document.getElementById('in-prec').value = "";
+        }
+
+        function calc() {
+            let b = 0; document.querySelectorAll('.t-line').forEach(td => b += parseFloat(td.innerText));
+            const d = parseFloat(document.getElementById('r-dto').value) || 0;
+            const bf = b * (1 - d/100), i = bf * 0.21;
+            document.getElementById('r-base').innerText = b.toFixed(2) + "€";
+            document.getElementById('r-iva').innerText = i.toFixed(2) + "€";
+            document.getElementById('r-total').innerText = (bf + i).toFixed(2) + "€";
+        }
+
+        // --- SINCRONIZACIÓN ---
+        function exp() {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([JSON.stringify({lib, cfg})], {type:'application/json'}));
+            a.download = "Pack_Antenista.json"; a.click();
+        }
+
+        function imp(e) {
+            const r = new FileReader();
+            r.onload = ev => {
+                const data = JSON.parse(ev.target.result);
+                localStorage.setItem('ant_l', JSON.stringify(data.lib));
+                localStorage.setItem('ant_c', JSON.stringify(data.cfg));
+                location.reload();
+            };
+            r.readAsText(e.target.files[0]);
+        }
+
+        init();
+    </script>
+</body>
+</html>
         
         table { width: 100%; border-collapse: collapse; margin: 20px 0; }
         th { background: #f8fafc; text-align: left; padding: 10px; border-bottom: 2px solid #ddd; }

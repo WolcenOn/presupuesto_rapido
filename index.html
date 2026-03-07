@@ -1,1173 +1,1398 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Gestor de Presupuestos</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2563eb" />
+  <title>AntenaManager PRO</title>
+  <style>
+    :root{
+      --amp-blue:#2563eb;
+      --amp-slate:#0f172a;
+      --amp-bg:#f1f5f9;
+      --amp-white:#ffffff;
+      --amp-border:#cbd5e1;
+      --amp-muted:#64748b;
+      --amp-danger:#dc2626;
+      --amp-success:#16a34a;
+      --amp-shadow:0 10px 25px rgba(15,23,42,.08);
+      --amp-radius:12px;
+    }
 
-<style>
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; padding:0; }
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--amp-bg);
+      color: var(--amp-slate);
+      line-height: 1.35;
+      -webkit-font-smoothing: antialiased;
+      padding-top: 68px;
+    }
 
-body{
-font-family:Arial;
-margin:0;
-background:#f3f3f3;
-}
+    /* NAV */
+    .amp-nav{
+      position:fixed; top:0; left:0; right:0; z-index:1000;
+      background: var(--amp-slate);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 6px 20px rgba(15,23,42,.18);
+    }
+    .amp-nav-inner{
+      max-width:1200px; margin:0 auto;
+      display:grid; grid-template-columns: repeat(3, 1fr);
+      gap:8px; padding:10px;
+    }
+    .amp-nav-btn{
+      min-height:44px;
+      border:0; border-radius:10px;
+      color:#dbeafe;
+      background: rgba(37,99,235,.18);
+      font-weight:800;
+      letter-spacing:.3px;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .amp-nav-btn.active{
+      background: var(--amp-blue);
+      color:#fff;
+      box-shadow: inset 0 -2px 0 rgba(255,255,255,.15);
+    }
 
-nav{
-background:#222;
-padding:10px;
-display:flex;
-gap:10px;
-}
+    .amp-app{ max-width:1200px; margin:0 auto; padding:12px; }
 
-nav button{
-padding:10px 15px;
-border:none;
-background:#444;
-color:white;
-cursor:pointer;
-}
+    /* SECCIONES */
+    .amp-section{ display:none; animation: ampFade .18s ease; }
+    .amp-section.active{ display:block; }
+    @keyframes ampFade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
 
-section{
-display:none;
-padding:20px;
-}
+    /* CARDS */
+    .amp-card{
+      background: var(--amp-white);
+      border: 1px solid var(--amp-border);
+      border-radius: var(--amp-radius);
+      box-shadow: var(--amp-shadow);
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .amp-card h2,.amp-card h3{ margin:0 0 10px; font-size:1rem; }
 
-.active{
-display:block;
-}
+    /* FORMS */
+    .amp-grid{ display:grid; gap:10px; }
+    .amp-grid-2{ grid-template-columns:1fr 1fr; }
+    .amp-grid-3{ grid-template-columns:1fr 1fr 1fr; }
+    @media (max-width:680px){ .amp-grid-2,.amp-grid-3{ grid-template-columns:1fr; } }
 
-.card{
-background:white;
-padding:20px;
-border-radius:6px;
-margin-bottom:20px;
-}
+    .amp-field{ display:flex; flex-direction:column; gap:6px; }
+    .amp-field label{ font-size:.85rem; font-weight:650; color:#334155; }
+    .amp-input,.amp-select,.amp-textarea{
+      width:100%;
+      min-height:44px;
+      border:1px solid var(--amp-border);
+      border-radius:10px;
+      padding:10px 12px;
+      font-size:.95rem;
+      background:#fff;
+      color: var(--amp-slate);
+      outline:none;
+    }
+    .amp-input:focus,.amp-select:focus,.amp-textarea:focus{
+      border-color: var(--amp-blue);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+    }
+    .amp-textarea{ min-height:100px; resize:vertical; }
 
-input,select{
-padding:8px;
-margin:5px;
-}
+    .amp-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .amp-btn{
+      min-height:44px;
+      border:1px solid transparent;
+      border-radius:10px;
+      padding:10px 14px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+    .amp-btn-primary{ background: var(--amp-blue); color:#fff; }
+    .amp-btn-secondary{ background:#fff; color:var(--amp-slate); border-color: var(--amp-border); }
+    .amp-btn-danger{ background:#fff1f2; color: var(--amp-danger); border-color:#fecdd3; }
+    .amp-btn-success{ background:#ecfdf5; color: var(--amp-success); border-color:#bbf7d0; }
 
-table{
-width:100%;
-border-collapse:collapse;
-}
+    .amp-muted{ color: var(--amp-muted); font-size:.85rem; }
+    .amp-status{ margin-top:8px; font-size:.85rem; color:#0f766e; min-height:1.1em; }
 
-th,td{
-border:1px solid #ccc;
-padding:8px;
-}
+    /* TABLES */
+    .amp-lines-table-wrap{ overflow:auto; border:1px solid var(--amp-border); border-radius:12px; background:#fff; }
+    .amp-lines-table{ width:100%; border-collapse:collapse; min-width:520px; }
+    .amp-lines-table th,.amp-lines-table td{ border-bottom:1px solid #e2e8f0; padding:10px 8px; font-size:.9rem; }
+    .amp-lines-table th{ background:#f8fafc; color:#334155; font-weight:800; position:sticky; top:0; }
+    .amp-line-actions button{
+      min-height:36px; padding:6px 10px; border-radius:8px;
+      border:1px solid #fecdd3; background:#fff1f2; color:#be123c;
+      cursor:pointer; font-weight:800;
+    }
 
-.total{
-text-align:right;
-margin-top:15px;
-}
+    /* LIST */
+    .amp-list-wrap{ display:grid; gap:10px; }
+    .amp-service-row{
+      display:grid;
+      grid-template-columns: 1fr auto auto;
+      gap:8px;
+      align-items:center;
+      padding:10px;
+      border:1px solid var(--amp-border);
+      border-radius: 12px;
+      background:#fff;
+    }
+    .amp-service-name{ font-weight:700; word-break:break-word; }
+    .amp-service-price{ font-weight:900; white-space:nowrap; }
+    @media (max-width:540px){
+      .amp-service-row{ grid-template-columns:1fr auto; }
+      .amp-service-price{ grid-column:1/2; color:var(--amp-muted); font-weight:700; }
+      .amp-service-row .amp-btn-danger{ grid-column:2/3; grid-row:1/span 2; }
+    }
 
-</style>
+    /* SHEET A4 */
+    .amp-sheet-wrap{ display:flex; justify-content:center; margin-top:12px; }
+    .amp-sheet{
+      width:100%;
+      max-width: 860px;
+      background:#fff;
+      border:1px solid #dbeafe;
+      border-radius: 12px;
+      box-shadow: 0 18px 40px rgba(15,23,42,.10);
+      padding: 18px;
+      color:#111827;
+    }
+    @media (min-width:900px){ .amp-sheet{ min-height:1120px; } }
+    .amp-sheet-header{
+      display:grid; grid-template-columns:110px 1fr; gap:14px; align-items:start;
+      border-bottom:2px solid #e2e8f0; padding-bottom:12px; margin-bottom:12px;
+    }
+    @media (max-width:600px){ .amp-sheet-header{ grid-template-columns:1fr; } }
+    .amp-logo-box{
+      width:110px; height:110px;
+      border:1px dashed #cbd5e1;
+      border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      overflow:hidden;
+      background:#f8fafc;
+      color:#64748b;
+      font-size:.75rem;
+      text-align:center;
+      padding:8px;
+    }
+    .amp-logo-box img{ width:100%; height:100%; object-fit:contain; display:block; background:#fff; }
+    .amp-company-title{ margin:0; color:#1e3a8a; font-size:1.15rem; font-weight:900; }
+    .amp-company-meta{ margin-top:6px; display:grid; gap:2px; font-size:.88rem; color:#374151; }
+    .amp-doc-title-row{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
+    .amp-doc-title{ font-size:1.1rem; font-weight:900; margin:0; }
+    .amp-two-cols{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+    @media (max-width:700px){ .amp-two-cols{ grid-template-columns:1fr; } }
+    .amp-box{
+      border:1px solid #e2e8f0;
+      border-radius:10px;
+      padding:10px;
+      background:#fcfdff;
+    }
+    .amp-box h4{
+      margin:0 0 8px;
+      font-size:.85rem;
+      color:#475569;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+    .amp-sheet-table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:6px;
+      border:1px solid #e2e8f0;
+    }
+    .amp-sheet-table th,.amp-sheet-table td{ border:1px solid #e2e8f0; padding:8px; font-size:.9rem; }
+    .amp-sheet-table th{ background:#f8fafc; text-align:left; }
+    .amp-text-right{ text-align:right; }
+
+    .amp-totals{
+      margin-top:12px;
+      margin-left:auto;
+      width:100%;
+      max-width:360px;
+      border:1px solid #e2e8f0;
+      border-radius:10px;
+      overflow:hidden;
+    }
+    .amp-totals-row{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:10px;
+      padding:10px 12px;
+      border-bottom:1px solid #e2e8f0;
+      background:#fff;
+      font-size:.92rem;
+    }
+    .amp-totals-row:last-child{
+      border-bottom:0;
+      background:#eff6ff;
+      font-weight:900;
+      color:#1e3a8a;
+      font-size:1rem;
+    }
+
+    .amp-notes-editable{
+      margin-top:14px;
+      border:1px dashed #cbd5e1;
+      border-radius:10px;
+      padding:10px;
+      min-height:80px;
+      background:#fafcff;
+      outline:none;
+      white-space: pre-wrap;
+    }
+    .amp-footer-print{ margin-top:16px; padding-top:8px; border-top:1px solid #e2e8f0; color:#64748b; font-size:.8rem; }
+
+    .amp-pill{ display:inline-block; font-size:.78rem; border-radius:999px; padding:4px 8px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
+    .amp-inline-total{ font-weight:900; color:#1e3a8a; font-size:1rem; }
+
+    /* Bottom bar for printing budget */
+    .amp-bottom-bar{
+      position: sticky;
+      bottom: 10px;
+      z-index: 20;
+      display:flex;
+      justify-content:center;
+      padding: 10px 0 0;
+    }
+    .amp-bottom-inner{
+      width:100%;
+      max-width: 860px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      background: rgba(241,245,249,.85);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(203,213,225,.65);
+      border-radius: 14px;
+      padding: 10px;
+      box-shadow: 0 10px 25px rgba(15,23,42,.08);
+    }
+    .amp-bottom-inner .amp-btn{ flex: 1 1 180px; }
+
+    .amp-no-print{}
+    .amp-hidden{ display:none !important; }
+
+    /* ✅ PRINT FIX (NO PÁGINA EN BLANCO) + MODOS */
+    @media print{
+      @page{ size:A4; margin:10mm; }
+      body{ background:#fff !important; padding-top:0 !important; }
+
+      /* Ocultar UI */
+      .amp-nav, .amp-no-print{ display:none !important; }
+
+      /* Ocultar todas las secciones por defecto */
+      .amp-section{ display:none !important; }
+
+      /* Mostrar sección correcta según modo */
+      body[data-print-mode="budget"] #ampSectionNuevo{ display:block !important; }
+      body[data-print-mode="library"] #ampSectionLista{ display:block !important; }
+      body[data-print-mode="config"]  #ampSectionConfig{ display:block !important; }
+
+      /* Dentro de la sección, ocultar todo excepto el host imprimible */
+      body[data-print-mode="budget"] #ampSectionNuevo > *{ display:none !important; }
+      body[data-print-mode="budget"] #ampPrintBudgetHost{ display:block !important; }
+
+      body[data-print-mode="library"] #ampSectionLista > *{ display:none !important; }
+      body[data-print-mode="library"] #ampPrintLibraryHost{ display:block !important; }
+
+      body[data-print-mode="config"] #ampSectionConfig > *{ display:none !important; }
+      body[data-print-mode="config"] #ampPrintConfigHost{ display:block !important; }
+
+      .amp-app{ padding:0 !important; margin:0 !important; max-width:none !important; }
+      .amp-sheet-wrap{ margin:0 !important; display:block !important; }
+      .amp-sheet{
+        box-shadow:none !important;
+        border:none !important;
+        border-radius:0 !important;
+        max-width:none !important;
+        width:100% !important;
+        padding:0 !important;
+        min-height:auto !important;
+      }
+      .amp-notes-editable{ border:1px solid #ddd !important; background:#fff !important; }
+    }
+  </style>
 </head>
-
-<body>
-
-<nav>
-<button onclick="show('nuevo')">NUEVO</button>
-<button onclick="show('lista')">LISTA</button>
-<button onclick="show('config')">CONFIG</button>
-</nav>
-
-<!-- NUEVO PRESUPUESTO -->
-
-<section id="nuevo" class="active">
-
-<div class="card">
-
-<h3>Cliente</h3>
-
-<input id="cliente" placeholder="Nombre cliente">
-
-</div>
-
-<div class="card">
-
-<h3>Añadir servicio</h3>
-
-<select id="selectServicio"></select>
-<button onclick="addServicio()">Añadir</button>
-
-<table id="tablaServicios">
-<tr>
-<th>Concepto</th>
-<th>Precio</th>
-<th></th>
-</tr>
-</table>
-
-</div>
-
-<div class="card">
-
-IVA
-
-<select id="tipoIVA" onchange="calcular()">
-<option value="sumar">Sumar 21%</option>
-<option value="desglosar">Precio incluye IVA</option>
-</select>
-
-<div class="total">
-
-<p>Base: <span id="base">0</span> €</p>
-<p>IVA: <span id="iva">0</span> €</p>
-<p>IRPF: <span id="irpf">0</span> €</p>
-
-<h3>Total: <span id="total">0</span> €</h3>
-
-</div>
-
-<button onclick="guardarPresupuesto()">Guardar presupuesto</button>
-
-</div>
-
-</section>
-
-<!-- LISTA -->
-
-<section id="lista">
-
-<div class="card">
-
-<h3>Presupuestos</h3>
-
-<table id="tablaLista">
-<tr>
-<th>Número</th>
-<th>Cliente</th>
-<th>Total</th>
-</tr>
-</table>
-
-</div>
-
-</section>
-
-<!-- CONFIG -->
-
-<section id="config">
-
-<div class="card">
-
-<h3>Datos empresa</h3>
-
-<input id="empNombre" placeholder="Empresa">
-
-<input id="empCIF" placeholder="CIF">
-
-<input id="empIBAN" placeholder="IBAN">
-
-<select id="empIRPF">
-<option value="0">IRPF 0%</option>
-<option value="7">IRPF 7%</option>
-<option value="15">IRPF 15%</option>
-</select>
-
-<button onclick="guardarEmpresa()">Guardar empresa</button>
-
-</div>
-
-<div class="card">
-
-<h3>Biblioteca servicios</h3>
-
-<input id="servNombre" placeholder="Servicio">
-<input id="servPrecio" placeholder="Precio">
-
-<button onclick="crearServicio()">Añadir</button>
-
-<ul id="listaServicios"></ul>
-
-</div>
-
-</section>
-
-<script>
-
-let servicios=JSON.parse(localStorage.getItem("servicios"))||[]
-let empresa=JSON.parse(localStorage.getItem("empresa"))||{irpf:0}
-let presupuestos=JSON.parse(localStorage.getItem("pres"))||[]
-
-let serviciosActual=[]
-
-function show(id){
-
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
-
-document.getElementById(id).classList.add("active")
-
-if(id==="lista")renderLista()
-
-}
-
-function crearServicio(){
-
-let s={
-nombre:servNombre.value,
-precio:parseFloat(servPrecio.value)
-}
-
-servicios.push(s)
-
-localStorage.setItem("servicios",JSON.stringify(servicios))
-
-renderServicios()
-
-servNombre.value=""
-servPrecio.value=""
-
-}
-
-function renderServicios(){
-
-selectServicio.innerHTML=""
-listaServicios.innerHTML=""
-
-servicios.forEach((s,i)=>{
-
-let op=document.createElement("option")
-op.value=i
-op.text=s.nombre+" - "+s.precio+"€"
-
-selectServicio.appendChild(op)
-
-let li=document.createElement("li")
-li.innerText=s.nombre+" - "+s.precio+"€"
-
-listaServicios.appendChild(li)
-
-})
-
-}
-
-function addServicio(){
-
-let s=servicios[selectServicio.value]
-
-serviciosActual.push({...s})
-
-renderTabla()
-
-}
-
-function renderTabla(){
-
-tablaServicios.innerHTML="<tr><th>Concepto</th><th>Precio</th><th></th></tr>"
-
-serviciosActual.forEach((s,i)=>{
-
-let tr=document.createElement("tr")
-
-tr.innerHTML=
-"<td>"+s.nombre+"</td>"+
-"<td>"+s.precio+"</td>"+
-"<td><button onclick='borrar("+i+")'>X</button></td>"
-
-tablaServicios.appendChild(tr)
-
-})
-
-calcular()
-
-}
-
-function borrar(i){
-
-serviciosActual.splice(i,1)
-
-renderTabla()
-
-}
-
-function calcular(){
-
-let base=serviciosActual.reduce((t,s)=>t+s.precio,0)
-
-let iva=0
-
-if(tipoIVA.value==="sumar"){
-
-iva=base*0.21
-
-}else{
-
-let baseSin=base/1.21
-iva=base-baseSin
-base=baseSin
-
-}
-
-let irpf=base*(empresa.irpf/100)
-
-let total=base+iva-irpf
-
-baseEl.innerText=base.toFixed(2)
-ivaEl.innerText=iva.toFixed(2)
-irpfEl.innerText=irpf.toFixed(2)
-totalEl.innerText=total.toFixed(2)
-
-}
-
-const baseEl=document.getElementById("base")
-const ivaEl=document.getElementById("iva")
-const irpfEl=document.getElementById("irpf")
-const totalEl=document.getElementById("total")
-
-function guardarEmpresa(){
-
-empresa={
-nombre:empNombre.value,
-cif:empCIF.value,
-iban:empIBAN.value,
-irpf:parseFloat(empIRPF.value)
-}
-
-localStorage.setItem("empresa",JSON.stringify(empresa))
-
-alert("Empresa guardada")
-
-}
-
-function guardarPresupuesto(){
-
-let num="P-"+new Date().getFullYear()+"-"+(presupuestos.length+1)
-
-let p={
-num:num,
-cliente:cliente.value,
-total:totalEl.innerText
-}
-
-presupuestos.push(p)
-
-localStorage.setItem("pres",JSON.stringify(presupuestos))
-
-alert("Presupuesto guardado")
-
-}
-
-function renderLista(){
-
-tablaLista.innerHTML="<tr><th>Número</th><th>Cliente</th><th>Total</th></tr>"
-
-presupuestos.forEach(p=>{
-
-let tr=document.createElement("tr")
-
-tr.innerHTML=
-"<td>"+p.num+"</td>"+
-"<td>"+p.cliente+"</td>"+
-"<td>"+p.total+" €</td>"
-
-tablaLista.appendChild(tr)
-
-})
-
-}
-
-renderServicios()
-
-</script>
-
-</body>
-</html>display:block;
-}
-
-.card{
-background:white;
-padding:20px;
-border-radius:6px;
-margin-bottom:20px;
-}
-
-input,select{
-padding:8px;
-margin:5px;
-width:200px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px;
-}
-
-table th,table td{
-border:1px solid #ccc;
-padding:8px;
-text-align:left;
-}
-
-.total{
-text-align:right;
-margin-top:20px;
-}
-
-.print{
-background:#2c7;
-padding:10px 20px;
-border:none;
-cursor:pointer;
-}
-
-@media print{
-
-header{
-display:none;
-}
-
-body{
-background:white;
-}
-
-section{
-display:block !important;
-}
-
-}
-
-</style>
-</head>
-
-<body>
-
-<header>
-<button onclick="mostrar('nuevo')">NUEVO</button>
-<button onclick="mostrar('lista')">LISTA</button>
-<button onclick="mostrar('config')">CONFIG</button>
-</header>
-
-<!-- NUEVO PRESUPUESTO -->
-
-<section id="nuevo" class="active">
-
-<div class="card">
-
-<h2>Datos cliente</h2>
-
-<input id="clienteNombre" placeholder="Nombre cliente">
-<input id="clienteTel" placeholder="Teléfono">
-<input id="clienteEmail" placeholder="Email">
-<input id="clienteDir" placeholder="Dirección">
-
-</div>
-
-<div class="card">
-
-<h2>Servicios</h2>
-
-<select id="serviciosSelect"></select>
-<button onclick="addServicio()">Añadir</button>
-
-<table id="tablaServicios">
-<tr>
-<th>Concepto</th>
-<th>Precio</th>
-<th></th>
-</tr>
-</table>
-
-</div>
-
-<div class="card">
-
-IVA
-<select id="tipoIVA">
-<option value="sumar">Sumar 21%</option>
-<option value="desglosar">Desglosar desde total</option>
-</select>
-
-<div class="total">
-<p>Base: <span id="base">0</span> €</p>
-<p>IVA: <span id="iva">0</span> €</p>
-<p>IRPF: <span id="irpf">0</span> €</p>
-<h3>Total: <span id="total">0</span> €</h3>
-</div>
-
-<button onclick="guardarPresupuesto()">Guardar</button>
-<button class="print" onclick="window.print()">Imprimir / PDF</button>
-
-</div>
-
-</section>
-
-<!-- LISTA -->
-
-<section id="lista">
-
-<div class="card">
-
-<h2>Presupuestos guardados</h2>
-
-<table id="tablaLista">
-<tr>
-<th>Nº</th>
-<th>Cliente</th>
-<th>Total</th>
-</tr>
-</table>
-
-</div>
-
-</section>
-
-<!-- CONFIG -->
-
-<section id="config">
-
-<div class="card">
-
-<h2>Datos empresa</h2>
-
-<input id="empNombre" placeholder="Nombre empresa">
-<input id="empCIF" placeholder="CIF">
-<input id="empDir" placeholder="Dirección">
-<input id="empTel" placeholder="Teléfono">
-<input id="empEmail" placeholder="Email">
-<input id="empIBAN" placeholder="IBAN">
-
-<select id="empIRPF">
-<option value="0">IRPF 0%</option>
-<option value="7">IRPF 7%</option>
-<option value="15">IRPF 15%</option>
-</select>
-
-<input type="file" id="logoUpload">
-
-<button onclick="guardarEmpresa()">Guardar</button>
-
-</div>
-
-<div class="card">
-
-<h2>Biblioteca de servicios</h2>
-
-<input id="servNombre" placeholder="Servicio">
-<input id="servPrecio" placeholder="Precio">
-
-<button onclick="guardarServicio()">Añadir</button>
-
-<ul id="listaServicios"></ul>
-
-</div>
-
-</section>
-
-<script>
-
-let servicios = JSON.parse(localStorage.getItem("servicios")) || [];
-let presupuestos = JSON.parse(localStorage.getItem("pres")) || [];
-let empresa = JSON.parse(localStorage.getItem("empresa")) || {};
-
-let serviciosActual=[];
-
-function mostrar(id){
-
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-
-document.getElementById(id).classList.add("active");
-
-if(id==="lista") cargarLista()
-
-}
-
-function guardarEmpresa(){
-
-empresa={
-nombre:empNombre.value,
-cif:empCIF.value,
-dir:empDir.value,
-tel:empTel.value,
-email:empEmail.value,
-iban:empIBAN.value,
-irpf:empIRPF.value
-}
-
-localStorage.setItem("empresa",JSON.stringify(empresa))
-
-alert("Guardado")
-
-}
-
-function guardarServicio(){
-
-let s={
-nombre:servNombre.value,
-precio:parseFloat(servPrecio.value)
-}
-
-servicios.push(s)
-
-localStorage.setItem("servicios",JSON.stringify(servicios))
-
-renderServicios()
-
-}
-
-function renderServicios(){
-
-serviciosSelect.innerHTML=""
-
-listaServicios.innerHTML=""
-
-servicios.forEach((s,i)=>{
-
-let op=document.createElement("option")
-
-op.value=i
-op.text=s.nombre+" - "+s.precio+"€"
-
-serviciosSelect.appendChild(op)
-
-let li=document.createElement("li")
-li.innerText=s.nombre+" - "+s.precio+"€"
-
-listaServicios.appendChild(li)
-
-})
-
-}
-
-function addServicio(){
-
-let s=servicios[serviciosSelect.value]
-
-serviciosActual.push(s)
-
-renderTabla()
-
-}
-
-function renderTabla(){
-
-tablaServicios.innerHTML="<tr><th>Concepto</th><th>Precio</th><th></th></tr>"
-
-serviciosActual.forEach((s,i)=>{
-
-let tr=document.createElement("tr")
-
-tr.innerHTML=
-"<td>"+s.nombre+"</td>"+
-"<td>"+s.precio+"</td>"+
-"<td><button onclick='del("+i+")'>X</button></td>"
-
-tablaServicios.appendChild(tr)
-
-})
-
-calcular()
-
-}
-
-function del(i){
-
-serviciosActual.splice(i,1)
-
-renderTabla()
-
-}
-
-function calcular(){
-
-let base=0
-
-serviciosActual.forEach(s=>base+=s.precio)
-
-let iva=0
-
-if(tipoIVA.value==="sumar"){
-iva=base*0.21
-}else{
-let sin=base/1.21
-iva=base-sin
-base=sin
-}
-
-let irpf=base*(empresa.irpf||0)/100
-
-let total=base+iva-irpf
-
-document.getElementById("base").innerText=base.toFixed(2)
-document.getElementById("iva").innerText=iva.toFixed(2)
-document.getElementById("irpf").innerText=irpf.toFixed(2)
-document.getElementById("total").innerText=total.toFixed(2)
-
-}
-
-function guardarPresupuesto(){
-
-let num="P-"+new Date().getFullYear()+"-"+(presupuestos.length+1)
-
-let p={
-num,
-cliente:clienteNombre.value,
-total:total.innerText
-}
-
-presupuestos.push(p)
-
-localStorage.setItem("pres",JSON.stringify(presupuestos))
-
-alert("Guardado")
-
-}
-
-function cargarLista(){
-
-tablaLista.innerHTML="<tr><th>Nº</th><th>Cliente</th><th>Total</th></tr>"
-
-presupuestos.forEach(p=>{
-
-let tr=document.createElement("tr")
-
-tr.innerHTML="<td>"+p.num+"</td><td>"+p.cliente+"</td><td>"+p.total+"€</td>"
-
-tablaLista.appendChild(tr)
-
-})
-
-}
-
-renderServicios()
-
-</script>
-
-</body>
-</html>                    <select id="in-iva">
-                        <option value="no">Precio sin IVA (+21% al final)</option>
-                        <option value="si">Precio con IVA incluido</option>
-                    </select>
-                </div>
-                <button class="btn btn-main" onclick="add()">+ AÑADIR A LA HOJA</button>
+<body data-print-mode="budget">
+  <header class="amp-nav amp-no-print">
+    <div class="amp-nav-inner">
+      <button class="amp-nav-btn active" data-target="ampSectionNuevo">NUEVO</button>
+      <button class="amp-nav-btn" data-target="ampSectionLista">LISTA</button>
+      <button class="amp-nav-btn" data-target="ampSectionConfig">CONFIG</button>
+    </div>
+  </header>
+
+  <main class="amp-app">
+    <!-- ================= NUEVO ================= -->
+    <section id="ampSectionNuevo" class="amp-section active">
+      <div class="amp-card amp-no-print">
+        <h2>Nuevo presupuesto</h2>
+
+        <div class="amp-grid amp-grid-2">
+          <div class="amp-field">
+            <label for="ampClientName">Cliente / Empresa</label>
+            <input id="ampClientName" class="amp-input" type="text" placeholder="Nombre del cliente o empresa" />
+          </div>
+          <div class="amp-field">
+            <label for="ampClientCif">DNI / CIF</label>
+            <input id="ampClientCif" class="amp-input" type="text" placeholder="Identificación fiscal" />
+          </div>
+          <div class="amp-field">
+            <label for="ampClientPhone">Teléfono cliente</label>
+            <input id="ampClientPhone" class="amp-input" type="tel" placeholder="Teléfono de contacto" />
+          </div>
+          <div class="amp-field">
+            <label for="ampClientAddress">Dirección cliente</label>
+            <input id="ampClientAddress" class="amp-input" type="text" placeholder="Dirección de instalación / facturación" />
+          </div>
+        </div>
+
+        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
+          <div class="amp-field">
+            <label for="ampBudgetNumber">Nº Presupuesto (irrepetible)</label>
+            <div style="display:flex; gap:8px;">
+              <input id="ampBudgetNumber" class="amp-input" type="text" />
+              <button id="ampBtnNewNumber" class="amp-btn amp-btn-secondary" type="button" style="min-width:120px;">Nuevo Nº</button>
             </div>
+            <div class="amp-muted">Generado offline: fecha+marca tiempo+ID dispositivo+aleatorio.</div>
+          </div>
+          <div class="amp-field">
+            <label for="ampBudgetDate">Fecha</label>
+            <input id="ampBudgetDate" class="amp-input" type="date" />
+          </div>
+          <div class="amp-field">
+            <label for="ampIvaMode">Modo de IVA</label>
+            <select id="ampIvaMode" class="amp-select">
+              <option value="base">Precio Base (añadir 21%)</option>
+              <option value="incluido">IVA Incluido (desglosar 21%)</option>
+            </select>
+          </div>
+        </div>
 
-            <div id="hoja" class="paper">
-                <div class="header">
-                    <div id="logo-box">
-                        <img id="v-logo" src="" style="display:none; max-height:60px;">
-                        <span id="v-logo-t" style="font-weight:bold; color:#2563eb;">MI EMPRESA</span>
-                    </div>
-                    <div class="emp-info">
-                        <strong id="v-nom">NOMBRE</strong><br>
-                        <span id="v-cif">CIF: ---</span><br>
-                        <span id="v-tel">TEL: ---</span><br>
-                        <span id="v-dir">DIR: ---</span>
-                    </div>
+        <div class="amp-actions">
+          <button id="ampBtnResetBudget" class="amp-btn amp-btn-secondary" type="button">Limpiar presupuesto</button>
+          <button id="ampBtnUseDefaultNotes" class="amp-btn amp-btn-secondary" type="button">Cargar notas de CONFIG</button>
+        </div>
+      </div>
+
+      <div class="amp-card amp-no-print">
+        <h3>Añadir concepto</h3>
+        <div class="amp-grid amp-grid-2">
+          <div class="amp-field">
+            <label for="ampProductSelect">Servicio / Producto (biblioteca)</label>
+            <select id="ampProductSelect" class="amp-select">
+              <option value="">-- Seleccionar de la biblioteca --</option>
+            </select>
+          </div>
+          <div class="amp-field">
+            <label for="ampLineDesc">Descripción manual</label>
+            <input id="ampLineDesc" class="amp-input" type="text" placeholder="Ej. Instalación antena TDT y orientación" />
+          </div>
+        </div>
+
+        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
+          <div class="amp-field">
+            <label for="ampLineQty">Cantidad</label>
+            <input id="ampLineQty" class="amp-input" type="number" min="0" step="0.01" value="1" />
+          </div>
+          <div class="amp-field">
+            <label for="ampLinePrice">Precio unitario (€)</label>
+            <input id="ampLinePrice" class="amp-input" type="number" min="0" step="0.01" placeholder="0.00" />
+          </div>
+          <div class="amp-field" style="justify-content:flex-end;">
+            <label class="amp-hidden">Acción</label>
+            <button id="ampBtnAddLine" class="amp-btn amp-btn-success" type="button">Añadir concepto</button>
+          </div>
+        </div>
+        <div class="amp-muted" style="margin-top:8px;">
+          En modo <strong>Precio Base</strong>, el precio unitario se considera sin IVA. En modo <strong>IVA Incluido</strong>, se desglosa automáticamente.
+        </div>
+        <div id="ampLineMsg" class="amp-status"></div>
+      </div>
+
+      <div class="amp-card amp-no-print">
+        <h3>Conceptos añadidos</h3>
+        <div class="amp-lines-table-wrap">
+          <table class="amp-lines-table">
+            <thead>
+              <tr><th>Descripción</th><th>Cant.</th><th>Precio Unit.</th><th>Importe</th><th>Acción</th></tr>
+            </thead>
+            <tbody id="ampLinesTbody">
+              <tr><td colspan="5" class="amp-muted">No hay conceptos añadidos todavía.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="amp-actions">
+          <span class="amp-pill">Total actual: <span id="ampQuickTotal" class="amp-inline-total">0,00 €</span></span>
+        </div>
+      </div>
+
+      <!-- Host imprimible: PRESUPUESTO -->
+      <div id="ampPrintBudgetHost">
+        <div class="amp-card">
+          <h3 class="amp-no-print">Vista previa de hoja de presupuesto</h3>
+          <div class="amp-sheet-wrap">
+            <article class="amp-sheet">
+              <div class="amp-sheet-header">
+                <div class="amp-logo-box" id="ampSheetLogoBox"><span>Logo empresa</span></div>
+                <div>
+                  <h1 class="amp-company-title" id="ampSheetCompanyName">Tu Empresa de Telecomunicaciones</h1>
+                  <div class="amp-company-meta">
+                    <div><strong>CIF:</strong> <span id="ampSheetCompanyCif">—</span></div>
+                    <div><strong>Tel.:</strong> <span id="ampSheetCompanyPhone">—</span></div>
+                    <div><strong>Dirección:</strong> <span id="ampSheetCompanyAddress">—</span></div>
+                  </div>
                 </div>
+              </div>
 
-                <div class="meta">
-                    <div><strong>PRESUPUESTO</strong><br><span id="v-ref">REF: --</span></div>
-                    <div style="text-align:right"><span id="v-fec">--/--/--</span></div>
+              <div class="amp-doc-title-row">
+                <h2 class="amp-doc-title">PRESUPUESTO</h2>
+                <div class="amp-muted">Nº <strong id="ampSheetBudgetNo">---</strong> · Fecha: <strong id="ampSheetBudgetDate">--/--/----</strong></div>
+              </div>
+
+              <div class="amp-two-cols">
+                <div class="amp-box">
+                  <h4>Datos del cliente</h4>
+                  <div><strong>Nombre / Empresa:</strong> <span id="ampSheetClientName">—</span></div>
+                  <div><strong>DNI/CIF:</strong> <span id="ampSheetClientCif">—</span></div>
+                  <div><strong>Teléfono:</strong> <span id="ampSheetClientPhone">—</span></div>
+                  <div><strong>Dirección:</strong> <span id="ampSheetClientAddress">—</span></div>
                 </div>
-
-                <table>
-                    <thead>
-                        <tr><th>Cant</th><th>Descripción</th><th>Precio</th><th>Total</th><th class="no-print"></th></tr>
-                    </thead>
-                    <tbody id="v-body"></tbody>
-                </table>
-
-                <div class="totals">
-                    <div class="t-row"><span>Base:</span> <span id="r-base">0.00€</span></div>
-                    <div class="t-row"><span>IVA (21%):</span> <span id="r-iva">0.00€</span></div>
-                    <div class="t-row total"><span>TOTAL:</span> <span id="r-total">0.00€</span></div>
+                <div class="amp-box">
+                  <h4>Resumen</h4>
+                  <div><strong>Modo IVA:</strong> <span id="ampSheetIvaModeText">Precio Base (añadir 21%)</span></div>
+                  <div><strong>Moneda:</strong> EUR (€)</div>
                 </div>
+              </div>
 
-                <div class="footer">
-                    <strong>Notas:</strong>
-                    <div id="v-not" contenteditable="true"></div>
+              <table class="amp-sheet-table">
+                <thead>
+                  <tr>
+                    <th style="width:52%;">Concepto</th>
+                    <th style="width:12%;" class="amp-text-right">Cant.</th>
+                    <th style="width:18%;" class="amp-text-right">P. Unit. (Base)</th>
+                    <th style="width:18%;" class="amp-text-right">Importe (Base)</th>
+                  </tr>
+                </thead>
+                <tbody id="ampSheetLinesBody">
+                  <tr><td colspan="4" class="amp-muted">Añade conceptos desde el formulario para generar el presupuesto.</td></tr>
+                </tbody>
+              </table>
+
+              <div class="amp-totals">
+                <div class="amp-totals-row"><span>Base imponible</span><span id="ampSheetBaseTotal">0,00 €</span></div>
+                <div class="amp-totals-row"><span>IVA 21%</span><span id="ampSheetIvaTotal">0,00 €</span></div>
+                <div class="amp-totals-row"><span>Total</span><span id="ampSheetGrandTotal">0,00 €</span></div>
+              </div>
+
+              <div style="margin-top:14px;">
+                <h4 style="margin:0 0 6px; color:#475569; font-size:.85rem; text-transform:uppercase; letter-spacing:.5px;">Notas</h4>
+                <div id="ampSheetNotesEditable" class="amp-notes-editable" contenteditable="true" spellcheck="true"></div>
+                <div class="amp-muted amp-no-print" style="margin-top:6px;">
+                  Estas notas se cargan desde <strong>CONFIG → Notas predeterminadas</strong> al crear un presupuesto nuevo (o con “Cargar notas de CONFIG”).
                 </div>
-            </div>
+              </div>
 
-            <div class="no-print">
-                <button class="btn btn-alt" onclick="window.print()">🖨️ IMPRIMIR / PDF</button>
-                <button class="btn btn-danger" onclick="clearH()">🗑️ BORRAR HOJA</button>
-            </div>
-        </section>
-
-        <section id="sec-l" class="page">
-            <div class="card">
-                <h3>Guardar en Biblioteca</h3>
-                <div class="field"><label>Nombre</label><input type="text" id="l-n"></div>
-                <div class="field"><label>Precio (€)</label><input type="number" id="l-p" step="0.01"></div>
-                <button class="btn btn-main" onclick="saveL()">GUARDAR PRODUCTO</button>
-            </div>
-            <div id="render-l"></div>
-        </section>
-
-        <section id="sec-c" class="page">
-            <div class="card">
-                <h3>Configuración</h3>
-                <div class="field"><label>Nombre Empresa</label><input type="text" id="c-n"></div>
-                <div class="field"><label>CIF</label><input type="text" id="c-c"></div>
-                <div class="field"><label>Teléfono</label><input type="text" id="c-t"></div>
-                <div class="field"><label>Dirección</label><input type="text" id="c-d"></div>
-                <div class="field"><label>Logo</label><input type="file" onchange="upL(this)"></div>
-                <div class="field"><label>Nota predeterminada</label><textarea id="c-not" rows="3"></textarea></div>
-                <button class="btn btn-main" onclick="saveC()">GUARDAR CAMBIOS</button>
-            </div>
-        </section>
-    </main>
-</body>
-</html>
-                        <option value="sin">Precio es BASE (+21% IVA)</option>
-                        <option value="con">Precio con IVA INCLUIDO</option>
-                    </select>
-                </div>
-                <button class="btn btn-azul" onclick="insertarFilaV11()">+ AÑADIR A LA HOJA</button>
-            </div>
-
-            <div id="documento-final" class="hoja-blanca">
-                <div class="cabecera-doc">
-                    <div class="bloque-logo">
-                        <img id="img-logo-v11" src="" style="display:none; max-height:70px;">
-                        <span id="txt-logo-v11" style="font-weight:bold; color:#2563eb;">MI EMPRESA</span>
-                    </div>
-                    <div class="bloque-datos-empresa">
-                        <strong id="v-nombre-v11">EMPRESA</strong><br>
-                        <span id="v-cif-v11">CIF: ---</span><br>
-                        <span id="v-tel-v11">TEL: ---</span><br>
-                        <span id="v-dir-v11">DIR: ---</span>
-                    </div>
-                </div>
-
-                <div class="info-meta">
-                    <div><strong>PRESUPUESTO</strong><br><span id="v-ref-v11">REF: --</span></div>
-                    <div style="text-align:right"><span id="v-fecha-v11">--/--/--</span></div>
-                </div>
-
-                <div class="zona-tabla">
-                    <table id="tabla-v11">
-                        <thead>
-                            <tr>
-                                <th style="width:10%">Cant</th>
-                                <th>Descripción</th>
-                                <th style="width:15%">Precio</th>
-                                <th style="width:20%">Total</th>
-                                <th class="no-print"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="cuerpo-tabla-v11"></tbody>
-                    </table>
-                </div>
-
-                <div class="contenedor-totales">
-                    <div class="linea-total"><span>Base Imponible:</span> <span id="tot-base-v11">0.00€</span></div>
-                    <div class="linea-total"><span>IVA (21%):</span> <span id="tot-iva-v11">0.00€</span></div>
-                    <div class="linea-total total-grande"><span>TOTAL:</span> <span id="tot-final-v11">0.00€</span></div>
-                </div>
-
-                <div class="pie-doc">
-                    <strong>Notas:</strong>
-                    <div id="v-notas-v11" contenteditable="true" style="margin-top:5px; min-height:50px; border:1px dashed transparent"></div>
-                </div>
-            </div>
-
-            <div class="no-print acciones-finales">
-                <button class="btn btn-negro" onclick="window.print()">🖨️ IMPRIMIR / PDF</button>
-                <button class="btn btn-rojo" onclick="resetearHojaV11()">🗑️ BORRAR HOJA</button>
-            </div>
-        </section>
-
-        <section id="seccion-lista" class="pantalla">
-            <div class="tarjeta-input">
-                <h2>Guardar Nueva Tarifa</h2>
-                <div class="campo"><label>Nombre</label><input type="text" id="lib-n-v11"></div>
-                <div class="campo"><label>Precio Base (€)</label><input type="number" id="lib-p-v11" step="0.01"></div>
-                <button class="btn btn-azul" onclick="guardarEnLibV11()">GUARDAR EN LISTA</button>
-            </div>
-            <div id="render-lista-v11"></div>
-        </section>
-
-        <section id="seccion-config" class="pantalla">
-            <div class="tarjeta-input">
-                <h2>Mis Datos de Empresa</h2>
-                <div class="campo"><label>Nombre</label><input type="text" id="cfg-n-v11"></div>
-                <div class="campo"><label>CIF</label><input type="text" id="cfg-c-v11"></div>
-                <div class="campo"><label>Teléfono</label><input type="text" id="cfg-t-v11"></div>
-                <div class="campo"><label>Dirección</label><input type="text" id="cfg-d-v11"></div>
-                <div class="campo"><label>Subir Logo</label><input type="file" onchange="cargarLogoV11(this)"></div>
-                <div class="campo">
-                    <label>Nota Fija (Garantía, Pago, etc.)</label>
-                    <textarea id="cfg-nota-v11" rows="4" style="width:100%"></textarea>
-                </div>
-                <button class="btn btn-azul" onclick="guardarConfigV11()">GUARDAR TODO</button>
-            </div>
-        </section>
-
-    </main>
-
-    <script src="script.js"></script>
-</body>
-</html>
-                        <option value="sin">Precio es BASE (+21% IVA)</option>
-                        <option value="con">Precio con IVA INCLUIDO</option>
-                    </select>
-                </div>
-                <button class="btn-action btn-blue" onclick="agregarLineaV10()">+ AÑADIR AL DOCUMENTO</button>
-            </div>
-
-            <div id="hoja-impresion" class="document-paper">
-                <div class="doc-header">
-                    <div class="doc-logo-area">
-                        <img id="logo-img" src="" style="display:none; max-height:70px;">
-                        <span id="logo-placeholder">MI EMPRESA</span>
-                    </div>
-                    <div class="doc-empresa-info">
-                        <strong id="doc-nombre-emp">EMPRESA</strong><br>
-                        <span id="doc-cif">CIF: ---</span><br>
-                        <span id="doc-tel">TEL: ---</span><br>
-                        <span id="doc-dir">DIR: ---</span>
-                    </div>
-                </div>
-
-                <div class="doc-meta">
-                    <div><strong>PRESUPUESTO</strong><br><small id="doc-ref">REF: --</small></div>
-                    <div style="text-align:right"><small id="doc-fecha">--/--/--</small></div>
-                </div>
-
-                <div class="table-container">
-                    <table id="tabla-principal">
-                        <thead>
-                            <tr>
-                                <th style="width:10%">Cant</th>
-                                <th>Descripción</th>
-                                <th style="width:15%">Ud.</th>
-                                <th style="width:20%">Total</th>
-                                <th class="no-print"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="cuerpo-tabla"></tbody>
-                    </table>
-                </div>
-
-                <div class="doc-resumen">
-                    <div class="res-row"><span>Base Imponible:</span> <span id="res-base">0.00€</span></div>
-                    <div class="res-row"><span>IVA (21%):</span> <span id="res-iva">0.00€</span></div>
-                    <div class="res-row res-total"><span>TOTAL:</span> <span id="res-total">0.00€</span></div>
-                </div>
-
-                <div class="doc-footer">
-                    <strong>Notas:</strong>
-                    <div id="doc-notas-texto" contenteditable="true" style="margin-top:5px; min-height:40px;"></div>
-                </div>
-            </div>
-
-            <div class="no-print main-actions">
-                <button class="btn-action btn-dark" onclick="window.print()">🖨️ IMPRIMIR / PDF</button>
-                <button class="btn-action btn-red" onclick="borrarHoja()">🗑️ VACIAR TODO</button>
-            </div>
-        </section>
-
-        <section id="tab-lista" class="tab-content">
-            <div class="input-card">
-                <h3>Guardar en Biblioteca</h3>
-                <div class="form-item"><label>Nombre</label><input type="text" id="lib-nombre"></div>
-                <div class="form-item"><label>Precio Base (€)</label><input type="number" id="lib-precio" step="0.01"></div>
-                <button class="btn-action btn-blue" onclick="guardarEnLib()">GUARDAR PRODUCTO</button>
-            </div>
-            <div id="lista-render"></div>
-        </section>
-
-        <section id="tab-conf" class="tab-content">
-            <div class="input-card">
-                <h3>Mis Datos de Empresa</h3>
-                <div class="form-item"><label>Nombre</label><input type="text" id="conf-nombre"></div>
-                <div class="form-item"><label>CIF</label><input type="text" id="conf-cif"></div>
-                <div class="form-item"><label>Teléfono</label><input type="text" id="conf-tel"></div>
-                <div class="form-item"><label>Dirección</label><input type="text" id="conf-dir"></div>
-                <div class="form-item"><label>Logo</label><input type="file" onchange="subirLogo(this)"></div>
-                <div class="form-item">
-                    <label>Nota Predeterminada (Garantía, etc.)</label>
-                    <textarea id="conf-nota" rows="3" style="width:100%"></textarea>
-                </div>
-                <button class="btn-action btn-blue" onclick="guardarConfig()">GUARDAR CAMBIOS</button>
-            </div>
-        </section>
-
-    </main>
-
-    <script src="script.js"></script>
-</body>
-</html>
-                        <option value="sin">Precio es BASE (Sumar 21% después)</option>
-                        <option value="con">Precio ya incluye IVA (Desglosar)</option>
-                    </select>
-                </div>
-                <button class="btn btn-main" onclick="addFila()">+ AÑADIR A LA HOJA</button>
-            </div>
-
-            <article id="hoja-real" class="paper">
-                <div class="p-header">
-                    <div id="v-logo-box">
-                        <img id="v-logo" src="" style="display:none; max-height:60px;">
-                        <span id="v-nom-text">MI EMPRESA</span>
-                    </div>
-                    <div class="v-empresa-datos">
-                        <strong id="v-emp">EMPRESA</strong><br>
-                        <span id="v-cif">CIF: ---</span><br>
-                        <span id="v-tel">TEL: ---</span><br>
-                        <span id="v-dir">DIR: ---</span>
-                    </div>
-                </div>
-
-                <div class="p-meta">
-                    <div><strong>PRESUPUESTO</strong><br><small id="v-ref">REF: --</small></div>
-                    <div style="text-align:right"><small id="v-fec">--/--/--</small></div>
-                </div>
-
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Cant</th>
-                                <th>Descripción</th>
-                                <th>Precio Ud.</th>
-                                <th>Total</th>
-                                <th class="no-print"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="v-body"></tbody>
-                    </table>
-                </div>
-
-                <div class="p-resumen">
-                    <div class="row-res"><span>Base Imponible:</span> <span id="r-base">0.00€</span></div>
-                    <div class="row-res"><span>IVA (21%):</span> <span id="r-iva">0.00€</span></div>
-                    <div class="row-res total-big"><span>TOTAL:</span> <span id="r-total">0.00€</span></div>
-                </div>
-
-                <footer class="p-footer">
-                    <strong>Notas y Condiciones:</strong>
-                    <div id="v-notas" contenteditable="true" style="margin-top:5px; white-space: pre-wrap;"></div>
-                </footer>
+              <div class="amp-footer-print">Documento generado con AntenaManager PRO.</div>
             </article>
+          </div>
 
-            <div class="no-print actions">
-                <button class="btn btn-alt" onclick="window.print()">🖨️ IMPRIMIR / PDF</button>
-                <button class="btn btn-danger" onclick="limpiarHoja()">🗑️ VACIAR HOJA</button>
+          <div class="amp-bottom-bar amp-no-print">
+            <div class="amp-bottom-inner">
+              <button id="ampBtnPrintBudget" class="amp-btn amp-btn-primary" type="button">Imprimir / Guardar PDF (Presupuesto)</button>
             </div>
-        </section>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <section id="p-tarifas" class="panel">
-            <div class="card">
-                <h3>Guardar Nueva Tarifa</h3>
-                <div class="f-group"><label>Nombre</label><input type="text" id="lib-n"></div>
-                <div class="f-group"><label>Precio (€)</label><input type="number" id="lib-p" step="0.01"></div>
-                <button class="btn btn-main" onclick="saveLib()">GUARDAR EN BIBLIOTECA</button>
-            </div>
-            <div id="lista-lib"></div>
-        </section>
+    <!-- ================= LISTA ================= -->
+    <section id="ampSectionLista" class="amp-section">
+      <div class="amp-card amp-no-print">
+        <h2>Biblioteca de precios</h2>
 
-        <section id="p-config" class="panel">
-            <div class="card">
-                <h3>Datos de mi Empresa</h3>
-                <div class="f-group"><label>Nombre Comercial</label><input type="text" id="c-nom"></div>
-                <div class="f-group"><label>CIF/NIF</label><input type="text" id="c-cif"></div>
-                <div class="f-group"><label>Teléfono</label><input type="text" id="c-tel"></div>
-                <div class="f-group"><label>Dirección Completa</label><input type="text" id="c-dir"></div>
-                <div class="f-group"><label>Logo</label><input type="file" onchange="upLogo(this)"></div>
-                <div class="f-group">
-                    <label>Nota Fija (Garantía, Pago, etc.)</label>
-                    <textarea id="c-nota" rows="4" style="width:100%; padding:10px; border-radius:8px; border:1px solid #cbd5e1;"></textarea>
+        <div class="amp-grid amp-grid-2">
+          <div class="amp-field">
+            <label for="ampLibName">Nombre del servicio / producto</label>
+            <input id="ampLibName" class="amp-input" type="text" placeholder="Ej. Instalación antena TDT" />
+          </div>
+          <div class="amp-field">
+            <label for="ampLibPrice">Precio base (€)</label>
+            <input id="ampLibPrice" class="amp-input" type="number" min="0" step="0.01" placeholder="0.00" />
+          </div>
+        </div>
+
+        <div class="amp-actions">
+          <button id="ampBtnAddLib" class="amp-btn amp-btn-primary" type="button">Guardar en biblioteca</button>
+          <button id="ampBtnClearLib" class="amp-btn amp-btn-danger" type="button">Vaciar biblioteca</button>
+          <button id="ampBtnPrintLibrary" class="amp-btn amp-btn-secondary" type="button">Imprimir / PDF (Biblioteca)</button>
+          <button id="ampBtnExportAll1" class="amp-btn amp-btn-secondary" type="button">Exportar datos</button>
+          <label class="amp-btn amp-btn-secondary" style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
+            Importar datos
+            <input id="ampImportFile1" type="file" accept="application/json" style="display:none;">
+          </label>
+        </div>
+        <div class="amp-muted">Exporta/Importa: configuración + biblioteca (localStorage) para actualizaciones offline.</div>
+        <div id="ampLibMsg" class="amp-status"></div>
+      </div>
+
+      <div class="amp-card amp-no-print">
+        <h3>Servicios guardados</h3>
+        <div id="ampLibraryList" class="amp-list-wrap">
+          <div class="amp-muted">No hay servicios guardados todavía.</div>
+        </div>
+      </div>
+
+      <!-- Host imprimible: BIBLIOTECA -->
+      <div id="ampPrintLibraryHost">
+        <div class="amp-sheet-wrap">
+          <article class="amp-sheet">
+            <div class="amp-sheet-header">
+              <div class="amp-logo-box" id="ampSheetLogoBoxLib"><span>Logo empresa</span></div>
+              <div>
+                <h1 class="amp-company-title" id="ampSheetCompanyNameLib">Tu Empresa de Telecomunicaciones</h1>
+                <div class="amp-company-meta">
+                  <div><strong>CIF:</strong> <span id="ampSheetCompanyCifLib">—</span></div>
+                  <div><strong>Tel.:</strong> <span id="ampSheetCompanyPhoneLib">—</span></div>
+                  <div><strong>Dirección:</strong> <span id="ampSheetCompanyAddressLib">—</span></div>
                 </div>
-                <button class="btn btn-main" onclick="saveCfg()">GUARDAR CONFIGURACIÓN</button>
+              </div>
             </div>
-            <div class="card">
-                <h3>Sincronizar Datos</h3>
-                <button class="btn btn-alt" onclick="exportJSON()">💾 EXPORTAR PACK (.json)</button>
-                <button class="btn btn-alt" style="margin-top:10px; background:#64748b" onclick="document.getElementById('f-in').click()">📂 IMPORTAR PACK</button>
-                <input type="file" id="f-in" style="display:none" onchange="importJSON(event)">
+
+            <div class="amp-doc-title-row">
+              <h2 class="amp-doc-title">BIBLIOTECA DE PRECIOS</h2>
+              <div class="amp-muted">Fecha: <strong id="ampLibPrintDate">--/--/----</strong></div>
             </div>
-        </section>
 
-    </main>
+            <table class="amp-sheet-table">
+              <thead><tr><th>Servicio / Producto</th><th class="amp-text-right">Precio base</th></tr></thead>
+              <tbody id="ampLibPrintBody"><tr><td colspan="2" class="amp-muted">No hay servicios guardados.</td></tr></tbody>
+            </table>
 
-    <script src="script.js"></script>
-</body>
-</html>
-            <article id="hoja-real" class="paper">
-                <div class="p-header">
-                    <div id="v-logo-box">
-                        <img id="v-logo" src="" style="display:none; max-height:60px;">
-                        <span id="v-nom-text" style="font-weight:bold; color:#2563eb;">MI EMPRESA</span>
-                    </div>
-                    <div class="v-empresa-datos" style="text-align:right">
-                        <strong id="v-emp">EMPRESA</strong><br>
-                        <span id="v-cif">CIF: ---</span><br>
-                        <span id="v-tel">TEL: ---</span>
-                    </div>
+            <div class="amp-footer-print">Documento generado con AntenaManager PRO.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CONFIG ================= -->
+    <section id="ampSectionConfig" class="amp-section">
+      <div class="amp-card amp-no-print">
+        <h2>Configuración de empresa</h2>
+
+        <div class="amp-grid amp-grid-2">
+          <div class="amp-field">
+            <label for="ampCfgCompanyName">Nombre comercial</label>
+            <input id="ampCfgCompanyName" class="amp-input" type="text" placeholder="Antenas López Telecom" />
+          </div>
+          <div class="amp-field">
+            <label for="ampCfgCompanyCif">CIF</label>
+            <input id="ampCfgCompanyCif" class="amp-input" type="text" placeholder="B12345678" />
+          </div>
+          <div class="amp-field">
+            <label for="ampCfgCompanyPhone">Teléfono</label>
+            <input id="ampCfgCompanyPhone" class="amp-input" type="tel" placeholder="+34 600 000 000" />
+          </div>
+          <div class="amp-field">
+            <label for="ampCfgCompanyAddress">Dirección</label>
+            <input id="ampCfgCompanyAddress" class="amp-input" type="text" placeholder="C/ Ejemplo, 123 - 28000 Madrid" />
+          </div>
+        </div>
+
+        <div class="amp-field" style="margin-top:10px;">
+          <label for="ampCfgDefaultNotes">Notas predeterminadas (garantía / condiciones de pago)</label>
+          <textarea id="ampCfgDefaultNotes" class="amp-textarea" placeholder="Ej. Garantía 2 años. Pago 50% aceptación y 50% finalización."></textarea>
+          <div class="amp-muted">Estas notas se copian al campo “Notas” del presupuesto al crear uno nuevo o al pulsar “Cargar notas de CONFIG”.</div>
+        </div>
+
+        <div class="amp-grid amp-grid-2" style="margin-top:10px;">
+          <div class="amp-field">
+            <label for="ampCfgLogoFile">Logo de empresa (imagen)</label>
+            <input id="ampCfgLogoFile" class="amp-input" type="file" accept="image/*" />
+            <div class="amp-muted">Se guardará como Base64 en localStorage.</div>
+          </div>
+          <div class="amp-field">
+            <label>Vista previa logo</label>
+            <div class="amp-logo-box" id="ampCfgLogoPreviewBox"><span>Sin logo</span></div>
+          </div>
+        </div>
+
+        <div class="amp-actions">
+          <button id="ampBtnSaveConfig" class="amp-btn amp-btn-primary" type="button">Guardar configuración</button>
+          <button id="ampBtnPrintConfig" class="amp-btn amp-btn-secondary" type="button">Imprimir / PDF (Configuración)</button>
+          <button id="ampBtnExportAll2" class="amp-btn amp-btn-secondary" type="button">Exportar datos</button>
+          <label class="amp-btn amp-btn-secondary" style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
+            Importar datos
+            <input id="ampImportFile2" type="file" accept="application/json" style="display:none;">
+          </label>
+        </div>
+        <div id="ampCfgMsg" class="amp-status"></div>
+      </div>
+
+      <!-- Host imprimible: CONFIG -->
+      <div id="ampPrintConfigHost">
+        <div class="amp-sheet-wrap">
+          <article class="amp-sheet">
+            <div class="amp-sheet-header">
+              <div class="amp-logo-box" id="ampSheetLogoBoxCfg"><span>Logo empresa</span></div>
+              <div>
+                <h1 class="amp-company-title" id="ampSheetCompanyNameCfg">Tu Empresa de Telecomunicaciones</h1>
+                <div class="amp-company-meta">
+                  <div><strong>CIF:</strong> <span id="ampSheetCompanyCifCfg">—</span></div>
+                  <div><strong>Tel.:</strong> <span id="ampSheetCompanyPhoneCfg">—</span></div>
+                  <div><strong>Dirección:</strong> <span id="ampSheetCompanyAddressCfg">—</span></div>
                 </div>
-
-                <div class="p-meta">
-                    <div><strong>PRESUPUESTO</strong><br><small id="v-ref">REF: --</small></div>
-                    <div><small id="v-fec">--/--/--</small></div>
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Cant</th>
-                            <th>Descripción</th>
-                            <th>Precio</th>
-                            <th>Total</th>
-                            <th class="no-print"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="v-body"></tbody>
-                </table>
-
-                <div class="p-resumen">
-                    <div class="row-res"><span>Base Imponible:</span> <span id="r-base">0.00€</span></div>
-                    <div class="row-res"><span>IVA (21%):</span> <span id="r-iva">0.00€</span></div>
-                    <div class="row-res total-big"><span>TOTAL:</span> <span id="r-total">0.00€</span></div>
-                </div>
-
-                <footer class="p-footer">
-                    <p><strong>Notas:</strong> <span id="v-notas" contenteditable="true">Validez: 30 días.</span></p>
-                </footer>
-            </article>
-
-            <div class="no-print actions">
-                <button class="btn btn-alt" onclick="window.print()">🖨️ GENERAR PDF / IMPRIMIR</button>
-                <button class="btn btn-danger" onclick="limpiarTab()">🗑️ VACIAR HOJA</button>
+              </div>
             </div>
-        </section>
 
-        <section id="p-tarifas" class="panel">
-            <div class="card">
-                <h3>Añadir a Biblioteca</h3>
-                <div class="f-group"><label>Nombre</label><input type="text" id="lib-n"></div>
-                <div class="f-group"><label>Precio (€)</label><input type="number" id="lib-p" step="0.01"></div>
-                <button class="btn btn-main" onclick="saveLib()">GUARDAR PRODUCTO</button>
+            <div class="amp-doc-title-row">
+              <h2 class="amp-doc-title">CONFIGURACIÓN DE EMPRESA</h2>
+              <div class="amp-muted">Fecha: <strong id="ampCfgPrintDate">--/--/----</strong></div>
             </div>
-            <div id="lista-lib"></div>
-        </section>
 
-        <section id="p-config" class="panel">
-            <div class="card">
-                <h3>Mis Datos</h3>
-                <div class="f-group"><label>Nombre</label><input type="text" id="c-nom"></div>
-                <div class="f-group"><label>CIF</label><input type="text" id="c-cif"></div>
-                <div class="f-group"><label>Teléfono</label><input type="text" id="c-tel"></div>
-                <div class="f-group"><label>Logo</label><input type="file" onchange="upLogo(this)"></div>
-                <button class="btn btn-main" onclick="saveCfg()">ACTUALIZAR DATOS</button>
+            <div class="amp-box">
+              <h4>Notas predeterminadas (garantía / condiciones de pago)</h4>
+              <div id="ampCfgPrintNotes" class="amp-notes-editable" contenteditable="false" style="border-style:solid; background:#fff;"></div>
             </div>
-            <div class="card">
-                <h3>Exportar Datos para el Jefe</h3>
-                <button class="btn btn-alt" onclick="exportJSON()">💾 DESCARGAR COPIA (.json)</button>
-                <button class="btn btn-alt" style="margin-top:10px; background:#64748b" onclick="document.getElementById('f-in').click()">📂 CARGAR COPIA</button>
-                <input type="file" id="f-in" style="display:none" onchange="importJSON(event)">
-            </div>
-        </section>
 
-    </main>
+            <div class="amp-footer-print">Documento generado con AntenaManager PRO.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
 
-    <script src="script.js"></script>
+  <script>
+    /* ============================================================
+       AntenaManager PRO - Single-file SPA (offline)
+       Cache-busting / unique prefix: antmPro_20260307_
+       ============================================================ */
+    (function(){
+      "use strict";
+
+      const antmPro_20260307_KEYS = {
+        library:  "antmPro_20260307_library",
+        config:   "antmPro_20260307_config",
+        deviceId: "antmPro_20260307_device_id"
+      };
+
+      const antmPro_20260307_state = {
+        library: [],
+        config: {
+          companyName:"", companyCif:"", companyPhone:"", companyAddress:"",
+          defaultNotes:"", logoBase64:""
+        },
+        budgetLines: [],
+        sheetNotesDirty: false
+      };
+
+      const $ = (s)=>document.querySelector(s);
+      const $$ = (s)=>Array.from(document.querySelectorAll(s));
+
+      const navButtons = $$(".amp-nav-btn");
+      const sections = $$(".amp-section");
+
+      const el = {
+        // Nuevo
+        clientName: $("#ampClientName"),
+        clientCif: $("#ampClientCif"),
+        clientPhone: $("#ampClientPhone"),
+        clientAddress: $("#ampClientAddress"),
+        budgetNumber: $("#ampBudgetNumber"),
+        budgetDate: $("#ampBudgetDate"),
+        ivaMode: $("#ampIvaMode"),
+        btnNewNumber: $("#ampBtnNewNumber"),
+        btnUseDefaultNotes: $("#ampBtnUseDefaultNotes"),
+        productSelect: $("#ampProductSelect"),
+        lineDesc: $("#ampLineDesc"),
+        lineQty: $("#ampLineQty"),
+        linePrice: $("#ampLinePrice"),
+        btnAddLine: $("#ampBtnAddLine"),
+        btnResetBudget: $("#ampBtnResetBudget"),
+        btnPrintBudget: $("#ampBtnPrintBudget"),
+        lineMsg: $("#ampLineMsg"),
+        linesTbody: $("#ampLinesTbody"),
+        quickTotal: $("#ampQuickTotal"),
+
+        // Hoja presupuesto
+        sheetLogoBox: $("#ampSheetLogoBox"),
+        sheetCompanyName: $("#ampSheetCompanyName"),
+        sheetCompanyCif: $("#ampSheetCompanyCif"),
+        sheetCompanyPhone: $("#ampSheetCompanyPhone"),
+        sheetCompanyAddress: $("#ampSheetCompanyAddress"),
+        sheetBudgetNo: $("#ampSheetBudgetNo"),
+        sheetBudgetDate: $("#ampSheetBudgetDate"),
+        sheetClientName: $("#ampSheetClientName"),
+        sheetClientCif: $("#ampSheetClientCif"),
+        sheetClientPhone: $("#ampSheetClientPhone"),
+        sheetClientAddress: $("#ampSheetClientAddress"),
+        sheetIvaModeText: $("#ampSheetIvaModeText"),
+        sheetLinesBody: $("#ampSheetLinesBody"),
+        sheetBaseTotal: $("#ampSheetBaseTotal"),
+        sheetIvaTotal: $("#ampSheetIvaTotal"),
+        sheetGrandTotal: $("#ampSheetGrandTotal"),
+        sheetNotesEditable: $("#ampSheetNotesEditable"),
+
+        // Lista
+        libName: $("#ampLibName"),
+        libPrice: $("#ampLibPrice"),
+        btnAddLib: $("#ampBtnAddLib"),
+        btnClearLib: $("#ampBtnClearLib"),
+        btnPrintLibrary: $("#ampBtnPrintLibrary"),
+        libraryList: $("#ampLibraryList"),
+        libMsg: $("#ampLibMsg"),
+        libPrintBody: $("#ampLibPrintBody"),
+        libPrintDate: $("#ampLibPrintDate"),
+
+        sheetLogoBoxLib: $("#ampSheetLogoBoxLib"),
+        sheetCompanyNameLib: $("#ampSheetCompanyNameLib"),
+        sheetCompanyCifLib: $("#ampSheetCompanyCifLib"),
+        sheetCompanyPhoneLib: $("#ampSheetCompanyPhoneLib"),
+        sheetCompanyAddressLib: $("#ampSheetCompanyAddressLib"),
+
+        // Config
+        cfgCompanyName: $("#ampCfgCompanyName"),
+        cfgCompanyCif: $("#ampCfgCompanyCif"),
+        cfgCompanyPhone: $("#ampCfgCompanyPhone"),
+        cfgCompanyAddress: $("#ampCfgCompanyAddress"),
+        cfgDefaultNotes: $("#ampCfgDefaultNotes"),
+        cfgLogoFile: $("#ampCfgLogoFile"),
+        cfgLogoPreviewBox: $("#ampCfgLogoPreviewBox"),
+        btnSaveConfig: $("#ampBtnSaveConfig"),
+        btnPrintConfig: $("#ampBtnPrintConfig"),
+        cfgMsg: $("#ampCfgMsg"),
+        cfgPrintDate: $("#ampCfgPrintDate"),
+        cfgPrintNotes: $("#ampCfgPrintNotes"),
+
+        sheetLogoBoxCfg: $("#ampSheetLogoBoxCfg"),
+        sheetCompanyNameCfg: $("#ampSheetCompanyNameCfg"),
+        sheetCompanyCifCfg: $("#ampSheetCompanyCifCfg"),
+        sheetCompanyPhoneCfg: $("#ampSheetCompanyPhoneCfg"),
+        sheetCompanyAddressCfg: $("#ampSheetCompanyAddressCfg"),
+
+        // Export/Import buttons (duplicados en LISTA/CONFIG)
+        btnExportAll1: $("#ampBtnExportAll1"),
+        btnExportAll2: $("#ampBtnExportAll2"),
+        importFile1: $("#ampImportFile1"),
+        importFile2: $("#ampImportFile2")
+      };
+
+      /* ===== Helpers ===== */
+      function safeParse(t,f){ try{ return JSON.parse(t); } catch { return f; } }
+      function num(v){ const n=Number(v); return Number.isFinite(n) ? n : 0; }
+      function round2(n){ return Math.round((Number(n)+Number.EPSILON)*100)/100; }
+      function money(v){ return new Intl.NumberFormat("es-ES",{style:"currency",currency:"EUR"}).format(Number(v||0)); }
+      function esc(s){ return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
+      function todayIso(){ const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+      function formatDateEs(iso){ if(!iso) return "--/--/----"; const d=new Date(iso+"T00:00:00"); if(isNaN(d.getTime())) return iso; return new Intl.DateTimeFormat("es-ES").format(d); }
+      function showMsg(node, txt, err=false){
+        node.textContent = txt || "";
+        node.style.color = err ? "#b91c1c" : "#0f766e";
+        if(txt) setTimeout(()=>{ if(node.textContent===txt) node.textContent=""; }, 2600);
+      }
+
+      /* ===== Offline unique IDs ===== */
+      function getOrCreateDeviceId(){
+        let id = localStorage.getItem(antmPro_20260307_KEYS.deviceId);
+        if(id) return id;
+
+        if(window.crypto && crypto.randomUUID) id = crypto.randomUUID();
+        else if(window.crypto && crypto.getRandomValues){
+          const buf = new Uint8Array(16); crypto.getRandomValues(buf);
+          id = Array.from(buf).map(b=>b.toString(16).padStart(2,"0")).join("");
+        } else {
+          id = `dev_${Date.now()}_${Math.floor(Math.random()*1e9)}`;
+        }
+        localStorage.setItem(antmPro_20260307_KEYS.deviceId, id);
+        return id;
+      }
+
+      function generateBudgetNumber(){
+        const dev = getOrCreateDeviceId().replace(/[^a-zA-Z0-9]/g,"").slice(0,10).toUpperCase();
+        const now36 = Date.now().toString(36).toUpperCase();
+        let rnd = "";
+        if(window.crypto && crypto.getRandomValues){
+          const buf = new Uint32Array(2); crypto.getRandomValues(buf);
+          rnd = (buf[0].toString(36)+buf[1].toString(36)).toUpperCase();
+        } else rnd = Math.floor(Math.random()*1e16).toString(36).toUpperCase();
+
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth()+1).padStart(2,"0");
+        const dd = String(d.getDate()).padStart(2,"0");
+        const rnd6 = rnd.replace(/[^0-9A-Z]/g,"").slice(0,6) || "RNDXXX";
+        return `AMP-${y}${m}${dd}-${now36}-${dev}-${rnd6}`;
+      }
+
+      /* ===== Storage ===== */
+      function saveLibrary(){ localStorage.setItem(antmPro_20260307_KEYS.library, JSON.stringify(antmPro_20260307_state.library)); }
+      function loadLibrary(){
+        const raw = localStorage.getItem(antmPro_20260307_KEYS.library);
+        const parsed = safeParse(raw, []);
+        antmPro_20260307_state.library = Array.isArray(parsed) ? parsed : [];
+      }
+
+      function saveConfig(){ localStorage.setItem(antmPro_20260307_KEYS.config, JSON.stringify(antmPro_20260307_state.config)); }
+      function loadConfig(){
+        const raw = localStorage.getItem(antmPro_20260307_KEYS.config);
+        const parsed = safeParse(raw, null);
+        if(parsed && typeof parsed === "object"){
+          antmPro_20260307_state.config = {
+            companyName: parsed.companyName || "",
+            companyCif: parsed.companyCif || "",
+            companyPhone: parsed.companyPhone || "",
+            companyAddress: parsed.companyAddress || "",
+            defaultNotes: parsed.defaultNotes || "",
+            logoBase64: parsed.logoBase64 || ""
+          };
+        }
+      }
+
+      /* ===== Export / Import =====
+         Exporta biblioteca + config + meta (version/timestamp)
+         Importa y reemplaza (con confirmación)
+      */
+      function buildExportObject(){
+        return {
+          app: "AntenaManager PRO",
+          schemaVersion: 1,
+          exportedAt: new Date().toISOString(),
+          keys: antmPro_20260307_KEYS,
+          data: {
+            config: antmPro_20260307_state.config,
+            library: antmPro_20260307_state.library
+          }
+        };
+      }
+
+      function downloadJson(filename, obj){
+        const json = JSON.stringify(obj, null, 2);
+        const blob = new Blob([json], {type:"application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function exportAll(){
+        const d = new Date();
+        const stamp = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}_${String(d.getHours()).padStart(2,"0")}${String(d.getMinutes()).padStart(2,"0")}`;
+        downloadJson(`AntenaManagerPRO_backup_${stamp}.json`, buildExportObject());
+      }
+
+      async function importFromFile(file){
+        if(!file) return;
+        const text = await file.text();
+        const obj = safeParse(text, null);
+        if(!obj || typeof obj !== "object"){
+          throw new Error("Archivo JSON inválido.");
+        }
+        // Validación suave
+        const data = obj.data || obj;
+        const cfg = data.config;
+        const lib = data.library;
+
+        if(!cfg || typeof cfg !== "object") throw new Error("No se encontró 'config' en el archivo.");
+        if(!Array.isArray(lib)) throw new Error("No se encontró 'library' (array) en el archivo.");
+
+        if(!confirm("Esto reemplazará tu CONFIGURACIÓN y BIBLIOTECA actuales. ¿Continuar?")) return;
+
+        // Reemplazar en memoria
+        antmPro_20260307_state.config = {
+          companyName: cfg.companyName || "",
+          companyCif: cfg.companyCif || "",
+          companyPhone: cfg.companyPhone || "",
+          companyAddress: cfg.companyAddress || "",
+          defaultNotes: cfg.defaultNotes || "",
+          logoBase64: cfg.logoBase64 || ""
+        };
+
+        antmPro_20260307_state.library = lib.map((it)=>({
+          id: String(it.id || `imp_${Date.now()}_${Math.floor(Math.random()*1000)}`),
+          name: String(it.name || ""),
+          basePrice: round2(num(it.basePrice))
+        })).filter(it => it.name.trim().length > 0);
+
+        // Guardar a localStorage
+        saveConfig();
+        saveLibrary();
+
+        // Refrescar UI
+        fillConfigForm();
+        applyConfigToAllPrintSheets();
+        renderLibraryList();
+        renderProductSelect();
+
+        // Notas: si no estaban editadas, recargar desde CONFIG
+        applyDefaultNotesToBudget(true);
+
+        renderBudgetLines();
+        renderBudgetSheet();
+
+        showMsg(el.cfgMsg, "Datos importados correctamente.");
+        showMsg(el.libMsg, "Datos importados correctamente.");
+      }
+
+      /* ===== SPA Navigation ===== */
+      function switchSection(id){
+        sections.forEach(s=>s.classList.remove("active"));
+        navButtons.forEach(b=>b.classList.remove("active"));
+        const sec = document.getElementById(id);
+        if(sec) sec.classList.add("active");
+        const btn = navButtons.find(b=>b.dataset.target===id);
+        if(btn) btn.classList.add("active");
+      }
+
+      /* ===== Notes: load from CONFIG ===== */
+      function applyDefaultNotesToBudget(force=false){
+        if(!force && antmPro_20260307_state.sheetNotesDirty) return;
+        const cfgNotes = (antmPro_20260307_state.config.defaultNotes || "").trim();
+        const fallback = "Añade aquí condiciones, garantía y observaciones del trabajo.";
+        el.sheetNotesEditable.textContent = cfgNotes ? cfgNotes : fallback;
+        antmPro_20260307_state.sheetNotesDirty = false;
+      }
+
+      /* ===== Render library ===== */
+      function renderProductSelect(){
+        const sel = el.productSelect;
+        const current = sel.value;
+        let html = `<option value="">-- Seleccionar de la biblioteca --</option>`;
+        antmPro_20260307_state.library.forEach(item=>{
+          html += `<option value="${item.id}">${esc(item.name)} · ${money(item.basePrice)}</option>`;
+        });
+        sel.innerHTML = html;
+        if([...sel.options].some(o=>o.value===current)) sel.value = current;
+      }
+
+      function renderLibraryList(){
+        const wrap = el.libraryList;
+        const lib = antmPro_20260307_state.library;
+
+        if(!lib.length){
+          wrap.innerHTML = `<div class="amp-muted">No hay servicios guardados todavía.</div>`;
+          renderProductSelect();
+          return;
+        }
+
+        wrap.innerHTML = lib.map(item => `
+          <div class="amp-service-row">
+            <div class="amp-service-name">${esc(item.name)}</div>
+            <div class="amp-service-price">${money(item.basePrice)}</div>
+            <button class="amp-btn amp-btn-danger" type="button" data-delete-lib-id="${item.id}" style="min-height:36px; padding:6px 10px;">Eliminar</button>
+          </div>
+        `).join("");
+
+        renderProductSelect();
+      }
+
+      function addLibraryItem(){
+        const name = el.libName.value.trim();
+        const price = num(el.libPrice.value);
+        if(!name){ showMsg(el.libMsg,"Introduce un nombre de servicio.", true); return; }
+        if(price < 0){ showMsg(el.libMsg,"El precio no puede ser negativo.", true); return; }
+
+        antmPro_20260307_state.library.unshift({
+          id: `lib_${Date.now()}_${Math.floor(Math.random()*1000)}`,
+          name,
+          basePrice: round2(price)
+        });
+        saveLibrary();
+        renderLibraryList();
+        el.libName.value = "";
+        el.libPrice.value = "";
+        showMsg(el.libMsg, "Servicio guardado.");
+      }
+
+      function deleteLibraryItem(id){
+        antmPro_20260307_state.library = antmPro_20260307_state.library.filter(x=>x.id!==id);
+        saveLibrary();
+        renderLibraryList();
+        showMsg(el.libMsg, "Servicio eliminado.");
+      }
+
+      function clearLibrary(){
+        if(!confirm("¿Vaciar toda la biblioteca de precios?")) return;
+        antmPro_20260307_state.library = [];
+        saveLibrary();
+        renderLibraryList();
+        showMsg(el.libMsg, "Biblioteca vaciada.");
+      }
+
+      /* ===== Config ===== */
+      function fillConfigForm(){
+        const c = antmPro_20260307_state.config;
+        el.cfgCompanyName.value = c.companyName;
+        el.cfgCompanyCif.value = c.companyCif;
+        el.cfgCompanyPhone.value = c.companyPhone;
+        el.cfgCompanyAddress.value = c.companyAddress;
+        el.cfgDefaultNotes.value = c.defaultNotes;
+        el.cfgLogoPreviewBox.innerHTML = c.logoBase64 ? `<img src="${c.logoBase64}" alt="Logo empresa" />` : `<span>Sin logo</span>`;
+      }
+
+      function applyConfigToAllPrintSheets(){
+        const c = antmPro_20260307_state.config;
+        // Budget
+        el.sheetCompanyName.textContent = c.companyName || "Tu Empresa de Telecomunicaciones";
+        el.sheetCompanyCif.textContent = c.companyCif || "—";
+        el.sheetCompanyPhone.textContent = c.companyPhone || "—";
+        el.sheetCompanyAddress.textContent = c.companyAddress || "—";
+        el.sheetLogoBox.innerHTML = c.logoBase64 ? `<img src="${c.logoBase64}" alt="Logo empresa" />` : `<span>Logo empresa</span>`;
+        // Library
+        el.sheetCompanyNameLib.textContent = c.companyName || "Tu Empresa de Telecomunicaciones";
+        el.sheetCompanyCifLib.textContent = c.companyCif || "—";
+        el.sheetCompanyPhoneLib.textContent = c.companyPhone || "—";
+        el.sheetCompanyAddressLib.textContent = c.companyAddress || "—";
+        el.sheetLogoBoxLib.innerHTML = c.logoBase64 ? `<img src="${c.logoBase64}" alt="Logo empresa" />` : `<span>Logo empresa</span>`;
+        // Config
+        el.sheetCompanyNameCfg.textContent = c.companyName || "Tu Empresa de Telecomunicaciones";
+        el.sheetCompanyCifCfg.textContent = c.companyCif || "—";
+        el.sheetCompanyPhoneCfg.textContent = c.companyPhone || "—";
+        el.sheetCompanyAddressCfg.textContent = c.companyAddress || "—";
+        el.sheetLogoBoxCfg.innerHTML = c.logoBase64 ? `<img src="${c.logoBase64}" alt="Logo empresa" />` : `<span>Logo empresa</span>`;
+      }
+
+      function saveConfigFromForm(){
+        antmPro_20260307_state.config.companyName = el.cfgCompanyName.value.trim();
+        antmPro_20260307_state.config.companyCif = el.cfgCompanyCif.value.trim();
+        antmPro_20260307_state.config.companyPhone = el.cfgCompanyPhone.value.trim();
+        antmPro_20260307_state.config.companyAddress = el.cfgCompanyAddress.value.trim();
+        antmPro_20260307_state.config.defaultNotes = el.cfgDefaultNotes.value;
+
+        saveConfig();
+        applyConfigToAllPrintSheets();
+
+        // Si el usuario no editó notas manualmente, refrescar desde CONFIG
+        applyDefaultNotesToBudget(false);
+
+        showMsg(el.cfgMsg, "Configuración guardada.");
+      }
+
+      function handleLogoUpload(file){
+        if(!file) return;
+        if(!file.type.startsWith("image/")){
+          showMsg(el.cfgMsg, "Selecciona una imagen válida.", true);
+          return;
+        }
+        const r = new FileReader();
+        r.onload = (e)=>{
+          antmPro_20260307_state.config.logoBase64 = String(e.target?.result || "");
+          el.cfgLogoPreviewBox.innerHTML = antmPro_20260307_state.config.logoBase64
+            ? `<img src="${antmPro_20260307_state.config.logoBase64}" alt="Logo empresa" />`
+            : `<span>Sin logo</span>`;
+          applyConfigToAllPrintSheets();
+          showMsg(el.cfgMsg, "Logo cargado. Guarda configuración para persistir.");
+        };
+        r.readAsDataURL(file);
+      }
+
+      /* ===== Budget calc ===== */
+      function getIvaMode(){ return el.ivaMode.value === "incluido" ? "incluido" : "base"; }
+      function getIvaModeLabel(){ return getIvaMode()==="base" ? "Precio Base (añadir 21%)" : "IVA Incluido (desglosar 21%)"; }
+
+      function computeLine(line){
+        const qty = num(line.qty);
+        const unitIn = num(line.unitPriceInput);
+        let baseUnit, baseLine, grossLine, ivaLine;
+
+        if(getIvaMode()==="base"){
+          baseUnit = unitIn;
+          baseLine = round2(qty * baseUnit);
+          grossLine = round2(baseLine * 1.21);
+          ivaLine = round2(grossLine - baseLine);
+        } else {
+          grossLine = round2(qty * unitIn);
+          baseLine = round2(grossLine / 1.21);
+          ivaLine = round2(grossLine - baseLine);
+          baseUnit = round2(unitIn / 1.21);
+        }
+        return { qty, baseUnit, baseLine, ivaLine, grossLine };
+      }
+
+      function computeTotals(){
+        let base=0, iva=0, total=0;
+        antmPro_20260307_state.budgetLines.forEach(l=>{
+          const c = computeLine(l);
+          base += c.baseLine; iva += c.ivaLine; total += c.grossLine;
+        });
+        return { base: round2(base), iva: round2(iva), total: round2(total) };
+      }
+
+      function syncHeaderAndClientToSheet(){
+        el.sheetBudgetNo.textContent = el.budgetNumber.value.trim() || "---";
+        el.sheetBudgetDate.textContent = formatDateEs(el.budgetDate.value);
+        el.sheetClientName.textContent = el.clientName.value.trim() || "—";
+        el.sheetClientCif.textContent = el.clientCif.value.trim() || "—";
+        el.sheetClientPhone.textContent = el.clientPhone.value.trim() || "—";
+        el.sheetClientAddress.textContent = el.clientAddress.value.trim() || "—";
+        el.sheetIvaModeText.textContent = getIvaModeLabel();
+      }
+
+      function renderBudgetLines(){
+        const tbody = el.linesTbody;
+        const lines = antmPro_20260307_state.budgetLines;
+        const mode = getIvaMode();
+
+        if(!lines.length){
+          tbody.innerHTML = `<tr><td colspan="5" class="amp-muted">No hay conceptos añadidos todavía.</td></tr>`;
+          el.quickTotal.textContent = money(0);
+          return;
+        }
+
+        tbody.innerHTML = lines.map(l=>{
+          const c = computeLine(l);
+          const display = mode==="base" ? c.baseLine : c.grossLine;
+          return `
+            <tr>
+              <td>${esc(l.description)}</td>
+              <td>${num(l.qty).toLocaleString("es-ES")}</td>
+              <td>${money(l.unitPriceInput)}</td>
+              <td>${money(display)}</td>
+              <td class="amp-line-actions"><button type="button" data-delete-line-id="${l.id}">Quitar</button></td>
+            </tr>
+          `;
+        }).join("");
+
+        el.quickTotal.textContent = money(computeTotals().total);
+      }
+
+      function renderBudgetSheet(){
+        syncHeaderAndClientToSheet();
+        const lines = antmPro_20260307_state.budgetLines;
+
+        if(!lines.length){
+          el.sheetLinesBody.innerHTML = `<tr><td colspan="4" class="amp-muted">Añade conceptos desde el formulario para generar el presupuesto.</td></tr>`;
+        } else {
+          el.sheetLinesBody.innerHTML = lines.map(l=>{
+            const c = computeLine(l);
+            return `
+              <tr>
+                <td>${esc(l.description)}</td>
+                <td class="amp-text-right">${num(l.qty).toLocaleString("es-ES")}</td>
+                <td class="amp-text-right">${money(c.baseUnit)}</td>
+                <td class="amp-text-right">${money(c.baseLine)}</td>
+              </tr>
+            `;
+          }).join("");
+        }
+
+        const t = computeTotals();
+        el.sheetBaseTotal.textContent = money(t.base);
+        el.sheetIvaTotal.textContent = money(t.iva);
+        el.sheetGrandTotal.textContent = money(t.total);
+        el.quickTotal.textContent = money(t.total);
+      }
+
+      function addBudgetLine(){
+        const descManual = el.lineDesc.value.trim();
+        const qty = num(el.lineQty.value);
+        const unitPriceInput = num(el.linePrice.value);
+
+        let desc = descManual;
+        const selId = el.productSelect.value;
+        if(!desc && selId){
+          const it = antmPro_20260307_state.library.find(x=>x.id===selId);
+          if(it) desc = it.name;
+        }
+
+        if(!desc){ showMsg(el.lineMsg, "Introduce una descripción o selecciona un servicio.", true); return; }
+        if(!(qty>0)){ showMsg(el.lineMsg, "La cantidad debe ser mayor que 0.", true); return; }
+        if(unitPriceInput < 0){ showMsg(el.lineMsg, "El precio unitario no puede ser negativo.", true); return; }
+
+        antmPro_20260307_state.budgetLines.push({
+          id: `line_${Date.now()}_${Math.floor(Math.random()*10000)}`,
+          description: desc,
+          qty: round2(qty),
+          unitPriceInput: round2(unitPriceInput)
+        });
+
+        el.lineDesc.value = "";
+        el.lineQty.value = "1";
+        el.linePrice.value = "";
+        el.productSelect.value = "";
+
+        renderBudgetLines();
+        renderBudgetSheet();
+        showMsg(el.lineMsg, "Concepto añadido.");
+      }
+
+      function deleteBudgetLine(id){
+        antmPro_20260307_state.budgetLines = antmPro_20260307_state.budgetLines.filter(x=>x.id!==id);
+        renderBudgetLines();
+        renderBudgetSheet();
+      }
+
+      function resetBudget(){
+        if(!confirm("¿Limpiar todos los datos del presupuesto actual?")) return;
+
+        antmPro_20260307_state.budgetLines = [];
+        el.clientName.value = "";
+        el.clientCif.value = "";
+        el.clientPhone.value = "";
+        el.clientAddress.value = "";
+        el.budgetNumber.value = generateBudgetNumber();
+        el.budgetDate.value = todayIso();
+        el.ivaMode.value = "base";
+        el.productSelect.value = "";
+        el.lineDesc.value = "";
+        el.lineQty.value = "1";
+        el.linePrice.value = "";
+
+        // Al crear nuevo presupuesto -> cargar SIEMPRE desde CONFIG
+        applyDefaultNotesToBudget(true);
+
+        antmPro_20260307_state.sheetNotesDirty = false;
+
+        renderBudgetLines();
+        renderBudgetSheet();
+      }
+
+      /* ===== Printing modes ===== */
+      function setPrintMode(mode){ document.body.setAttribute("data-print-mode", mode); }
+
+      function printBudget(){
+        setPrintMode("budget");
+        applyConfigToAllPrintSheets();
+        renderBudgetSheet();
+        window.print();
+      }
+
+      function renderLibraryPrint(){
+        el.libPrintDate.textContent = formatDateEs(todayIso());
+        const lib = antmPro_20260307_state.library;
+        el.libPrintBody.innerHTML = lib.length
+          ? lib.map(it=>`<tr><td>${esc(it.name)}</td><td class="amp-text-right">${money(it.basePrice)}</td></tr>`).join("")
+          : `<tr><td colspan="2" class="amp-muted">No hay servicios guardados.</td></tr>`;
+      }
+
+      function printLibrary(){
+        setPrintMode("library");
+        applyConfigToAllPrintSheets();
+        renderLibraryPrint();
+        window.print();
+      }
+
+      function renderConfigPrint(){
+        el.cfgPrintDate.textContent = formatDateEs(todayIso());
+        el.cfgPrintNotes.textContent = (antmPro_20260307_state.config.defaultNotes || "—");
+      }
+
+      function printConfig(){
+        setPrintMode("config");
+        applyConfigToAllPrintSheets();
+        renderConfigPrint();
+        window.print();
+      }
+
+      /* ===== Bind events ===== */
+      function bindEvents(){
+        // Nav
+        navButtons.forEach(btn=>btn.addEventListener("click",()=>switchSection(btn.dataset.target)));
+
+        // Export buttons
+        el.btnExportAll1.addEventListener("click", exportAll);
+        el.btnExportAll2.addEventListener("click", exportAll);
+
+        // Import files
+        el.importFile1.addEventListener("change", async (ev)=>{
+          try{ await importFromFile(ev.target.files && ev.target.files[0]); }
+          catch(e){ showMsg(el.libMsg, e.message || "Error importando.", true); }
+          ev.target.value = "";
+        });
+        el.importFile2.addEventListener("change", async (ev)=>{
+          try{ await importFromFile(ev.target.files && ev.target.files[0]); }
+          catch(e){ showMsg(el.cfgMsg, e.message || "Error importando.", true); }
+          ev.target.value = "";
+        });
+
+        // Library
+        el.btnAddLib.addEventListener("click", addLibraryItem);
+        el.btnClearLib.addEventListener("click", clearLibrary);
+        el.libraryList.addEventListener("click",(ev)=>{
+          const b = ev.target.closest("[data-delete-lib-id]");
+          if(!b) return;
+          deleteLibraryItem(b.dataset.deleteLibId);
+        });
+        el.btnPrintLibrary.addEventListener("click", printLibrary);
+
+        // Budget add line
+        el.productSelect.addEventListener("change",()=>{
+          const id = el.productSelect.value;
+          const it = antmPro_20260307_state.library.find(x=>x.id===id);
+          if(!it) return;
+          if(!el.lineDesc.value.trim()) el.lineDesc.value = it.name;
+          if(!el.linePrice.value) el.linePrice.value = String(it.basePrice);
+        });
+        el.btnAddLine.addEventListener("click", addBudgetLine);
+        el.linesTbody.addEventListener("click",(ev)=>{
+          const b = ev.target.closest("[data-delete-line-id]");
+          if(!b) return;
+          deleteBudgetLine(b.dataset.deleteLineId);
+        });
+
+        // Budget misc
+        el.btnResetBudget.addEventListener("click", resetBudget);
+        el.btnPrintBudget.addEventListener("click", printBudget);
+        el.btnNewNumber.addEventListener("click", ()=>{
+          el.budgetNumber.value = generateBudgetNumber();
+          renderBudgetSheet();
+        });
+        el.btnUseDefaultNotes.addEventListener("click", ()=>applyDefaultNotesToBudget(true));
+
+        // Keep sheet in sync
+        [el.clientName,el.clientCif,el.clientPhone,el.clientAddress,el.budgetNumber,el.budgetDate,el.ivaMode].forEach(inp=>{
+          inp.addEventListener("input", ()=>{ renderBudgetLines(); renderBudgetSheet(); });
+          inp.addEventListener("change", ()=>{ renderBudgetLines(); renderBudgetSheet(); });
+        });
+
+        // Detect manual edit notes
+        el.sheetNotesEditable.addEventListener("input", ()=>{ antmPro_20260307_state.sheetNotesDirty = true; });
+
+        // Config
+        el.btnSaveConfig.addEventListener("click", saveConfigFromForm);
+        el.btnPrintConfig.addEventListener("click", printConfig);
+        el.cfgLogoFile.addEventListener("change",(ev)=>{
+          const file = ev.target.files && ev.target.files[0];
+          handleLogoUpload(file);
+          ev.target.value = "";
+        });
+      }
+
+      function init(){
+        loadLibrary();
+        loadConfig();
+
+        // Defaults
+        el.budgetDate.value = todayIso();
+        el.budgetNumber.value = generateBudgetNumber();
+
+        // Fill UI
+        fillConfigForm();
+        applyConfigToAllPrintSheets();
+        renderLibraryList();
+        renderProductSelect();
+
+        // Notes: must load from CONFIG on startup
+        applyDefaultNotesToBudget(true);
+
+        renderBudgetLines();
+        renderBudgetSheet();
+
+        bindEvents();
+      }
+
+      document.addEventListener("DOMContentLoaded", init);
+    })();
+  </script>
 </body>
 </html>

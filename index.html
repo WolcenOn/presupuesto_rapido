@@ -372,2915 +372,6 @@
           <label for="ampCfgDefaultNotes">Notas predeterminadas (garantía / condiciones de pago)</label>
           <textarea id="ampCfgDefaultNotes" class="amp-textarea" placeholder="Ej. Garantía 2 años. Pago 50% aceptación y 50% finalización."></textarea>
           <div class="amp-muted">Estas notas se copian al campo "Notas" del presupuesto al crear uno nuevo o al pulsar "Cargar notas de CONFIG".</div>
-  </div>      border-bottom: 1px solid rgba(255,255,255,.08);
-      box-shadow: 0 6px 20px rgba(15,23,42,.18);
-    }
-    .amp-nav-inner{
-      max-width:1200px; margin:0 auto;
-      display:grid; grid-template-columns: repeat(3, 1fr);
-      gap:8px; padding:10px;
-    }
-    .amp-nav-btn{
-      min-height:44px;
-      border:0; border-radius:10px;
-      color:#dbeafe;
-      background: rgba(37,99,235,.18);
-      font-weight:800;
-      letter-spacing:.3px;
-      cursor:pointer;
-      transition:.2s ease;
-    }
-    .amp-nav-btn.active{
-      background: var(--amp-blue);
-      color:#fff;
-      box-shadow: inset 0 -2px 0 rgba(255,255,255,.15);
-    }
-
-    .amp-app{ max-width:1200px; margin:0 auto; padding:12px; }
-
-    /* SECCIONES */
-    .amp-section{ display:none; animation: ampFade .18s ease; }
-    .amp-section.active{ display:block; }
-    @keyframes ampFade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
-
-    /* CARDS */
-    .amp-card{
-      background: var(--amp-white);
-      border: 1px solid var(--amp-border);
-      border-radius: var(--amp-radius);
-      box-shadow: var(--amp-shadow);
-      padding: 12px;
-      margin-bottom: 12px;
-    }
-    .amp-card h2,.amp-card h3{ margin:0 0 10px; font-size:1rem; }
-
-    /* FORMS */
-    .amp-grid{ display:grid; gap:10px; }
-    .amp-grid-2{ grid-template-columns:1fr 1fr; }
-    .amp-grid-3{ grid-template-columns:1fr 1fr 1fr; }
-    @media (max-width:680px){ .amp-grid-2,.amp-grid-3{ grid-template-columns:1fr; } }
-
-    .amp-field{ display:flex; flex-direction:column; gap:6px; }
-    .amp-field label{ font-size:.85rem; font-weight:650; color:#334155; }
-    .amp-input,.amp-select,.amp-textarea{
-      width:100%;
-      min-height:44px;
-      border:1px solid var(--amp-border);
-      border-radius:10px;
-      padding:10px 12px;
-      font-size:.95rem;
-      background:#fff;
-      color: var(--amp-slate);
-      outline:none;
-    }
-    .amp-input:focus,.amp-select:focus,.amp-textarea:focus{
-      border-color: var(--amp-blue);
-      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
-    }
-    .amp-textarea{ min-height:100px; resize:vertical; }
-
-    .amp-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
-    .amp-btn{
-      min-height:44px;
-      border:1px solid transparent;
-      border-radius:10px;
-      padding:10px 14px;
-      font-weight:800;
-      cursor:pointer;
-      transition:.15s ease;
-    }
-    .amp-btn-primary{ background: var(--amp-blue); color:#fff; }
-    .amp-btn-secondary{ background:#fff; color:var(--amp-slate); border-color: var(--amp-border); }
-    .amp-btn-danger{ background:#fff1f2; color: var(--amp-danger); border-color:#fecdd3; }
-    .amp-btn-success{ background:#ecfdf5; color: var(--amp-success); border-color:#bbf7d0; }
-
-    .amp-muted{ color: var(--amp-muted); font-size:.85rem; }
-    .amp-status{ margin-top:8px; font-size:.85rem; color:#0f766e; min-height:1.1em; }
-
-    /* TABLES */
-    .amp-lines-table-wrap{ overflow:auto; border:1px solid var(--amp-border); border-radius:12px; background:#fff; }
-    .amp-lines-table{ width:100%; border-collapse:collapse; min-width:520px; }
-    .amp-lines-table th,.amp-lines-table td{ border-bottom:1px solid #e2e8f0; padding:10px 8px; font-size:.9rem; }
-    .amp-lines-table th{ background:#f8fafc; color:#334155; font-weight:800; position:sticky; top:0; }
-    .amp-line-actions button{
-      min-height:36px; padding:6px 10px; border-radius:8px;
-      border:1px solid #fecdd3; background:#fff1f2; color:#be123c;
-      cursor:pointer; font-weight:800;
-    }
-
-    /* LIST */
-    .amp-list-wrap{ display:grid; gap:10px; }
-    .amp-service-row{
-      display:grid;
-      grid-template-columns: 1fr auto auto;
-      gap:8px;
-      align-items:center;
-      padding:10px;
-      border:1px solid var(--amp-border);
-      border-radius: 12px;
-      background:#fff;
-    }
-    .amp-service-name{ font-weight:700; word-break:break-word; }
-    .amp-service-price{ font-weight:900; white-space:nowrap; }
-    @media (max-width:540px){
-      .amp-service-row{ grid-template-columns:1fr auto; }
-      .amp-service-price{ grid-column:1/2; color:var(--amp-muted); font-weight:700; }
-      .amp-service-row .amp-btn-danger{ grid-column:2/3; grid-row:1/span 2; }
-    }
-
-    /* SHEET A4 */
-    .amp-sheet-wrap{ display:flex; justify-content:center; margin-top:12px; }
-    .amp-sheet{
-      width:100%;
-      max-width: 860px;
-      background:#fff;
-      border:1px solid #dbeafe;
-      border-radius: 12px;
-      box-shadow: 0 18px 40px rgba(15,23,42,.10);
-      padding: 18px;
-      color:#111827;
-    }
-    @media (min-width:900px){ .amp-sheet{ min-height:1120px; } }
-    .amp-sheet-header{
-      display:grid; grid-template-columns:110px 1fr; gap:14px; align-items:start;
-      border-bottom:2px solid #e2e8f0; padding-bottom:12px; margin-bottom:12px;
-    }
-    @media (max-width:600px){ .amp-sheet-header{ grid-template-columns:1fr; } }
-    .amp-logo-box{
-      width:110px; height:110px;
-      border:1px dashed #cbd5e1;
-      border-radius:12px;
-      display:flex; align-items:center; justify-content:center;
-      overflow:hidden;
-      background:#f8fafc;
-      color:#64748b;
-      font-size:.75rem;
-      text-align:center;
-      padding:8px;
-    }
-    .amp-logo-box img{ width:100%; height:100%; object-fit:contain; display:block; background:#fff; }
-    .amp-company-title{ margin:0; color:#1e3a8a; font-size:1.15rem; font-weight:900; }
-    .amp-company-meta{ margin-top:6px; display:grid; gap:2px; font-size:.88rem; color:#374151; }
-    .amp-doc-title-row{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
-    .amp-doc-title{ font-size:1.1rem; font-weight:900; margin:0; }
-    .amp-two-cols{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
-    @media (max-width:700px){ .amp-two-cols{ grid-template-columns:1fr; } }
-    .amp-box{
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      padding:10px;
-      background:#fcfdff;
-    }
-    .amp-box h4{
-      margin:0 0 8px;
-      font-size:.85rem;
-      color:#475569;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-    .amp-sheet-table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:6px;
-      border:1px solid #e2e8f0;
-    }
-    .amp-sheet-table th,.amp-sheet-table td{ border:1px solid #e2e8f0; padding:8px; font-size:.9rem; }
-    .amp-sheet-table th{ background:#f8fafc; text-align:left; }
-    .amp-text-right{ text-align:right; }
-
-    .amp-totals{
-      margin-top:12px;
-      margin-left:auto;
-      width:100%;
-      max-width:360px;
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      overflow:hidden;
-    }
-    .amp-totals-row{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:10px;
-      padding:10px 12px;
-      border-bottom:1px solid #e2e8f0;
-      background:#fff;
-      font-size:.92rem;
-    }
-    .amp-totals-row:last-child{
-      border-bottom:0;
-      background:#eff6ff;
-      font-weight:900;
-      color:#1e3a8a;
-      font-size:1rem;
-    }
-
-    .amp-notes-editable{
-      margin-top:14px;
-      border:1px dashed #cbd5e1;
-      border-radius:10px;
-      padding:10px;
-      min-height:80px;
-      background:#fafcff;
-      outline:none;
-      white-space: pre-wrap;
-    }
-    .amp-footer-print{ margin-top:16px; padding-top:8px; border-top:1px solid #e2e8f0; color:#64748b; font-size:.8rem; }
-
-    .amp-pill{ display:inline-block; font-size:.78rem; border-radius:999px; padding:4px 8px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
-    .amp-inline-total{ font-weight:900; color:#1e3a8a; font-size:1rem; }
-
-    /* Bottom bar for printing budget */
-    .amp-bottom-bar{
-      position: sticky;
-      bottom: 10px;
-      z-index: 20;
-      display:flex;
-      justify-content:center;
-      padding: 10px 0 0;
-    }
-    .amp-bottom-inner{
-      width:100%;
-      max-width: 860px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      background: rgba(241,245,249,.85);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(203,213,225,.65);
-      border-radius: 14px;
-      padding: 10px;
-      box-shadow: 0 10px 25px rgba(15,23,42,.08);
-    }
-    .amp-bottom-inner .amp-btn{ flex: 1 1 180px; }
-
-    .amp-no-print{}
-    .amp-hidden{ display:none !important; }
-
-    /* Toast portapapeles */
-    .amp-toast{
-      position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
-      background:#0f172a; color:#fff;
-      padding:10px 18px; border-radius:10px;
-      font-size:.85rem; font-weight:700;
-      box-shadow:0 8px 24px rgba(15,23,42,.22);
-      z-index:3000; pointer-events:none;
-      opacity:0; transition:opacity .2s ease;
-      white-space:nowrap;
-    }
-    .amp-toast.show{ opacity:1; }
-
-    /* === FIRMAS === */
-    .amp-signatures-row{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:20px;
-      margin-top:24px;
-    }
-    @media (max-width:600px){ .amp-signatures-row{ grid-template-columns:1fr; } }
-    .amp-signature-box{
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      padding:10px 12px;
-      background:#fcfdff;
-    }
-    .amp-signature-box h4{
-      margin:0 0 6px;
-      font-size:.82rem;
-      color:#475569;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-    .amp-signature-name{
-      font-size:.9rem;
-      font-weight:700;
-      color:#1e3a8a;
-      margin-bottom:6px;
-      min-height:1.1em;
-    }
-    /* Canvas de firma en el documento imprimible */
-    .amp-sig-canvas-preview{
-      display:block;
-      width:100%;
-      height:70px;
-      border-bottom:1.5px solid #334155;
-      background:transparent;
-      margin-bottom:6px;
-    }
-    .amp-signature-label{
-      font-size:.78rem;
-      color:#64748b;
-      text-align:center;
-    }
-    /* Boton "Firmar" en modo pantalla (no imprime) */
-    .amp-sig-btn{
-      display:inline-block;
-      margin-top:6px;
-      min-height:36px;
-      padding:6px 14px;
-      border:1px solid #bfdbfe;
-      border-radius:8px;
-      background:#eff6ff;
-      color:#1d4ed8;
-      font-size:.82rem;
-      font-weight:800;
-      cursor:pointer;
-    }
-    .amp-sig-btn:hover{ background:#dbeafe; }
-
-    /* === MODAL DE FIRMA === */
-    .amp-sig-modal{
-      display:none;
-      position:fixed; inset:0; z-index:2000;
-      background:rgba(15,23,42,.55);
-      backdrop-filter:blur(3px);
-      align-items:center; justify-content:center;
-    }
-    .amp-sig-modal.open{ display:flex; }
-    .amp-sig-modal-inner{
-      background:#fff;
-      border-radius:16px;
-      box-shadow:0 24px 60px rgba(15,23,42,.22);
-      padding:20px;
-      width:min(96vw, 560px);
-      display:flex; flex-direction:column; gap:12px;
-    }
-    .amp-sig-modal-title{
-      font-size:1rem; font-weight:900; color:#0f172a; margin:0;
-    }
-    .amp-sig-modal-subtitle{
-      font-size:.82rem; color:#64748b; margin:0;
-    }
-    .amp-sig-pad{
-      display:block;
-      width:100%; height:200px;
-      border:2px dashed #cbd5e1;
-      border-radius:12px;
-      background:#f8fafc;
-      cursor:crosshair;
-      touch-action:none;
-    }
-    .amp-sig-pad.has-sig{ border-color:#2563eb; background:#fff; }
-    .amp-sig-modal-actions{
-      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
-    }
-
-    /* Canvas firma del tecnico en CONFIG */
-    .amp-cfg-sig-pad{
-      display:block;
-      width:100%; height:160px;
-      border:2px dashed #cbd5e1;
-      border-radius:12px;
-      background:#f8fafc;
-      cursor:crosshair;
-      touch-action:none;
-    }
-    .amp-cfg-sig-pad.has-sig{ border-color:#2563eb; background:#fff; }
-
-    /*  PRINT FIX (NO PAGINA EN BLANCO) + MODOS */
-    @media print{
-      @page{ size:A4; margin:10mm; }
-      body{ background:#fff !important; padding-top:0 !important; }
-
-      /* Ocultar UI */
-      .amp-nav, .amp-no-print{ display:none !important; }
-
-      /* Ocultar todas las secciones por defecto */
-      .amp-section{ display:none !important; }
-
-      /* Mostrar seccion correcta segun modo */
-      body[data-print-mode="budget"] #ampSectionNuevo{ display:block !important; }
-      body[data-print-mode="library"] #ampSectionLista{ display:block !important; }
-      body[data-print-mode="config"]  #ampSectionConfig{ display:block !important; }
-
-      /* Dentro de la seccion, ocultar todo excepto el host imprimible */
-      body[data-print-mode="budget"] #ampSectionNuevo > *{ display:none !important; }
-      body[data-print-mode="budget"] #ampPrintBudgetHost{ display:block !important; }
-
-      body[data-print-mode="library"] #ampSectionLista > *{ display:none !important; }
-      body[data-print-mode="library"] #ampPrintLibraryHost{ display:block !important; }
-
-      body[data-print-mode="config"] #ampSectionConfig > *{ display:none !important; }
-      body[data-print-mode="config"] #ampPrintConfigHost{ display:block !important; }
-
-      .amp-app{ padding:0 !important; margin:0 !important; max-width:none !important; }
-      .amp-sheet-wrap{ margin:0 !important; display:block !important; }
-      .amp-sheet{
-        box-shadow:none !important;
-        border:none !important;
-        border-radius:0 !important;
-        max-width:none !important;
-        width:100% !important;
-        padding:0 !important;
-        min-height:auto !important;
-      }
-      .amp-notes-editable{ border:1px solid #ddd !important; background:#fff !important; }
-
-      /* Firmas en impresion */
-      .amp-signature-box{ background:#fff !important; }
-      .amp-sig-canvas-preview{ border-bottom:1.5px solid #334155 !important; }
-      .amp-sig-btn{ display:none !important; }
-      .amp-sig-modal{ display:none !important; }
-    }
-  </style>
-</head>
-<body data-print-mode="budget">
-  <header class="amp-nav amp-no-print">
-    <div class="amp-nav-inner">
-      <button class="amp-nav-btn active" data-target="ampSectionNuevo">NUEVO</button>
-      <button class="amp-nav-btn" data-target="ampSectionLista">LISTA</button>
-      <button class="amp-nav-btn" data-target="ampSectionConfig">CONFIG</button>
-    </div>
-  </header>
-
-  <main class="amp-app">
-    <!-- ================= NUEVO ================= -->
-    <section id="ampSectionNuevo" class="amp-section active">
-      <div class="amp-card amp-no-print">
-        <!-- CAMBIO: título dinámico según tipo de documento -->
-        <h2 id="ampFormTitle">Nuevo presupuesto</h2>
-
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampClientName">Cliente / Empresa</label>
-            <input id="ampClientName" class="amp-input" type="text" placeholder="Nombre del cliente o empresa" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientCif">DNI / CIF</label>
-            <input id="ampClientCif" class="amp-input" type="text" placeholder="Identificación fiscal" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientPhone">Teléfono cliente</label>
-            <input id="ampClientPhone" class="amp-input" type="tel" placeholder="Teléfono de contacto" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientAddress">Dirección cliente</label>
-            <input id="ampClientAddress" class="amp-input" type="text" placeholder="Dirección de instalación / facturación" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <!-- NUEVO: tipo de documento -->
-          <div class="amp-field">
-            <label for="ampDocType">Tipo de documento</label>
-            <select id="ampDocType" class="amp-select">
-              <option value="presupuesto">Presupuesto</option>
-              <option value="albaran">Albarán</option>
-              <option value="factura">Factura</option>
-            </select>
-          </div>
-          <div class="amp-field">
-            <label for="ampBudgetNumber"><span id="ampDocNumberLabel">Nº Presupuesto</span> (irrepetible)</label>
-            <div style="display:flex; gap:8px;">
-              <input id="ampBudgetNumber" class="amp-input" type="text" />
-              <button id="ampBtnNewNumber" class="amp-btn amp-btn-secondary" type="button" style="min-width:120px;">Nuevo Nº</button>
-            </div>
-            <div class="amp-muted">Generado offline: fecha+marca tiempo+ID dispositivo+aleatorio.</div>
-          </div>
-          <div class="amp-field">
-            <label for="ampBudgetDate">Fecha</label>
-            <input id="ampBudgetDate" class="amp-input" type="date" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <div class="amp-field">
-            <label for="ampIvaMode">Modo de IVA</label>
-            <select id="ampIvaMode" class="amp-select">
-              <option value="base">Precio Base (añadir 21%)</option>
-              <option value="incluido">IVA Incluido (desglosar 21%)</option>
-            </select>
-          </div>
-          <!-- NUEVO: firma del cliente -->
-          <div class="amp-field" style="grid-column: span 2;">
-            <label for="ampClientSignatureName">Nombre firmante cliente (para documento impreso)</label>
-            <input id="ampClientSignatureName" class="amp-input" type="text" placeholder="Nombre y apellidos del cliente que firma" />
-          </div>
-        </div>
-
-        <!-- Método de pago: solo visible en albarán/factura -->
-        <div id="ampPaymentRow" class="amp-grid amp-grid-2" style="margin-top:10px; display:none;">
-          <div class="amp-field">
-            <label for="ampPaymentMethod">Método de pago</label>
-            <select id="ampPaymentMethod" class="amp-select">
-              <option value="efectivo">Efectivo</option>
-              <option value="transferencia">Transferencia bancaria</option>
-              <option value="tarjeta">Tarjeta</option>
-              <option value="bizum">Bizum</option>
-            </select>
-          </div>
-          <div class="amp-field" id="ampBankAccountInfo" style="display:none;">
-            <label>Número de cuenta (desde CONFIG)</label>
-            <div id="ampBankAccountDisplay" class="amp-input" style="background:#f8fafc; color:#334155; display:flex; align-items:center; font-family:monospace;">—</div>
-          </div>
-        </div>
-
-        <div class="amp-actions">
-          <button id="ampBtnResetBudget" class="amp-btn amp-btn-secondary" type="button">Limpiar presupuesto</button>
-          <button id="ampBtnUseDefaultNotes" class="amp-btn amp-btn-secondary" type="button">Cargar notas de CONFIG</button>
-        </div>
-      </div>
-
-      <div class="amp-card amp-no-print">
-        <h3>Añadir concepto</h3>
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampProductSelect">Servicio / Producto (biblioteca)</label>
-            <select id="ampProductSelect" class="amp-select">
-              <option value="">-- Seleccionar de la biblioteca --</option>
-            </select>
-          </div>
-          <div class="amp-field">
-           border-bottom: 1px solid rgba(255,255,255,.08);
-      box-shadow: 0 6px 20px rgba(15,23,42,.18);
-    }
-    .amp-nav-inner{
-      max-width:1200px; margin:0 auto;
-      display:grid; grid-template-columns: repeat(3, 1fr);
-      gap:8px; padding:10px;
-    }
-    .amp-nav-btn{
-      min-height:44px;
-      border:0; border-radius:10px;
-      color:#dbeafe;
-      background: rgba(37,99,235,.18);
-      font-weight:800;
-      letter-spacing:.3px;
-      cursor:pointer;
-      transition:.2s ease;
-    }
-    .amp-nav-btn.active{
-      background: var(--amp-blue);
-      color:#fff;
-      box-shadow: inset 0 -2px 0 rgba(255,255,255,.15);
-    }
-
-    .amp-app{ max-width:1200px; margin:0 auto; padding:12px; }
-
-    /* SECCIONES */
-    .amp-section{ display:none; animation: ampFade .18s ease; }
-    .amp-section.active{ display:block; }
-    @keyframes ampFade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
-
-    /* CARDS */
-    .amp-card{
-      background: var(--amp-white);
-      border: 1px solid var(--amp-border);
-      border-radius: var(--amp-radius);
-      box-shadow: var(--amp-shadow);
-      padding: 12px;
-      margin-bottom: 12px;
-    }
-    .amp-card h2,.amp-card h3{ margin:0 0 10px; font-size:1rem; }
-
-    /* FORMS */
-    .amp-grid{ display:grid; gap:10px; }
-    .amp-grid-2{ grid-template-columns:1fr 1fr; }
-    .amp-grid-3{ grid-template-columns:1fr 1fr 1fr; }
-    @media (max-width:680px){ .amp-grid-2,.amp-grid-3{ grid-template-columns:1fr; } }
-
-    .amp-field{ display:flex; flex-direction:column; gap:6px; }
-    .amp-field label{ font-size:.85rem; font-weight:650; color:#334155; }
-    .amp-input,.amp-select,.amp-textarea{
-      width:100%;
-      min-height:44px;
-      border:1px solid var(--amp-border);
-      border-radius:10px;
-      padding:10px 12px;
-      font-size:.95rem;
-      background:#fff;
-      color: var(--amp-slate);
-      outline:none;
-    }
-    .amp-input:focus,.amp-select:focus,.amp-textarea:focus{
-      border-color: var(--amp-blue);
-      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
-    }
-    .amp-textarea{ min-height:100px; resize:vertical; }
-
-    .amp-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
-    .amp-btn{
-      min-height:44px;
-      border:1px solid transparent;
-      border-radius:10px;
-      padding:10px 14px;
-      font-weight:800;
-      cursor:pointer;
-      transition:.15s ease;
-    }
-    .amp-btn-primary{ background: var(--amp-blue); color:#fff; }
-    .amp-btn-secondary{ background:#fff; color:var(--amp-slate); border-color: var(--amp-border); }
-    .amp-btn-danger{ background:#fff1f2; color: var(--amp-danger); border-color:#fecdd3; }
-    .amp-btn-success{ background:#ecfdf5; color: var(--amp-success); border-color:#bbf7d0; }
-
-    .amp-muted{ color: var(--amp-muted); font-size:.85rem; }
-    .amp-status{ margin-top:8px; font-size:.85rem; color:#0f766e; min-height:1.1em; }
-
-    /* TABLES */
-    .amp-lines-table-wrap{ overflow:auto; border:1px solid var(--amp-border); border-radius:12px; background:#fff; }
-    .amp-lines-table{ width:100%; border-collapse:collapse; min-width:520px; }
-    .amp-lines-table th,.amp-lines-table td{ border-bottom:1px solid #e2e8f0; padding:10px 8px; font-size:.9rem; }
-    .amp-lines-table th{ background:#f8fafc; color:#334155; font-weight:800; position:sticky; top:0; }
-    .amp-line-actions button{
-      min-height:36px; padding:6px 10px; border-radius:8px;
-      border:1px solid #fecdd3; background:#fff1f2; color:#be123c;
-      cursor:pointer; font-weight:800;
-    }
-
-    /* LIST */
-    .amp-list-wrap{ display:grid; gap:10px; }
-    .amp-service-row{
-      display:grid;
-      grid-template-columns: 1fr auto auto;
-      gap:8px;
-      align-items:center;
-      padding:10px;
-      border:1px solid var(--amp-border);
-      border-radius: 12px;
-      background:#fff;
-    }
-    .amp-service-name{ font-weight:700; word-break:break-word; }
-    .amp-service-price{ font-weight:900; white-space:nowrap; }
-    @media (max-width:540px){
-      .amp-service-row{ grid-template-columns:1fr auto; }
-      .amp-service-price{ grid-column:1/2; color:var(--amp-muted); font-weight:700; }
-      .amp-service-row .amp-btn-danger{ grid-column:2/3; grid-row:1/span 2; }
-    }
-
-    /* SHEET A4 */
-    .amp-sheet-wrap{ display:flex; justify-content:center; margin-top:12px; }
-    .amp-sheet{
-      width:100%;
-      max-width: 860px;
-      background:#fff;
-      border:1px solid #dbeafe;
-      border-radius: 12px;
-      box-shadow: 0 18px 40px rgba(15,23,42,.10);
-      padding: 18px;
-      color:#111827;
-    }
-    @media (min-width:900px){ .amp-sheet{ min-height:1120px; } }
-    .amp-sheet-header{
-      display:grid; grid-template-columns:110px 1fr; gap:14px; align-items:start;
-      border-bottom:2px solid #e2e8f0; padding-bottom:12px; margin-bottom:12px;
-    }
-    @media (max-width:600px){ .amp-sheet-header{ grid-template-columns:1fr; } }
-    .amp-logo-box{
-      width:110px; height:110px;
-      border:1px dashed #cbd5e1;
-      border-radius:12px;
-      display:flex; align-items:center; justify-content:center;
-      overflow:hidden;
-      background:#f8fafc;
-      color:#64748b;
-      font-size:.75rem;
-      text-align:center;
-      padding:8px;
-    }
-    .amp-logo-box img{ width:100%; height:100%; object-fit:contain; display:block; background:#fff; }
-    .amp-company-title{ margin:0; color:#1e3a8a; font-size:1.15rem; font-weight:900; }
-    .amp-company-meta{ margin-top:6px; display:grid; gap:2px; font-size:.88rem; color:#374151; }
-    .amp-doc-title-row{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
-    .amp-doc-title{ font-size:1.1rem; font-weight:900; margin:0; }
-    .amp-two-cols{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
-    @media (max-width:700px){ .amp-two-cols{ grid-template-columns:1fr; } }
-    .amp-box{
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      padding:10px;
-      background:#fcfdff;
-    }
-    .amp-box h4{
-      margin:0 0 8px;
-      font-size:.85rem;
-      color:#475569;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-    .amp-sheet-table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:6px;
-      border:1px solid #e2e8f0;
-    }
-    .amp-sheet-table th,.amp-sheet-table td{ border:1px solid #e2e8f0; padding:8px; font-size:.9rem; }
-    .amp-sheet-table th{ background:#f8fafc; text-align:left; }
-    .amp-text-right{ text-align:right; }
-
-    .amp-totals{
-      margin-top:12px;
-      margin-left:auto;
-      width:100%;
-      max-width:360px;
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      overflow:hidden;
-    }
-    .amp-totals-row{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:10px;
-      padding:10px 12px;
-      border-bottom:1px solid #e2e8f0;
-      background:#fff;
-      font-size:.92rem;
-    }
-    .amp-totals-row:last-child{
-      border-bottom:0;
-      background:#eff6ff;
-      font-weight:900;
-      color:#1e3a8a;
-      font-size:1rem;
-    }
-
-    .amp-notes-editable{
-      margin-top:14px;
-      border:1px dashed #cbd5e1;
-      border-radius:10px;
-      padding:10px;
-      min-height:80px;
-      background:#fafcff;
-      outline:none;
-      white-space: pre-wrap;
-    }
-    .amp-footer-print{ margin-top:16px; padding-top:8px; border-top:1px solid #e2e8f0; color:#64748b; font-size:.8rem; }
-
-    .amp-pill{ display:inline-block; font-size:.78rem; border-radius:999px; padding:4px 8px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
-    .amp-inline-total{ font-weight:900; color:#1e3a8a; font-size:1rem; }
-
-    /* Bottom bar for printing budget */
-    .amp-bottom-bar{
-      position: sticky;
-      bottom: 10px;
-      z-index: 20;
-      display:flex;
-      justify-content:center;
-      padding: 10px 0 0;
-    }
-    .amp-bottom-inner{
-      width:100%;
-      max-width: 860px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      background: rgba(241,245,249,.85);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(203,213,225,.65);
-      border-radius: 14px;
-      padding: 10px;
-      box-shadow: 0 10px 25px rgba(15,23,42,.08);
-    }
-    .amp-bottom-inner .amp-btn{ flex: 1 1 180px; }
-
-    .amp-no-print{}
-    .amp-hidden{ display:none !important; }
-
-    /* Toast portapapeles */
-    .amp-toast{
-      position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
-      background:#0f172a; color:#fff;
-      padding:10px 18px; border-radius:10px;
-      font-size:.85rem; font-weight:700;
-      box-shadow:0 8px 24px rgba(15,23,42,.22);
-      z-index:3000; pointer-events:none;
-      opacity:0; transition:opacity .2s ease;
-      white-space:nowrap;
-    }
-    .amp-toast.show{ opacity:1; }
-
-    /* === FIRMAS === */
-    .amp-signatures-row{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:20px;
-      margin-top:24px;
-    }
-    @media (max-width:600px){ .amp-signatures-row{ grid-template-columns:1fr; } }
-    .amp-signature-box{
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      padding:10px 12px;
-      background:#fcfdff;
-    }
-    .amp-signature-box h4{
-      margin:0 0 6px;
-      font-size:.82rem;
-      color:#475569;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-    .amp-signature-name{
-      font-size:.9rem;
-      font-weight:700;
-      color:#1e3a8a;
-      margin-bottom:6px;
-      min-height:1.1em;
-    }
-    /* Canvas de firma en el documento imprimible */
-    .amp-sig-canvas-preview{
-      display:block;
-      width:100%;
-      height:70px;
-      border-bottom:1.5px solid #334155;
-      background:transparent;
-      margin-bottom:6px;
-    }
-    .amp-signature-label{
-      font-size:.78rem;
-      color:#64748b;
-      text-align:center;
-    }
-    /* Botón "Firmar" en modo pantalla (no imprime) */
-    .amp-sig-btn{
-      display:inline-block;
-      margin-top:6px;
-      min-height:36px;
-      padding:6px 14px;
-      border:1px solid #bfdbfe;
-      border-radius:8px;
-      background:#eff6ff;
-      color:#1d4ed8;
-      font-size:.82rem;
-      font-weight:800;
-      cursor:pointer;
-    }
-    .amp-sig-btn:hover{ background:#dbeafe; }
-
-    /* === MODAL DE FIRMA === */
-    .amp-sig-modal{
-      display:none;
-      position:fixed; inset:0; z-index:2000;
-      background:rgba(15,23,42,.55);
-      backdrop-filter:blur(3px);
-      align-items:center; justify-content:center;
-    }
-    .amp-sig-modal.open{ display:flex; }
-    .amp-sig-modal-inner{
-      background:#fff;
-      border-radius:16px;
-      box-shadow:0 24px 60px rgba(15,23,42,.22);
-      padding:20px;
-      width:min(96vw, 560px);
-      display:flex; flex-direction:column; gap:12px;
-    }
-    .amp-sig-modal-title{
-      font-size:1rem; font-weight:900; color:#0f172a; margin:0;
-    }
-    .amp-sig-modal-subtitle{
-      font-size:.82rem; color:#64748b; margin:0;
-    }
-    .amp-sig-pad{
-      display:block;
-      width:100%; height:200px;
-      border:2px dashed #cbd5e1;
-      border-radius:12px;
-      background:#f8fafc;
-      cursor:crosshair;
-      touch-action:none;
-    }
-    .amp-sig-pad.has-sig{ border-color:#2563eb; background:#fff; }
-    .amp-sig-modal-actions{
-      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
-    }
-
-    /* Canvas firma del técnico en CONFIG */
-    .amp-cfg-sig-pad{
-      display:block;
-      width:100%; height:160px;
-      border:2px dashed #cbd5e1;
-      border-radius:12px;
-      background:#f8fafc;
-      cursor:crosshair;
-      touch-action:none;
-    }
-    .amp-cfg-sig-pad.has-sig{ border-color:#2563eb; background:#fff; }
-
-    /* ✅ PRINT FIX (NO PÁGINA EN BLANCO) + MODOS */
-    @media print{
-      @page{ size:A4; margin:10mm; }
-      body{ background:#fff !important; padding-top:0 !important; }
-
-      /* Ocultar UI */
-      .amp-nav, .amp-no-print{ display:none !important; }
-
-      /* Ocultar todas las secciones por defecto */
-      .amp-section{ display:none !important; }
-
-      /* Mostrar sección correcta según modo */
-      body[data-print-mode="budget"] #ampSectionNuevo{ display:block !important; }
-      body[data-print-mode="library"] #ampSectionLista{ display:block !important; }
-      body[data-print-mode="config"]  #ampSectionConfig{ display:block !important; }
-
-      /* Dentro de la sección, ocultar todo excepto el host imprimible */
-      body[data-print-mode="budget"] #ampSectionNuevo > *{ display:none !important; }
-      body[data-print-mode="budget"] #ampPrintBudgetHost{ display:block !important; }
-
-      body[data-print-mode="library"] #ampSectionLista > *{ display:none !important; }
-      body[data-print-mode="library"] #ampPrintLibraryHost{ display:block !important; }
-
-      body[data-print-mode="config"] #ampSectionConfig > *{ display:none !important; }
-      body[data-print-mode="config"] #ampPrintConfigHost{ display:block !important; }
-
-      .amp-app{ padding:0 !important; margin:0 !important; max-width:none !important; }
-      .amp-sheet-wrap{ margin:0 !important; display:block !important; }
-      .amp-sheet{
-        box-shadow:none !important;
-        border:none !important;
-        border-radius:0 !important;
-        max-width:none !important;
-        width:100% !important;
-        padding:0 !important;
-        min-height:auto !important;
-      }
-      .amp-notes-editable{ border:1px solid #ddd !important; background:#fff !important; }
-
-      /* Firmas en impresión */
-      .amp-signature-box{ background:#fff !important; }
-      .amp-sig-canvas-preview{ border-bottom:1.5px solid #334155 !important; }
-      .amp-sig-btn{ display:none !important; }
-      .amp-sig-modal{ display:none !important; }
-    }
-  </style>
-</head>
-<body data-print-mode="budget">
-  <header class="amp-nav amp-no-print">
-    <div class="amp-nav-inner">
-      <button class="amp-nav-btn active" data-target="ampSectionNuevo">NUEVO</button>
-      <button class="amp-nav-btn" data-target="ampSectionLista">LISTA</button>
-      <button class="amp-nav-btn" data-target="ampSectionConfig">CONFIG</button>
-    </div>
-  </header>
-
-  <main class="amp-app">
-    <!-- ================= NUEVO ================= -->
-    <section id="ampSectionNuevo" class="amp-section active">
-      <div class="amp-card amp-no-print">
-        <!-- CAMBIO: título dinámico según tipo de documento -->
-        <h2 id="ampFormTitle">Nuevo presupuesto</h2>
-
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampClientName">Cliente / Empresa</label>
-            <input id="ampClientName" class="amp-input" type="text" placeholder="Nombre del cliente o empresa" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientCif">DNI / CIF</label>
-            <input id="ampClientCif" class="amp-input" type="text" placeholder="Identificación fiscal" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientPhone">Teléfono cliente</label>
-            <input id="ampClientPhone" class="amp-input" type="tel" placeholder="Teléfono de contacto" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientAddress">Dirección cliente</label>
-            <input id="ampClientAddress" class="amp-input" type="text" placeholder="Dirección de instalación / facturación" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <!-- NUEVO: tipo de documento -->
-          <div class="amp-field">
-            <label for="ampDocType">Tipo de documento</label>
-            <select id="ampDocType" class="amp-select">
-              <option value="presupuesto">Presupuesto</option>
-              <option value="albaran">Albarán</option>
-              <option value="factura">Factura</option>
-            </select>
-          </div>
-          <div class="amp-field">
-            <label for="ampBudgetNumber"><span id="ampDocNumberLabel">Nº Presupuesto</span> (irrepetible)</label>
-            <div style="display:flex; gap:8px;">
-              <input id="ampBudgetNumber" class="amp-input" type="text" />
-              <button id="ampBtnNewNumber" class="amp-btn amp-btn-secondary" type="button" style="min-width:120px;">Nuevo Nº</button>
-            </div>
-            <div class="amp-muted">Generado offline: fecha+marca tiempo+ID dispositivo+aleatorio.</div>
-          </div>
-          <div class="amp-field">
-            <label for="ampBudgetDate">Fecha</label>
-            <input id="ampBudgetDate" class="amp-input" type="date" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <div class="amp-field">
-            <label for="ampIvaMode">Modo de IVA</label>
-            <select id="ampIvaMode" class="amp-select">
-              <option value="base">Precio Base (añadir 21%)</option>
-              <option value="incluido">IVA Incluido (desglosar 21%)</option>
-            </select>
-          </div>
-          <!-- NUEVO: firma del cliente -->
-          <div class="amp-field" style="grid-column: span 2;">
-            <label for="ampClientSignatureName">Nombre firmante cliente (para documento impreso)</label>
-            <input id="ampClientSignatureName" class="amp-input" type="text" placeholder="Nombre y apellidos del cliente que firma" />
-          </div>
-        </div>
-
-        <!-- Método de pago: solo visible en albarán/factura -->
-        <div id="ampPaymentRow" class="amp-grid amp-grid-2" style="margin-top:10px; display:none;">
-          <div class="amp-field">
-            <label for="ampPaymentMethod">Método de pago</label>
-            <select id="ampPaymentMethod" class="amp-select">
-              <option value="efectivo">Efectivo</option>
-              <option value="transferencia">Transferencia bancaria</option>
-              <option value="tarjeta">Tarjeta</option>
-              <option value="bizum">Bizum</option>
-            </select>
-          </div>
-          <div class="amp-field" id="ampBankAccountInfo" style="display:none;">
-            <label>Número de cuenta (desde CONFIG)</label>
-            <div id="ampBankAccountDisplay" class="amp-input" style="background:#f8fafc; color:#334155; display:flex; align-items:center; font-family:monospace;">—</div>
-          </div>
-        </div>
-
-        <div class="amp-actions">
-          <button id="ampBtnResetBudget" class="amp-btn amp-btn-secondary" type="button">Limpiar presupuesto</button>
-          <button id="ampBtnUseDefaultNotes" class="amp-btn amp-btn-secondary" type="button">Cargar notas de CONFIG</button>
-        </div>
-      </div>
-
-      <div class="amp-card amp-no-print">
-        <h3>Añadir concepto</h3>
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampProductSelect">Servicio / Producto (biblioteca)</label>
-            <select id="ampProductSelect" class="amp-select">
-              <option value="">-- Seleccionar de la biblioteca --</option>
-            </select>
-          </div>
-          <div class="amp-field">
-          border-bottom: 1px solid rgba(255,255,255,.08);
-      box-shadow: 0 6px 20px rgba(15,23,42,.18);
-    }
-    .amp-nav-inner{
-      max-width:1200px; margin:0 auto;
-      display:grid; grid-template-columns: repeat(3, 1fr);
-      gap:8px; padding:10px;
-    }
-    .amp-nav-btn{
-      min-height:44px;
-      border:0; border-radius:10px;
-      color:#dbeafe;
-      background: rgba(37,99,235,.18);
-      font-weight:800;
-      letter-spacing:.3px;
-      cursor:pointer;
-      transition:.2s ease;
-    }
-    .amp-nav-btn.active{
-      background: var(--amp-blue);
-      color:#fff;
-      box-shadow: inset 0 -2px 0 rgba(255,255,255,.15);
-    }
-
-    .amp-app{ max-width:1200px; margin:0 auto; padding:12px; }
-
-    /* SECCIONES */
-    .amp-section{ display:none; animation: ampFade .18s ease; }
-    .amp-section.active{ display:block; }
-    @keyframes ampFade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
-
-    /* CARDS */
-    .amp-card{
-      background: var(--amp-white);
-      border: 1px solid var(--amp-border);
-      border-radius: var(--amp-radius);
-      box-shadow: var(--amp-shadow);
-      padding: 12px;
-      margin-bottom: 12px;
-    }
-    .amp-card h2,.amp-card h3{ margin:0 0 10px; font-size:1rem; }
-
-    /* FORMS */
-    .amp-grid{ display:grid; gap:10px; }
-    .amp-grid-2{ grid-template-columns:1fr 1fr; }
-    .amp-grid-3{ grid-template-columns:1fr 1fr 1fr; }
-    @media (max-width:680px){ .amp-grid-2,.amp-grid-3{ grid-template-columns:1fr; } }
-
-    .amp-field{ display:flex; flex-direction:column; gap:6px; }
-    .amp-field label{ font-size:.85rem; font-weight:650; color:#334155; }
-    .amp-input,.amp-select,.amp-textarea{
-      width:100%;
-      min-height:44px;
-      border:1px solid var(--amp-border);
-      border-radius:10px;
-      padding:10px 12px;
-      font-size:.95rem;
-      background:#fff;
-      color: var(--amp-slate);
-      outline:none;
-    }
-    .amp-input:focus,.amp-select:focus,.amp-textarea:focus{
-      border-color: var(--amp-blue);
-      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
-    }
-    .amp-textarea{ min-height:100px; resize:vertical; }
-
-    .amp-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
-    .amp-btn{
-      min-height:44px;
-      border:1px solid transparent;
-      border-radius:10px;
-      padding:10px 14px;
-      font-weight:800;
-      cursor:pointer;
-      transition:.15s ease;
-    }
-    .amp-btn-primary{ background: var(--amp-blue); color:#fff; }
-    .amp-btn-secondary{ background:#fff; color:var(--amp-slate); border-color: var(--amp-border); }
-    .amp-btn-danger{ background:#fff1f2; color: var(--amp-danger); border-color:#fecdd3; }
-    .amp-btn-success{ background:#ecfdf5; color: var(--amp-success); border-color:#bbf7d0; }
-
-    .amp-muted{ color: var(--amp-muted); font-size:.85rem; }
-    .amp-status{ margin-top:8px; font-size:.85rem; color:#0f766e; min-height:1.1em; }
-
-    /* TABLES */
-    .amp-lines-table-wrap{ overflow:auto; border:1px solid var(--amp-border); border-radius:12px; background:#fff; }
-    .amp-lines-table{ width:100%; border-collapse:collapse; min-width:520px; }
-    .amp-lines-table th,.amp-lines-table td{ border-bottom:1px solid #e2e8f0; padding:10px 8px; font-size:.9rem; }
-    .amp-lines-table th{ background:#f8fafc; color:#334155; font-weight:800; position:sticky; top:0; }
-    .amp-line-actions button{
-      min-height:36px; padding:6px 10px; border-radius:8px;
-      border:1px solid #fecdd3; background:#fff1f2; color:#be123c;
-      cursor:pointer; font-weight:800;
-    }
-
-    /* LIST */
-    .amp-list-wrap{ display:grid; gap:10px; }
-    .amp-service-row{
-      display:grid;
-      grid-template-columns: 1fr auto auto;
-      gap:8px;
-      align-items:center;
-      padding:10px;
-      border:1px solid var(--amp-border);
-      border-radius: 12px;
-      background:#fff;
-    }
-    .amp-service-name{ font-weight:700; word-break:break-word; }
-    .amp-service-price{ font-weight:900; white-space:nowrap; }
-    @media (max-width:540px){
-      .amp-service-row{ grid-template-columns:1fr auto; }
-      .amp-service-price{ grid-column:1/2; color:var(--amp-muted); font-weight:700; }
-      .amp-service-row .amp-btn-danger{ grid-column:2/3; grid-row:1/span 2; }
-    }
-
-    /* SHEET A4 */
-    .amp-sheet-wrap{ display:flex; justify-content:center; margin-top:12px; }
-    .amp-sheet{
-      width:100%;
-      max-width: 860px;
-      background:#fff;
-      border:1px solid #dbeafe;
-      border-radius: 12px;
-      box-shadow: 0 18px 40px rgba(15,23,42,.10);
-      padding: 18px;
-      color:#111827;
-    }
-    @media (min-width:900px){ .amp-sheet{ min-height:1120px; } }
-    .amp-sheet-header{
-      display:grid; grid-template-columns:110px 1fr; gap:14px; align-items:start;
-      border-bottom:2px solid #e2e8f0; padding-bottom:12px; margin-bottom:12px;
-    }
-    @media (max-width:600px){ .amp-sheet-header{ grid-template-columns:1fr; } }
-    .amp-logo-box{
-      width:110px; height:110px;
-      border:1px dashed #cbd5e1;
-      border-radius:12px;
-      display:flex; align-items:center; justify-content:center;
-      overflow:hidden;
-      background:#f8fafc;
-      color:#64748b;
-      font-size:.75rem;
-      text-align:center;
-      padding:8px;
-    }
-    .amp-logo-box img{ width:100%; height:100%; object-fit:contain; display:block; background:#fff; }
-    .amp-company-title{ margin:0; color:#1e3a8a; font-size:1.15rem; font-weight:900; }
-    .amp-company-meta{ margin-top:6px; display:grid; gap:2px; font-size:.88rem; color:#374151; }
-    .amp-doc-title-row{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
-    .amp-doc-title{ font-size:1.1rem; font-weight:900; margin:0; }
-    .amp-two-cols{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
-    @media (max-width:700px){ .amp-two-cols{ grid-template-columns:1fr; } }
-    .amp-box{
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      padding:10px;
-      background:#fcfdff;
-    }
-    .amp-box h4{
-      margin:0 0 8px;
-      font-size:.85rem;
-      color:#475569;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-    .amp-sheet-table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:6px;
-      border:1px solid #e2e8f0;
-    }
-    .amp-sheet-table th,.amp-sheet-table td{ border:1px solid #e2e8f0; padding:8px; font-size:.9rem; }
-    .amp-sheet-table th{ background:#f8fafc; text-align:left; }
-    .amp-text-right{ text-align:right; }
-
-    .amp-totals{
-      margin-top:12px;
-      margin-left:auto;
-      width:100%;
-      max-width:360px;
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      overflow:hidden;
-    }
-    .amp-totals-row{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:10px;
-      padding:10px 12px;
-      border-bottom:1px solid #e2e8f0;
-      background:#fff;
-      font-size:.92rem;
-    }
-    .amp-totals-row:last-child{
-      border-bottom:0;
-      background:#eff6ff;
-      font-weight:900;
-      color:#1e3a8a;
-      font-size:1rem;
-    }
-
-    .amp-notes-editable{
-      margin-top:14px;
-      border:1px dashed #cbd5e1;
-      border-radius:10px;
-      padding:10px;
-      min-height:80px;
-      background:#fafcff;
-      outline:none;
-      white-space: pre-wrap;
-    }
-    .amp-footer-print{ margin-top:16px; padding-top:8px; border-top:1px solid #e2e8f0; color:#64748b; font-size:.8rem; }
-
-    .amp-pill{ display:inline-block; font-size:.78rem; border-radius:999px; padding:4px 8px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
-    .amp-inline-total{ font-weight:900; color:#1e3a8a; font-size:1rem; }
-
-    /* Bottom bar for printing budget */
-    .amp-bottom-bar{
-      position: sticky;
-      bottom: 10px;
-      z-index: 20;
-      display:flex;
-      justify-content:center;
-      padding: 10px 0 0;
-    }
-    .amp-bottom-inner{
-      width:100%;
-      max-width: 860px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      background: rgba(241,245,249,.85);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(203,213,225,.65);
-      border-radius: 14px;
-      padding: 10px;
-      box-shadow: 0 10px 25px rgba(15,23,42,.08);
-    }
-    .amp-bottom-inner .amp-btn{ flex: 1 1 180px; }
-
-    .amp-no-print{}
-    .amp-hidden{ display:none !important; }
-
-    /* Toast portapapeles */
-    .amp-toast{
-      position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
-      background:#0f172a; color:#fff;
-      padding:10px 18px; border-radius:10px;
-      font-size:.85rem; font-weight:700;
-      box-shadow:0 8px 24px rgba(15,23,42,.22);
-      z-index:3000; pointer-events:none;
-      opacity:0; transition:opacity .2s ease;
-      white-space:nowrap;
-    }
-    .amp-toast.show{ opacity:1; }
-
-    /* === FIRMAS === */
-    .amp-signatures-row{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:20px;
-      margin-top:24px;
-    }
-    @media (max-width:600px){ .amp-signatures-row{ grid-template-columns:1fr; } }
-    .amp-signature-box{
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      padding:10px 12px;
-      background:#fcfdff;
-    }
-    .amp-signature-box h4{
-      margin:0 0 6px;
-      font-size:.82rem;
-      color:#475569;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-    .amp-signature-name{
-      font-size:.9rem;
-      font-weight:700;
-      color:#1e3a8a;
-      margin-bottom:6px;
-      min-height:1.1em;
-    }
-    /* Canvas de firma en el documento imprimible */
-    .amp-sig-canvas-preview{
-      display:block;
-      width:100%;
-      height:70px;
-      border-bottom:1.5px solid #334155;
-      background:transparent;
-      margin-bottom:6px;
-    }
-    .amp-signature-label{
-      font-size:.78rem;
-      color:#64748b;
-      text-align:center;
-    }
-    /* Botón "Firmar" en modo pantalla (no imprime) */
-    .amp-sig-btn{
-      display:inline-block;
-      margin-top:6px;
-      min-height:36px;
-      padding:6px 14px;
-      border:1px solid #bfdbfe;
-      border-radius:8px;
-      background:#eff6ff;
-      color:#1d4ed8;
-      font-size:.82rem;
-      font-weight:800;
-      cursor:pointer;
-    }
-    .amp-sig-btn:hover{ background:#dbeafe; }
-
-    /* === MODAL DE FIRMA === */
-    .amp-sig-modal{
-      display:none;
-      position:fixed; inset:0; z-index:2000;
-      background:rgba(15,23,42,.55);
-      backdrop-filter:blur(3px);
-      align-items:center; justify-content:center;
-    }
-    .amp-sig-modal.open{ display:flex; }
-    .amp-sig-modal-inner{
-      background:#fff;
-      border-radius:16px;
-      box-shadow:0 24px 60px rgba(15,23,42,.22);
-      padding:20px;
-      width:min(96vw, 560px);
-      display:flex; flex-direction:column; gap:12px;
-    }
-    .amp-sig-modal-title{
-      font-size:1rem; font-weight:900; color:#0f172a; margin:0;
-    }
-    .amp-sig-modal-subtitle{
-      font-size:.82rem; color:#64748b; margin:0;
-    }
-    .amp-sig-pad{
-      display:block;
-      width:100%; height:200px;
-      border:2px dashed #cbd5e1;
-      border-radius:12px;
-      background:#f8fafc;
-      cursor:crosshair;
-      touch-action:none;
-    }
-    .amp-sig-pad.has-sig{ border-color:#2563eb; background:#fff; }
-    .amp-sig-modal-actions{
-      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
-    }
-
-    /* Canvas firma del técnico en CONFIG */
-    .amp-cfg-sig-pad{
-      display:block;
-      width:100%; height:160px;
-      border:2px dashed #cbd5e1;
-      border-radius:12px;
-      background:#f8fafc;
-      cursor:crosshair;
-      touch-action:none;
-    }
-    .amp-cfg-sig-pad.has-sig{ border-color:#2563eb; background:#fff; }
-
-    /* ✅ PRINT FIX (NO PÁGINA EN BLANCO) + MODOS */
-    @media print{
-      @page{ size:A4; margin:10mm; }
-      body{ background:#fff !important; padding-top:0 !important; }
-
-      /* Ocultar UI */
-      .amp-nav, .amp-no-print{ display:none !important; }
-
-      /* Ocultar todas las secciones por defecto */
-      .amp-section{ display:none !important; }
-
-      /* Mostrar sección correcta según modo */
-      body[data-print-mode="budget"] #ampSectionNuevo{ display:block !important; }
-      body[data-print-mode="library"] #ampSectionLista{ display:block !important; }
-      body[data-print-mode="config"]  #ampSectionConfig{ display:block !important; }
-
-      /* Dentro de la sección, ocultar todo excepto el host imprimible */
-      body[data-print-mode="budget"] #ampSectionNuevo > *{ display:none !important; }
-      body[data-print-mode="budget"] #ampPrintBudgetHost{ display:block !important; }
-
-      body[data-print-mode="library"] #ampSectionLista > *{ display:none !important; }
-      body[data-print-mode="library"] #ampPrintLibraryHost{ display:block !important; }
-
-      body[data-print-mode="config"] #ampSectionConfig > *{ display:none !important; }
-      body[data-print-mode="config"] #ampPrintConfigHost{ display:block !important; }
-
-      .amp-app{ padding:0 !important; margin:0 !important; max-width:none !important; }
-      .amp-sheet-wrap{ margin:0 !important; display:block !important; }
-      .amp-sheet{
-        box-shadow:none !important;
-        border:none !important;
-        border-radius:0 !important;
-        max-width:none !important;
-        width:100% !important;
-        padding:0 !important;
-        min-height:auto !important;
-      }
-      .amp-notes-editable{ border:1px solid #ddd !important; background:#fff !important; }
-
-      /* Firmas en impresión */
-      .amp-signature-box{ background:#fff !important; }
-      .amp-sig-canvas-preview{ border-bottom:1.5px solid #334155 !important; }
-      .amp-sig-btn{ display:none !important; }
-      .amp-sig-modal{ display:none !important; }
-    }
-  </style>
-</head>
-<body data-print-mode="budget">
-  <header class="amp-nav amp-no-print">
-    <div class="amp-nav-inner">
-      <button class="amp-nav-btn active" data-target="ampSectionNuevo">NUEVO</button>
-      <button class="amp-nav-btn" data-target="ampSectionLista">LISTA</button>
-      <button class="amp-nav-btn" data-target="ampSectionConfig">CONFIG</button>
-    </div>
-  </header>
-
-  <main class="amp-app">
-    <!-- ================= NUEVO ================= -->
-    <section id="ampSectionNuevo" class="amp-section active">
-      <div class="amp-card amp-no-print">
-        <!-- CAMBIO: título dinámico según tipo de documento -->
-        <h2 id="ampFormTitle">Nuevo presupuesto</h2>
-
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampClientName">Cliente / Empresa</label>
-            <input id="ampClientName" class="amp-input" type="text" placeholder="Nombre del cliente o empresa" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientCif">DNI / CIF</label>
-            <input id="ampClientCif" class="amp-input" type="text" placeholder="Identificación fiscal" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientPhone">Teléfono cliente</label>
-            <input id="ampClientPhone" class="amp-input" type="tel" placeholder="Teléfono de contacto" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientAddress">Dirección cliente</label>
-            <input id="ampClientAddress" class="amp-input" type="text" placeholder="Dirección de instalación / facturación" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <!-- NUEVO: tipo de documento -->
-          <div class="amp-field">
-            <label for="ampDocType">Tipo de documento</label>
-            <select id="ampDocType" class="amp-select">
-              <option value="presupuesto">Presupuesto</option>
-              <option value="albaran">Albarán</option>
-              <option value="factura">Factura</option>
-            </select>
-          </div>
-          <div class="amp-field">
-            <label for="ampBudgetNumber"><span id="ampDocNumberLabel">Nº Presupuesto</span> (irrepetible)</label>
-            <div style="display:flex; gap:8px;">
-              <input id="ampBudgetNumber" class="amp-input" type="text" />
-              <button id="ampBtnNewNumber" class="amp-btn amp-btn-secondary" type="button" style="min-width:120px;">Nuevo Nº</button>
-            </div>
-            <div class="amp-muted">Generado offline: fecha+marca tiempo+ID dispositivo+aleatorio.</div>
-          </div>
-          <div class="amp-field">
-            <label for="ampBudgetDate">Fecha</label>
-            <input id="ampBudgetDate" class="amp-input" type="date" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <div class="amp-field">
-            <label for="ampIvaMode">Modo de IVA</label>
-            <select id="ampIvaMode" class="amp-select">
-              <option value="base">Precio Base (añadir 21%)</option>
-              <option value="incluido">IVA Incluido (desglosar 21%)</option>
-            </select>
-          </div>
-          <!-- NUEVO: firma del cliente -->
-          <div class="amp-field" style="grid-column: span 2;">
-            <label for="ampClientSignatureName">Nombre firmante cliente (para documento impreso)</label>
-            <input id="ampClientSignatureName" class="amp-input" type="text" placeholder="Nombre y apellidos del cliente que firma" />
-          </div>
-        </div>
-
-        <div class="amp-actions">
-          <button id="ampBtnResetBudget" class="amp-btn amp-btn-secondary" type="button">Limpiar presupuesto</button>
-          <button id="ampBtnUseDefaultNotes" class="amp-btn amp-btn-secondary" type="button">Cargar notas de CONFIG</button>
-        </div>
-      </div>
-
-      <div class="amp-card amp-no-print">
-        <h3>Añadir concepto</h3>
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampProductSelect">Servicio / Producto (biblioteca)</label>
-            <select id="ampProductSelect" class="amp-select">
-              <option value="">-- Seleccionar de la biblioteca --</option>
-            </select>
-          </div>
-          <div class="amp-field">
-            <label for="ampLineDesc">Descripción manual</label>
-            <input id="ampLineDesc" class="amp-input" type="text" placeholder="Ej. Instalación antena TDT y orientación" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <div class="amp-field">
-            <label for="ampLineQty">Cantidad</label>
-            <input id="ampLineQty" class="amp-input" type="number" min="0" step="0.01" value="1" />
-          </div>
-          <div class="amp-field">
-            <label for="ampLinePrice">Precio unitario (€)</label>
-            <input id="ampLinePrice" class="amp-input" type="number" min="0" step="0.01" placeholder="0.00" />
-          </div>
-          <div class="amp-field" style="justify-content:flex-end;">
-            <label class="amp-hidden">Acción</label>
-            <button id="ampBtnAddLine" class="amp-btn amp-btn-success" type="button">Añadir concepto</button>      border-bottom: 1px solid rgba(255,255,255,.08);
-      box-shadow: 0 6px 20px rgba(15,23,42,.18);
-    }
-    .amp-nav-inner{
-      max-width:1200px; margin:0 auto;
-      display:grid; grid-template-columns: repeat(3, 1fr);
-      gap:8px; padding:10px;
-    }
-    .amp-nav-btn{
-      min-height:44px;
-      border:0; border-radius:10px;
-      color:#dbeafe;
-      background: rgba(37,99,235,.18);
-      font-weight:800;
-      letter-spacing:.3px;
-      cursor:pointer;
-      transition:.2s ease;
-    }
-    .amp-nav-btn.active{
-      background: var(--amp-blue);
-      color:#fff;
-      box-shadow: inset 0 -2px 0 rgba(255,255,255,.15);
-    }
-
-    .amp-app{ max-width:1200px; margin:0 auto; padding:12px; }
-
-    /* SECCIONES */
-    .amp-section{ display:none; animation: ampFade .18s ease; }
-    .amp-section.active{ display:block; }
-    @keyframes ampFade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
-
-    /* CARDS */
-    .amp-card{
-      background: var(--amp-white);
-      border: 1px solid var(--amp-border);
-      border-radius: var(--amp-radius);
-      box-shadow: var(--amp-shadow);
-      padding: 12px;
-      margin-bottom: 12px;
-    }
-    .amp-card h2,.amp-card h3{ margin:0 0 10px; font-size:1rem; }
-
-    /* FORMS */
-    .amp-grid{ display:grid; gap:10px; }
-    .amp-grid-2{ grid-template-columns:1fr 1fr; }
-    .amp-grid-3{ grid-template-columns:1fr 1fr 1fr; }
-    @media (max-width:680px){ .amp-grid-2,.amp-grid-3{ grid-template-columns:1fr; } }
-
-    .amp-field{ display:flex; flex-direction:column; gap:6px; }
-    .amp-field label{ font-size:.85rem; font-weight:650; color:#334155; }
-    .amp-input,.amp-select,.amp-textarea{
-      width:100%;
-      min-height:44px;
-      border:1px solid var(--amp-border);
-      border-radius:10px;
-      padding:10px 12px;
-      font-size:.95rem;
-      background:#fff;
-      color: var(--amp-slate);
-      outline:none;
-    }
-    .amp-input:focus,.amp-select:focus,.amp-textarea:focus{
-      border-color: var(--amp-blue);
-      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
-    }
-    .amp-textarea{ min-height:100px; resize:vertical; }
-
-    .amp-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
-    .amp-btn{
-      min-height:44px;
-      border:1px solid transparent;
-      border-radius:10px;
-      padding:10px 14px;
-      font-weight:800;
-      cursor:pointer;
-      transition:.15s ease;
-    }
-    .amp-btn-primary{ background: var(--amp-blue); color:#fff; }
-    .amp-btn-secondary{ background:#fff; color:var(--amp-slate); border-color: var(--amp-border); }
-    .amp-btn-danger{ background:#fff1f2; color: var(--amp-danger); border-color:#fecdd3; }
-    .amp-btn-success{ background:#ecfdf5; color: var(--amp-success); border-color:#bbf7d0; }
-
-    .amp-muted{ color: var(--amp-muted); font-size:.85rem; }
-    .amp-status{ margin-top:8px; font-size:.85rem; color:#0f766e; min-height:1.1em; }
-
-    /* TABLES */
-    .amp-lines-table-wrap{ overflow:auto; border:1px solid var(--amp-border); border-radius:12px; background:#fff; }
-    .amp-lines-table{ width:100%; border-collapse:collapse; min-width:520px; }
-    .amp-lines-table th,.amp-lines-table td{ border-bottom:1px solid #e2e8f0; padding:10px 8px; font-size:.9rem; }
-    .amp-lines-table th{ background:#f8fafc; color:#334155; font-weight:800; position:sticky; top:0; }
-    .amp-line-actions button{
-      min-height:36px; padding:6px 10px; border-radius:8px;
-      border:1px solid #fecdd3; background:#fff1f2; color:#be123c;
-      cursor:pointer; font-weight:800;
-    }
-
-    /* LIST */
-    .amp-list-wrap{ display:grid; gap:10px; }
-    .amp-service-row{
-      display:grid;
-      grid-template-columns: 1fr auto auto;
-      gap:8px;
-      align-items:center;
-      padding:10px;
-      border:1px solid var(--amp-border);
-      border-radius: 12px;
-      background:#fff;
-    }
-    .amp-service-name{ font-weight:700; word-break:break-word; }
-    .amp-service-price{ font-weight:900; white-space:nowrap; }
-    @media (max-width:540px){
-      .amp-service-row{ grid-template-columns:1fr auto; }
-      .amp-service-price{ grid-column:1/2; color:var(--amp-muted); font-weight:700; }
-      .amp-service-row .amp-btn-danger{ grid-column:2/3; grid-row:1/span 2; }
-    }
-
-    /* SHEET A4 */
-    .amp-sheet-wrap{ display:flex; justify-content:center; margin-top:12px; }
-    .amp-sheet{
-      width:100%;
-      max-width: 860px;
-      background:#fff;
-      border:1px solid #dbeafe;
-      border-radius: 12px;
-      box-shadow: 0 18px 40px rgba(15,23,42,.10);
-      padding: 18px;
-      color:#111827;
-    }
-    @media (min-width:900px){ .amp-sheet{ min-height:1120px; } }
-    .amp-sheet-header{
-      display:grid; grid-template-columns:110px 1fr; gap:14px; align-items:start;
-      border-bottom:2px solid #e2e8f0; padding-bottom:12px; margin-bottom:12px;
-    }
-    @media (max-width:600px){ .amp-sheet-header{ grid-template-columns:1fr; } }
-    .amp-logo-box{
-      width:110px; height:110px;
-      border:1px dashed #cbd5e1;
-      border-radius:12px;
-      display:flex; align-items:center; justify-content:center;
-      overflow:hidden;
-      background:#f8fafc;
-      color:#64748b;
-      font-size:.75rem;
-      text-align:center;
-      padding:8px;
-    }
-    .amp-logo-box img{ width:100%; height:100%; object-fit:contain; display:block; background:#fff; }
-    .amp-company-title{ margin:0; color:#1e3a8a; font-size:1.15rem; font-weight:900; }
-    .amp-company-meta{ margin-top:6px; display:grid; gap:2px; font-size:.88rem; color:#374151; }
-    .amp-doc-title-row{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
-    .amp-doc-title{ font-size:1.1rem; font-weight:900; margin:0; }
-    .amp-two-cols{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
-    @media (max-width:700px){ .amp-two-cols{ grid-template-columns:1fr; } }
-    .amp-box{
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      padding:10px;
-      background:#fcfdff;
-    }
-    .amp-box h4{
-      margin:0 0 8px;
-      font-size:.85rem;
-      color:#475569;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-    .amp-sheet-table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:6px;
-      border:1px solid #e2e8f0;
-    }
-    .amp-sheet-table th,.amp-sheet-table td{ border:1px solid #e2e8f0; padding:8px; font-size:.9rem; }
-    .amp-sheet-table th{ background:#f8fafc; text-align:left; }
-    .amp-text-right{ text-align:right; }
-
-    .amp-totals{
-      margin-top:12px;
-      margin-left:auto;
-      width:100%;
-      max-width:360px;
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      overflow:hidden;
-    }
-    .amp-totals-row{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:10px;
-      padding:10px 12px;
-      border-bottom:1px solid #e2e8f0;
-      background:#fff;
-      font-size:.92rem;
-    }
-    .amp-totals-row:last-child{
-      border-bottom:0;
-      background:#eff6ff;
-      font-weight:900;
-      color:#1e3a8a;
-      font-size:1rem;
-    }
-
-    .amp-notes-editable{
-      margin-top:14px;
-      border:1px dashed #cbd5e1;
-      border-radius:10px;
-      padding:10px;
-      min-height:80px;
-      background:#fafcff;
-      outline:none;
-      white-space: pre-wrap;
-    }
-    .amp-footer-print{ margin-top:16px; padding-top:8px; border-top:1px solid #e2e8f0; color:#64748b; font-size:.8rem; }
-
-    .amp-pill{ display:inline-block; font-size:.78rem; border-radius:999px; padding:4px 8px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
-    .amp-inline-total{ font-weight:900; color:#1e3a8a; font-size:1rem; }
-
-    /* Bottom bar for printing budget */
-    .amp-bottom-bar{
-      position: sticky;
-      bottom: 10px;
-      z-index: 20;
-      display:flex;
-      justify-content:center;
-      padding: 10px 0 0;
-    }
-    .amp-bottom-inner{
-      width:100%;
-      max-width: 860px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      background: rgba(241,245,249,.85);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(203,213,225,.65);
-      border-radius: 14px;
-      padding: 10px;
-      box-shadow: 0 10px 25px rgba(15,23,42,.08);
-    }
-    .amp-bottom-inner .amp-btn{ flex: 1 1 180px; }
-
-    .amp-no-print{}
-    .amp-hidden{ display:none !important; }
-
-    /* Toast portapapeles */
-    .amp-toast{
-      position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
-      background:#0f172a; color:#fff;
-      padding:10px 18px; border-radius:10px;
-      font-size:.85rem; font-weight:700;
-      box-shadow:0 8px 24px rgba(15,23,42,.22);
-      z-index:3000; pointer-events:none;
-      opacity:0; transition:opacity .2s ease;
-      white-space:nowrap;
-    }
-    .amp-toast.show{ opacity:1; }
-
-    /* === FIRMAS === */
-    .amp-signatures-row{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:20px;
-      margin-top:24px;
-    }
-    @media (max-width:600px){ .amp-signatures-row{ grid-template-columns:1fr; } }
-    .amp-signature-box{
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      padding:10px 12px;
-      background:#fcfdff;
-    }
-    .amp-signature-box h4{
-      margin:0 0 6px;
-      font-size:.82rem;
-      color:#475569;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-    .amp-signature-name{
-      font-size:.9rem;
-      font-weight:700;
-      color:#1e3a8a;
-      margin-bottom:6px;
-      min-height:1.1em;
-    }
-    /* Canvas de firma en el documento imprimible */
-    .amp-sig-canvas-preview{
-      display:block;
-      width:100%;
-      height:70px;
-      border-bottom:1.5px solid #334155;
-      background:transparent;
-      margin-bottom:6px;
-    }
-    .amp-signature-label{
-      font-size:.78rem;
-      color:#64748b;
-      text-align:center;
-    }
-    /* Botón "Firmar" en modo pantalla (no imprime) */
-    .amp-sig-btn{
-      display:inline-block;
-      margin-top:6px;
-      min-height:36px;
-      padding:6px 14px;
-      border:1px solid #bfdbfe;
-      border-radius:8px;
-      background:#eff6ff;
-      color:#1d4ed8;
-      font-size:.82rem;
-      font-weight:800;
-      cursor:pointer;
-    }
-    .amp-sig-btn:hover{ background:#dbeafe; }
-
-    /* === MODAL DE FIRMA === */
-    .amp-sig-modal{
-      display:none;
-      position:fixed; inset:0; z-index:2000;
-      background:rgba(15,23,42,.55);
-      backdrop-filter:blur(3px);
-      align-items:center; justify-content:center;
-    }
-    .amp-sig-modal.open{ display:flex; }
-    .amp-sig-modal-inner{
-      background:#fff;
-      border-radius:16px;
-      box-shadow:0 24px 60px rgba(15,23,42,.22);
-      padding:20px;
-      width:min(96vw, 560px);
-      display:flex; flex-direction:column; gap:12px;
-    }
-    .amp-sig-modal-title{
-      font-size:1rem; font-weight:900; color:#0f172a; margin:0;
-    }
-    .amp-sig-modal-subtitle{
-      font-size:.82rem; color:#64748b; margin:0;
-    }
-    .amp-sig-pad{
-      display:block;
-      width:100%; height:200px;
-      border:2px dashed #cbd5e1;
-      border-radius:12px;
-      background:#f8fafc;
-      cursor:crosshair;
-      touch-action:none;
-    }
-    .amp-sig-pad.has-sig{ border-color:#2563eb; background:#fff; }
-    .amp-sig-modal-actions{
-      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
-    }
-
-    /* Canvas firma del técnico en CONFIG */
-    .amp-cfg-sig-pad{
-      display:block;
-      width:100%; height:160px;
-      border:2px dashed #cbd5e1;
-      border-radius:12px;
-      background:#f8fafc;
-      cursor:crosshair;
-      touch-action:none;
-    }
-    .amp-cfg-sig-pad.has-sig{ border-color:#2563eb; background:#fff; }
-
-    /* ✅ PRINT FIX (NO PÁGINA EN BLANCO) + MODOS */
-    @media print{
-      @page{ size:A4; margin:10mm; }
-      body{ background:#fff !important; padding-top:0 !important; }
-
-      /* Ocultar UI */
-      .amp-nav, .amp-no-print{ display:none !important; }
-
-      /* Ocultar todas las secciones por defecto */
-      .amp-section{ display:none !important; }
-
-      /* Mostrar sección correcta según modo */
-      body[data-print-mode="budget"] #ampSectionNuevo{ display:block !important; }
-      body[data-print-mode="library"] #ampSectionLista{ display:block !important; }
-      body[data-print-mode="config"]  #ampSectionConfig{ display:block !important; }
-
-      /* Dentro de la sección, ocultar todo excepto el host imprimible */
-      body[data-print-mode="budget"] #ampSectionNuevo > *{ display:none !important; }
-      body[data-print-mode="budget"] #ampPrintBudgetHost{ display:block !important; }
-
-      body[data-print-mode="library"] #ampSectionLista > *{ display:none !important; }
-      body[data-print-mode="library"] #ampPrintLibraryHost{ display:block !important; }
-
-      body[data-print-mode="config"] #ampSectionConfig > *{ display:none !important; }
-      body[data-print-mode="config"] #ampPrintConfigHost{ display:block !important; }
-
-      .amp-app{ padding:0 !important; margin:0 !important; max-width:none !important; }
-      .amp-sheet-wrap{ margin:0 !important; display:block !important; }
-      .amp-sheet{
-        box-shadow:none !important;
-        border:none !important;
-        border-radius:0 !important;
-        max-width:none !important;
-        width:100% !important;
-        padding:0 !important;
-        min-height:auto !important;
-      }
-      .amp-notes-editable{ border:1px solid #ddd !important; background:#fff !important; }
-
-      /* Firmas en impresión */
-      .amp-signature-box{ background:#fff !important; }
-      .amp-sig-canvas-preview{ border-bottom:1.5px solid #334155 !important; }
-      .amp-sig-btn{ display:none !important; }
-      .amp-sig-modal{ display:none !important; }
-    }
-  </style>
-</head>
-<body data-print-mode="budget">
-  <header class="amp-nav amp-no-print">
-    <div class="amp-nav-inner">
-      <button class="amp-nav-btn active" data-target="ampSectionNuevo">NUEVO</button>
-      <button class="amp-nav-btn" data-target="ampSectionLista">LISTA</button>
-      <button class="amp-nav-btn" data-target="ampSectionConfig">CONFIG</button>
-    </div>
-  </header>
-
-  <main class="amp-app">
-    <!-- ================= NUEVO ================= -->
-    <section id="ampSectionNuevo" class="amp-section active">
-      <div class="amp-card amp-no-print">
-        <!-- CAMBIO: título dinámico según tipo de documento -->
-        <h2 id="ampFormTitle">Nuevo presupuesto</h2>
-
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampClientName">Cliente / Empresa</label>
-            <input id="ampClientName" class="amp-input" type="text" placeholder="Nombre del cliente o empresa" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientCif">DNI / CIF</label>
-            <input id="ampClientCif" class="amp-input" type="text" placeholder="Identificación fiscal" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientPhone">Teléfono cliente</label>
-            <input id="ampClientPhone" class="amp-input" type="tel" placeholder="Teléfono de contacto" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientAddress">Dirección cliente</label>
-            <input id="ampClientAddress" class="amp-input" type="text" placeholder="Dirección de instalación / facturación" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <!-- NUEVO: tipo de documento -->
-          <div class="amp-field">
-            <label for="ampDocType">Tipo de documento</label>
-            <select id="ampDocType" class="amp-select">
-              <option value="presupuesto">Presupuesto</option>
-              <option value="albaran">Albarán</option>
-              <option value="factura">Factura</option>
-            </select>
-          </div>
-          <div class="amp-field">
-            <label for="ampBudgetNumber"><span id="ampDocNumberLabel">Nº Presupuesto</span> (irrepetible)</label>
-            <div style="display:flex; gap:8px;">
-              <input id="ampBudgetNumber" class="amp-input" type="text" />
-              <button id="ampBtnNewNumber" class="amp-btn amp-btn-secondary" type="button" style="min-width:120px;">Nuevo Nº</button>
-            </div>
-            <div class="amp-muted">Generado offline: fecha+marca tiempo+ID dispositivo+aleatorio.</div>
-          </div>
-          <div class="amp-field">
-            <label for="ampBudgetDate">Fecha</label>
-            <input id="ampBudgetDate" class="amp-input" type="date" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <div class="amp-field">
-            <label for="ampIvaMode">Modo de IVA</label>
-            <select id="ampIvaMode" class="amp-select">
-              <option value="base">Precio Base (añadir 21%)</option>
-              <option value="incluido">IVA Incluido (desglosar 21%)</option>
-            </select>
-          </div>
-          <!-- NUEVO: firma del cliente -->
-          <div class="amp-field" style="grid-column: span 2;">
-            <label for="ampClientSignatureName">Nombre firmante cliente (para documento impreso)</label>
-            <input id="ampClientSignatureName" class="amp-input" type="text" placeholder="Nombre y apellidos del cliente que firma" />
-          </div>
-        </div>
-
-        <!-- Método de pago: solo visible en albarán/factura -->
-        <div id="ampPaymentRow" class="amp-grid amp-grid-2" style="margin-top:10px; display:none;">
-          <div class="amp-field">
-            <label for="ampPaymentMethod">Método de pago</label>
-            <select id="ampPaymentMethod" class="amp-select">
-              <option value="efectivo">Efectivo</option>
-              <option value="transferencia">Transferencia bancaria</option>
-              <option value="tarjeta">Tarjeta</option>
-              <option value="bizum">Bizum</option>
-            </select>
-          </div>
-          <div class="amp-field" id="ampBankAccountInfo" style="display:none;">
-            <label>Número de cuenta (desde CONFIG)</label>
-            <div id="ampBankAccountDisplay" class="amp-input" style="background:#f8fafc; color:#334155; display:flex; align-items:center; font-family:monospace;">—</div>
-          </div>
-        </div>
-
-        <div class="amp-actions">
-          <button id="ampBtnResetBudget" class="amp-btn amp-btn-secondary" type="button">Limpiar presupuesto</button>
-          <button id="ampBtnUseDefaultNotes" class="amp-btn amp-btn-secondary" type="button">Cargar notas de CONFIG</button>
-        </div>
-      </div>
-
-      <div class="amp-card amp-no-print">
-        <h3>Añadir concepto</h3>
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampProductSelect">Servicio / Producto (biblioteca)</label>
-            <select id="ampProductSelect" class="amp-select">
-              <option value="">-- Seleccionar de la biblioteca --</option>
-            </select>
-          </div>
-          <div class="amp-field">
-          border-bottom: 1px solid rgba(255,255,255,.08);
-      box-shadow: 0 6px 20px rgba(15,23,42,.18);
-    }
-    .amp-nav-inner{
-      max-width:1200px; margin:0 auto;
-      display:grid; grid-template-columns: repeat(3, 1fr);
-      gap:8px; padding:10px;
-    }
-    .amp-nav-btn{
-      min-height:44px;
-      border:0; border-radius:10px;
-      color:#dbeafe;
-      background: rgba(37,99,235,.18);
-      font-weight:800;
-      letter-spacing:.3px;
-      cursor:pointer;
-      transition:.2s ease;
-    }
-    .amp-nav-btn.active{
-      background: var(--amp-blue);
-      color:#fff;
-      box-shadow: inset 0 -2px 0 rgba(255,255,255,.15);
-    }
-
-    .amp-app{ max-width:1200px; margin:0 auto; padding:12px; }
-
-    /* SECCIONES */
-    .amp-section{ display:none; animation: ampFade .18s ease; }
-    .amp-section.active{ display:block; }
-    @keyframes ampFade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
-
-    /* CARDS */
-    .amp-card{
-      background: var(--amp-white);
-      border: 1px solid var(--amp-border);
-      border-radius: var(--amp-radius);
-      box-shadow: var(--amp-shadow);
-      padding: 12px;
-      margin-bottom: 12px;
-    }
-    .amp-card h2,.amp-card h3{ margin:0 0 10px; font-size:1rem; }
-
-    /* FORMS */
-    .amp-grid{ display:grid; gap:10px; }
-    .amp-grid-2{ grid-template-columns:1fr 1fr; }
-    .amp-grid-3{ grid-template-columns:1fr 1fr 1fr; }
-    @media (max-width:680px){ .amp-grid-2,.amp-grid-3{ grid-template-columns:1fr; } }
-
-    .amp-field{ display:flex; flex-direction:column; gap:6px; }
-    .amp-field label{ font-size:.85rem; font-weight:650; color:#334155; }
-    .amp-input,.amp-select,.amp-textarea{
-      width:100%;
-      min-height:44px;
-      border:1px solid var(--amp-border);
-      border-radius:10px;
-      padding:10px 12px;
-      font-size:.95rem;
-      background:#fff;
-      color: var(--amp-slate);
-      outline:none;
-    }
-    .amp-input:focus,.amp-select:focus,.amp-textarea:focus{
-      border-color: var(--amp-blue);
-      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
-    }
-    .amp-textarea{ min-height:100px; resize:vertical; }
-
-    .amp-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
-    .amp-btn{
-      min-height:44px;
-      border:1px solid transparent;
-      border-radius:10px;
-      padding:10px 14px;
-      font-weight:800;
-      cursor:pointer;
-      transition:.15s ease;
-    }
-    .amp-btn-primary{ background: var(--amp-blue); color:#fff; }
-    .amp-btn-secondary{ background:#fff; color:var(--amp-slate); border-color: var(--amp-border); }
-    .amp-btn-danger{ background:#fff1f2; color: var(--amp-danger); border-color:#fecdd3; }
-    .amp-btn-success{ background:#ecfdf5; color: var(--amp-success); border-color:#bbf7d0; }
-
-    .amp-muted{ color: var(--amp-muted); font-size:.85rem; }
-    .amp-status{ margin-top:8px; font-size:.85rem; color:#0f766e; min-height:1.1em; }
-
-    /* TABLES */
-    .amp-lines-table-wrap{ overflow:auto; border:1px solid var(--amp-border); border-radius:12px; background:#fff; }
-    .amp-lines-table{ width:100%; border-collapse:collapse; min-width:520px; }
-    .amp-lines-table th,.amp-lines-table td{ border-bottom:1px solid #e2e8f0; padding:10px 8px; font-size:.9rem; }
-    .amp-lines-table th{ background:#f8fafc; color:#334155; font-weight:800; position:sticky; top:0; }
-    .amp-line-actions button{
-      min-height:36px; padding:6px 10px; border-radius:8px;
-      border:1px solid #fecdd3; background:#fff1f2; color:#be123c;
-      cursor:pointer; font-weight:800;
-    }
-
-    /* LIST */
-    .amp-list-wrap{ display:grid; gap:10px; }
-    .amp-service-row{
-      display:grid;
-      grid-template-columns: 1fr auto auto;
-      gap:8px;
-      align-items:center;
-      padding:10px;
-      border:1px solid var(--amp-border);
-      border-radius: 12px;
-      background:#fff;
-    }
-    .amp-service-name{ font-weight:700; word-break:break-word; }
-    .amp-service-price{ font-weight:900; white-space:nowrap; }
-    @media (max-width:540px){
-      .amp-service-row{ grid-template-columns:1fr auto; }
-      .amp-service-price{ grid-column:1/2; color:var(--amp-muted); font-weight:700; }
-      .amp-service-row .amp-btn-danger{ grid-column:2/3; grid-row:1/span 2; }
-    }
-
-    /* SHEET A4 */
-    .amp-sheet-wrap{ display:flex; justify-content:center; margin-top:12px; }
-    .amp-sheet{
-      width:100%;
-      max-width: 860px;
-      background:#fff;
-      border:1px solid #dbeafe;
-      border-radius: 12px;
-      box-shadow: 0 18px 40px rgba(15,23,42,.10);
-      padding: 18px;
-      color:#111827;
-    }
-    @media (min-width:900px){ .amp-sheet{ min-height:1120px; } }
-    .amp-sheet-header{
-      display:grid; grid-template-columns:110px 1fr; gap:14px; align-items:start;
-      border-bottom:2px solid #e2e8f0; padding-bottom:12px; margin-bottom:12px;
-    }
-    @media (max-width:600px){ .amp-sheet-header{ grid-template-columns:1fr; } }
-    .amp-logo-box{
-      width:110px; height:110px;
-      border:1px dashed #cbd5e1;
-      border-radius:12px;
-      display:flex; align-items:center; justify-content:center;
-      overflow:hidden;
-      background:#f8fafc;
-      color:#64748b;
-      font-size:.75rem;
-      text-align:center;
-      padding:8px;
-    }
-    .amp-logo-box img{ width:100%; height:100%; object-fit:contain; display:block; background:#fff; }
-    .amp-company-title{ margin:0; color:#1e3a8a; font-size:1.15rem; font-weight:900; }
-    .amp-company-meta{ margin-top:6px; display:grid; gap:2px; font-size:.88rem; color:#374151; }
-    .amp-doc-title-row{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
-    .amp-doc-title{ font-size:1.1rem; font-weight:900; margin:0; }
-    .amp-two-cols{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
-    @media (max-width:700px){ .amp-two-cols{ grid-template-columns:1fr; } }
-    .amp-box{
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      padding:10px;
-      background:#fcfdff;
-    }
-    .amp-box h4{
-      margin:0 0 8px;
-      font-size:.85rem;
-      color:#475569;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-    .amp-sheet-table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:6px;
-      border:1px solid #e2e8f0;
-    }
-    .amp-sheet-table th,.amp-sheet-table td{ border:1px solid #e2e8f0; padding:8px; font-size:.9rem; }
-    .amp-sheet-table th{ background:#f8fafc; text-align:left; }
-    .amp-text-right{ text-align:right; }
-
-    .amp-totals{
-      margin-top:12px;
-      margin-left:auto;
-      width:100%;
-      max-width:360px;
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      overflow:hidden;
-    }
-    .amp-totals-row{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:10px;
-      padding:10px 12px;
-      border-bottom:1px solid #e2e8f0;
-      background:#fff;
-      font-size:.92rem;
-    }
-    .amp-totals-row:last-child{
-      border-bottom:0;
-      background:#eff6ff;
-      font-weight:900;
-      color:#1e3a8a;
-      font-size:1rem;
-    }
-
-    .amp-notes-editable{
-      margin-top:14px;
-      border:1px dashed #cbd5e1;
-      border-radius:10px;
-      padding:10px;
-      min-height:80px;
-      background:#fafcff;
-      outline:none;
-      white-space: pre-wrap;
-    }
-    .amp-footer-print{ margin-top:16px; padding-top:8px; border-top:1px solid #e2e8f0; color:#64748b; font-size:.8rem; }
-
-    .amp-pill{ display:inline-block; font-size:.78rem; border-radius:999px; padding:4px 8px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
-    .amp-inline-total{ font-weight:900; color:#1e3a8a; font-size:1rem; }
-
-    /* Bottom bar for printing budget */
-    .amp-bottom-bar{
-      position: sticky;
-      bottom: 10px;
-      z-index: 20;
-      display:flex;
-      justify-content:center;
-      padding: 10px 0 0;
-    }
-    .amp-bottom-inner{
-      width:100%;
-      max-width: 860px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      background: rgba(241,245,249,.85);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(203,213,225,.65);
-      border-radius: 14px;
-      padding: 10px;
-      box-shadow: 0 10px 25px rgba(15,23,42,.08);
-    }
-    .amp-bottom-inner .amp-btn{ flex: 1 1 180px; }
-
-    .amp-no-print{}
-    .amp-hidden{ display:none !important; }
-
-    /* Toast portapapeles */
-    .amp-toast{
-      position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
-      background:#0f172a; color:#fff;
-      padding:10px 18px; border-radius:10px;
-      font-size:.85rem; font-weight:700;
-      box-shadow:0 8px 24px rgba(15,23,42,.22);
-      z-index:3000; pointer-events:none;
-      opacity:0; transition:opacity .2s ease;
-      white-space:nowrap;
-    }
-    .amp-toast.show{ opacity:1; }
-
-    /* === FIRMAS === */
-    .amp-signatures-row{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:20px;
-      margin-top:24px;
-    }
-    @media (max-width:600px){ .amp-signatures-row{ grid-template-columns:1fr; } }
-    .amp-signature-box{
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      padding:10px 12px;
-      background:#fcfdff;
-    }
-    .amp-signature-box h4{
-      margin:0 0 6px;
-      font-size:.82rem;
-      color:#475569;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-    .amp-signature-name{
-      font-size:.9rem;
-      font-weight:700;
-      color:#1e3a8a;
-      margin-bottom:6px;
-      min-height:1.1em;
-    }
-    /* Canvas de firma en el documento imprimible */
-    .amp-sig-canvas-preview{
-      display:block;
-      width:100%;
-      height:70px;
-      border-bottom:1.5px solid #334155;
-      background:transparent;
-      margin-bottom:6px;
-    }
-    .amp-signature-label{
-      font-size:.78rem;
-      color:#64748b;
-      text-align:center;
-    }
-    /* Botón "Firmar" en modo pantalla (no imprime) */
-    .amp-sig-btn{
-      display:inline-block;
-      margin-top:6px;
-      min-height:36px;
-      padding:6px 14px;
-      border:1px solid #bfdbfe;
-      border-radius:8px;
-      background:#eff6ff;
-      color:#1d4ed8;
-      font-size:.82rem;
-      font-weight:800;
-      cursor:pointer;
-    }
-    .amp-sig-btn:hover{ background:#dbeafe; }
-
-    /* === MODAL DE FIRMA === */
-    .amp-sig-modal{
-      display:none;
-      position:fixed; inset:0; z-index:2000;
-      background:rgba(15,23,42,.55);
-      backdrop-filter:blur(3px);
-      align-items:center; justify-content:center;
-    }
-    .amp-sig-modal.open{ display:flex; }
-    .amp-sig-modal-inner{
-      background:#fff;
-      border-radius:16px;
-      box-shadow:0 24px 60px rgba(15,23,42,.22);
-      padding:20px;
-      width:min(96vw, 560px);
-      display:flex; flex-direction:column; gap:12px;
-    }
-    .amp-sig-modal-title{
-      font-size:1rem; font-weight:900; color:#0f172a; margin:0;
-    }
-    .amp-sig-modal-subtitle{
-      font-size:.82rem; color:#64748b; margin:0;
-    }
-    .amp-sig-pad{
-      display:block;
-      width:100%; height:200px;
-      border:2px dashed #cbd5e1;
-      border-radius:12px;
-      background:#f8fafc;
-      cursor:crosshair;
-      touch-action:none;
-    }
-    .amp-sig-pad.has-sig{ border-color:#2563eb; background:#fff; }
-    .amp-sig-modal-actions{
-      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
-    }
-
-    /* Canvas firma del técnico en CONFIG */
-    .amp-cfg-sig-pad{
-      display:block;
-      width:100%; height:160px;
-      border:2px dashed #cbd5e1;
-      border-radius:12px;
-      background:#f8fafc;
-      cursor:crosshair;
-      touch-action:none;
-    }
-    .amp-cfg-sig-pad.has-sig{ border-color:#2563eb; background:#fff; }
-
-    /* ✅ PRINT FIX (NO PÁGINA EN BLANCO) + MODOS */
-    @media print{
-      @page{ size:A4; margin:10mm; }
-      body{ background:#fff !important; padding-top:0 !important; }
-
-      /* Ocultar UI */
-      .amp-nav, .amp-no-print{ display:none !important; }
-
-      /* Ocultar todas las secciones por defecto */
-      .amp-section{ display:none !important; }
-
-      /* Mostrar sección correcta según modo */
-      body[data-print-mode="budget"] #ampSectionNuevo{ display:block !important; }
-      body[data-print-mode="library"] #ampSectionLista{ display:block !important; }
-      body[data-print-mode="config"]  #ampSectionConfig{ display:block !important; }
-
-      /* Dentro de la sección, ocultar todo excepto el host imprimible */
-      body[data-print-mode="budget"] #ampSectionNuevo > *{ display:none !important; }
-      body[data-print-mode="budget"] #ampPrintBudgetHost{ display:block !important; }
-
-      body[data-print-mode="library"] #ampSectionLista > *{ display:none !important; }
-      body[data-print-mode="library"] #ampPrintLibraryHost{ display:block !important; }
-
-      body[data-print-mode="config"] #ampSectionConfig > *{ display:none !important; }
-      body[data-print-mode="config"] #ampPrintConfigHost{ display:block !important; }
-
-      .amp-app{ padding:0 !important; margin:0 !important; max-width:none !important; }
-      .amp-sheet-wrap{ margin:0 !important; display:block !important; }
-      .amp-sheet{
-        box-shadow:none !important;
-        border:none !important;
-        border-radius:0 !important;
-        max-width:none !important;
-        width:100% !important;
-        padding:0 !important;
-        min-height:auto !important;
-      }
-      .amp-notes-editable{ border:1px solid #ddd !important; background:#fff !important; }
-
-      /* Firmas en impresión */
-      .amp-signature-box{ background:#fff !important; }
-      .amp-sig-canvas-preview{ border-bottom:1.5px solid #334155 !important; }
-      .amp-sig-btn{ display:none !important; }
-      .amp-sig-modal{ display:none !important; }
-    }
-  </style>
-</head>
-<body data-print-mode="budget">
-  <header class="amp-nav amp-no-print">
-    <div class="amp-nav-inner">
-      <button class="amp-nav-btn active" data-target="ampSectionNuevo">NUEVO</button>
-      <button class="amp-nav-btn" data-target="ampSectionLista">LISTA</button>
-      <button class="amp-nav-btn" data-target="ampSectionConfig">CONFIG</button>
-    </div>
-  </header>
-
-  <main class="amp-app">
-    <!-- ================= NUEVO ================= -->
-    <section id="ampSectionNuevo" class="amp-section active">
-      <div class="amp-card amp-no-print">
-        <!-- CAMBIO: título dinámico según tipo de documento -->
-        <h2 id="ampFormTitle">Nuevo presupuesto</h2>
-
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampClientName">Cliente / Empresa</label>
-            <input id="ampClientName" class="amp-input" type="text" placeholder="Nombre del cliente o empresa" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientCif">DNI / CIF</label>
-            <input id="ampClientCif" class="amp-input" type="text" placeholder="Identificación fiscal" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientPhone">Teléfono cliente</label>
-            <input id="ampClientPhone" class="amp-input" type="tel" placeholder="Teléfono de contacto" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientAddress">Dirección cliente</label>
-            <input id="ampClientAddress" class="amp-input" type="text" placeholder="Dirección de instalación / facturación" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <!-- NUEVO: tipo de documento -->
-          <div class="amp-field">
-            <label for="ampDocType">Tipo de documento</label>
-            <select id="ampDocType" class="amp-select">
-              <option value="presupuesto">Presupuesto</option>
-              <option value="albaran">Albarán</option>
-              <option value="factura">Factura</option>
-            </select>
-          </div>
-          <div class="amp-field">
-            <label for="ampBudgetNumber"><span id="ampDocNumberLabel">Nº Presupuesto</span> (irrepetible)</label>
-            <div style="display:flex; gap:8px;">
-              <input id="ampBudgetNumber" class="amp-input" type="text" />
-              <button id="ampBtnNewNumber" class="amp-btn amp-btn-secondary" type="button" style="min-width:120px;">Nuevo Nº</button>
-            </div>
-            <div class="amp-muted">Generado offline: fecha+marca tiempo+ID dispositivo+aleatorio.</div>
-          </div>
-          <div class="amp-field">
-            <label for="ampBudgetDate">Fecha</label>
-            <input id="ampBudgetDate" class="amp-input" type="date" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <div class="amp-field">
-            <label for="ampIvaMode">Modo de IVA</label>
-            <select id="ampIvaMode" class="amp-select">
-              <option value="base">Precio Base (añadir 21%)</option>
-              <option value="incluido">IVA Incluido (desglosar 21%)</option>
-            </select>
-          </div>
-          <!-- NUEVO: firma del cliente -->
-          <div class="amp-field" style="grid-column: span 2;">
-            <label for="ampClientSignatureName">Nombre firmante cliente (para documento impreso)</label>
-            <input id="ampClientSignatureName" class="amp-input" type="text" placeholder="Nombre y apellidos del cliente que firma" />
-          </div>
-        </div>
-
-        <!-- Método de pago: solo visible en albarán/factura -->
-        <div id="ampPaymentRow" class="amp-grid amp-grid-2" style="margin-top:10px; display:none;">
-          <div class="amp-field">
-            <label for="ampPaymentMethod">Método de pago</label>
-            <select id="ampPaymentMethod" class="amp-select">
-              <option value="efectivo">Efectivo</option>
-              <option value="transferencia">Transferencia bancaria</option>
-              <option value="tarjeta">Tarjeta</option>
-              <option value="bizum">Bizum</option>
-            </select>
-          </div>
-          <div class="amp-field" id="ampBankAccountInfo" style="display:none;">
-            <label>Número de cuenta (desde CONFIG)</label>
-            <div id="ampBankAccountDisplay" class="amp-input" style="background:#f8fafc; color:#334155; display:flex; align-items:center; font-family:monospace;">—</div>
-          </div>
-        </div>
-
-        <div class="amp-actions">
-          <button id="ampBtnResetBudget" class="amp-btn amp-btn-secondary" type="button">Limpiar presupuesto</button>
-          <button id="ampBtnUseDefaultNotes" class="amp-btn amp-btn-secondary" type="button">Cargar notas de CONFIG</button>
-        </div>
-      </div>
-
-      <div class="amp-card amp-no-print">
-        <h3>Añadir concepto</h3>
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampProductSelect">Servicio / Producto (biblioteca)</label>
-            <select id="ampProductSelect" class="amp-select">
-              <option value="">-- Seleccionar de la biblioteca --</option>
-            </select>
-          </div>
-          <div class="amp-field">
-    tro de la sección, ocultar todo excepto el host imprimible */
-      body[data-print-mode="budget"] #ampSectionNuevo > *{ display:none !important; }
-      body[data-print-mode="budget"] #ampPrintBudgetHost{ display:block !important; }
-
-      body[data-print-mode="library"] #ampSectionLista > *{ display:none !important; }
-      body[data-print-mode="library"] #ampPrintLibraryHost{ display:block !important; }
-
-      body[data-print-mode="config"] #ampSectionConfig > *{ display:none !important; }
-      body[data-print-mode="config"] #ampPrintConfigHost{ display:block !important; }
-
-      .amp-app{ padding:0 !important; margin:0 !important; max-width:none !important; }
-      .amp-sheet-wrap{ margin:0 !important; display:block !important; }
-      .amp-sheet{
-        box-shadow:none !important;
-        border:none !important;
-        border-radius:0 !important;
-        max-width:none !important;
-        width:100% !important;
-        padding:0 !important;
-        min-height:auto !important;
-      }
-      .amp-notes-editable{ border:1px solid #ddd !important; background:#fff !important; }
-    }
-  </style>
-</head>
-<body data-print-mode="budget">
-  <header class="amp-nav amp-no-print">
-    <div class="amp-nav-inner">
-      <button class="amp-nav-btn active" data-target="ampSectionNuevo">NUEVO</button>
-      <button class="amp-nav-btn" data-target="ampSectionLista">LISTA</button>
-      <button class="amp-nav-btn" data-target="ampSectionConfig">CONFIG</button>
-    </div>
-  </header>
-
-  <main class="amp-app">
-    <!-- ================= NUEVO ================= -->
-    <section id="ampSectionNuevo" class="amp-section active">
-      <div class="amp-card amp-no-print">
-        <h2>Nuevo presupuesto</h2>
-
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampClientName">Cliente / Empresa</label>
-            <input id="ampClientName" class="amp-input" type="text" placeholder="Nombre del cliente o empresa" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientCif">DNI / CIF</label>
-            <input id="ampClientCif" class="amp-input" type="text" placeholder="Identificación fiscal" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientPhone">Teléfono cliente</label>
-            <input id="ampClientPhone" class="amp-input" type="tel" placeholder="Teléfono de contacto" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientAddress">Dirección cliente</label>
-            <input id="ampClientAddress" class="amp-input" type="text" placeholder="Dirección de instalación / facturación" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <div class="amp-field">
-            <label for="ampBudgetNumber">Nº Presupuesto (irrepetible)</label>
-            <div style="display:flex; gap:8px;">
-              <input id="ampBudgetNumber" class="amp-input" type="text" />
-              <button id="ampBtnNewNumber" class="amp-btn amp-btn-secondary" type="button" style="min-width:120px;">Nuevo Nº</button>
-            </div>
-            <div class="amp-muted">Generado offline: fecha+marca tiempo+ID dispositivo+aleatorio.</div>
-          </div>
-          <div class="amp-field">
-            <label for="ampBudgetDate">Fecha</label>
-            <input id="ampBudgetDate" class="amp-input" type="date" />
-          </div>
-          <div class="amp-field">
-            <label for="ampIvaMode">Modo de IVA</label>
-            <select id="ampIvaMode" class="amp-select">
-              <option value="base">Precio Base (añadir 21%)</option>
-              <option value="incluido">IVA Incluido (desglosar 21%)</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="amp-actions">
-          <button id="ampBtnResetBudget" class="amp-btn amp-btn-secondary" type="button">Limpiar presupuesto</button>
-          <button id="ampBtnUseDefaultNotes" class="amp-btn amp-btn-secondary" type="button">Cargar notas de CONFIG</button>
-        </div>
-      </div>
-
-      <div class="amp-card amp-no-print">
-        <h3>Añadir concepto</h3>
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampProductSelect">Servicio / Producto (biblioteca)</label>
-            <select id="ampProductSelect" class="amp-select">
-              <option value="">-- Seleccionar de la biblioteca --</option>
-            </select>
-          </div>
-          <div class="amp-field">
-            <label for="ampLineDesc">Descripción manual</label>
-            <input id="ampLineDesc" class="amp-input" type="text" placeholder="Ej. Instalación antena TDT y orientación" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <div class="amp-field">
-            <label for="ampLineQty">Cantidad</label>
-            <input id="ampLineQty" class="amp-input" type="number" min="0" step="0.01" value="1" />
-          </div>
-          <div class="amp-field">
-            <label for="ampLinePrice">Precio unitario (€)</label>
-            <input id="ampLinePrice" class="amp-input" type="number" min="0" step="0.01" placeholder="0.00" />
-          </div>
-          <div class="amp-field" style="justify-content:flex-end;">
-            <label class="amp-hidden">Acción</label>
-            <button id="ampBtnAddLine" class="amp-btn amp-btn-success" type="button">Añadir concepto</button>
-          </div>
-        </div>
-        <div class="amp-muted" style="margin-top:8px;">
-          En modo <strong>Precio Base</strong>, el precio unitario se considera sin IVA. En modo <strong>IVA Incluido</strong>, se desglosa automáticamente.
-        </div>
-        <div id="ampLineMsg" class="amp-status"></div>
-      </div>
-
-      <div class="amp-card amp-no-print">
-        <h3>Conceptos añadidos</h3>
-        <div class="amp-lines-table-wrap">
-          <table class="amp-lines-table">
-            <thead>
-              <tr><th>Descripción</th><th>Cant.</th><th>Precio Unit.</th><th>Importe</th><th>Acción</th></tr>
-            </thead>
-            <tbody id="ampLinesTbody">
-              <tr><td colspan="5" class="amp-muted">No hay conceptos añadidos todavía.</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="amp-actions">
-          <span class="amp-pill">Total actual: <span id="ampQuickTotal" class="amp-inline-total">0,00 €</span></span>
-        </div>
-      </div>
-
-      <!-- Host imprimible: PRESUPUESTO -->
-      <div id="ampPrintBudgetHost">
-        <div class="amp-card">
-          <h3 class="amp-no-print">Vista previa de hoja de presupuesto</h3>
-          <div class="amp-sheet-wrap">
-            <article class="amp-sheet">
-              <div class="amp-sheet-header">
-                <div class="amp-logo-box" id="ampSheetLogoBox"><span>Logo empresa</span></div>
-                <div>
-                  <h1 class="amp-company-title" id="ampSheetCompanyName">Tu Empresa de Telecomunicaciones</h1>
-                  <div class="amp-company-meta">
-                    <div><strong>CIF:</strong> <span id="ampSheetCompanyCif">—</span></div>
-                    <div><strong>Tel.:</strong> <span id="ampSheetCompanyPhone">—</span></div>
-                    <div><strong>Dirección:</strong> <span id="ampSheetCompanyAddress">—</span></div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="amp-doc-title-row">
-                <h2 class="amp-doc-title">PRESUPUESTO</h2>
-                <div class="amp-muted">Nº <strong id="ampSheetBudgetNo">---</strong> · Fecha: <strong id="ampSheetBudgetDate">--/--/----</strong></div>
-              </div>
-
-              <div class="amp-two-cols">
-                <div class="amp-box">
-                  <h4>Datos del cliente</h4>
-                  <div><strong>Nombre / Empresa:</strong> <span id="ampSheetClientName">—</span></div>
-                  <div><strong>DNI/CIF:</strong> <span id="ampSheetClientCif">—</span></div>
-                  <div><strong>Teléfono:</strong> <span id="ampSheetClientPhone">—</span></div>
-                  <div><strong>Dirección:</strong> <span id="ampSheetClientAddress">—</span></div>
-                </div>
-                <div class="amp-box">
-                  <h4>Resumen</h4>
-                  <div><strong>Modo IVA:</strong> <span id="ampSheetIvaModeText">Precio Base (añadir 21%)</span></div>
-                  <div><strong>Moneda:</strong> EUR (€)</div>
-                </div>
-              </div>
-
-              <table class="amp-sheet-table">
-                <thead>
-                  <tr>
-                    <th style="width:52%;">Concepto</th>
-                    <th style="width:12%;" class="amp-text-right">Cant.</th>
-                    <th style="width:18%;" class="amp-text-right">P. Unit. (Base)</th>
-                    <th style="width:18%;" class="amp-text-right">Importe (Base)</th>
-                  </tr>
-                </thead>
-                <tbody id="ampSheetLinesBody">
-                  <tr><td colspan="4" class="amp-muted">Añade conceptos desde el formulario para generar el presupuesto.</td></tr>
-                </tbody>
-              </table>
-
-              <div class="amp-totals">
-                <div class="amp-totals-row"><span>Base imponible</span><span id="ampSheetBaseTotal">0,00 €</span></div>
-                <div class="amp-totals-row"><span>IVA 21%</span><span id="ampSheetIvaTotal">0,00 €</span></div>
-                <div class="amp-totals-row"><span>Total</span><span id="ampSheetGrandTotal">0,00 €</span></div>
-              </div>
-
-              <div style="margin-top:14px;">
-                <h4 style="margin:0 0 6px; color:#475569; font-size:.85rem; text-transform:uppercase; letter-spacing:.5px;">Notas</h4>
-                <div id="ampSheetNotesEditable" class="amp-notes-editable" contenteditable="true" spellcheck="true"></div>
-                <div class="amp-muted amp-no-print" style="margin-top:6px;">
-                  Estas notas se cargan desde <strong>CONFIG → Notas predeterminadas</strong> al crear un presupuesto nuevo (o con “Cargar notas de CONFIG”).
-                </div>
-              </div>
-
-              <div class="amp-footer-print">Documento generado con AntenaManager PRO.</div>
-            </article>
-          </div>
-
-          <div class="amp-bottom-bar amp-no-print">
-            <div class="amp-bottom-inner">
-              <button id="ampBtnPrintBudget" class="amp-btn amp-btn-primary" type="button">Imprimir / Guardar PDF (Presupuesto)</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= LISTA ================= -->
-    <section id="ampSectionLista" class="amp-section">
-      <div class="amp-card amp-no-print">
-        <h2>Biblioteca de precios</h2>
-
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampLibName">Nombre del servicio / producto</label>
-            <input id="ampLibName" class="amp-input" type="text" placeholder="Ej. Instalación antena TDT" />
-          </div>
-          <div class="amp-field">
-            <label for="ampLibPrice">Precio base (€)</label>
-            <input id="ampLibPrice" class="amp-input" type="number" min="0" step="0.01" placeholder="0.00" />
-          </div>
-        </div>
-
-        <div class="amp-actions">
-          <button id="ampBtnAddLib" class="amp-btn amp-btn-primary" type="button">Guardar en biblioteca</button>
-          <button id="ampBtnClearLib" class="amp-btn amp-btn-danger" type="button">Vaciar biblioteca</button>
-          <button id="ampBtnPrintLibrary" class="amp-btn amp-btn-secondary" type="button">Imprimir / PDF (Biblioteca)</button>
-          <button id="ampBtnExportAll1" class="amp-btn amp-btn-secondary" type="button">Exportar datos</button>
-          <label class="amp-btn amp-btn-secondary" style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
-            Importar datos
-            <input id="ampImportFile1" type="file" accept="application/json" style="display:none;">
-          </label>
-        </div>
-        <div class="amp-muted">Exporta/Importa: configuración + biblioteca (localStorage) para actualizaciones offline.</div>
-        <div id="ampLibMsg" class="amp-status"></div>
-      </div>
-
-      <div class="amp-card amp-no-print">
-        <h3>Servicios guardados</h3>
-        <div id="ampLibraryList" class="amp-list-wrap">
-          <div class="amp-muted">No hay servicios guardados todavía.</div>
-        </div>
-      </div>
-
-      <!-- Host imprimible: BIBLIOTECA -->
-      <div id="ampPrintLibraryHost">
-        <div class="amp-sheet-wrap">
-          <article class="amp-sheet">
-            <div class="amp-sheet-header">
-              <div class="amp-logo-box" id="ampSheetLogoBoxLib"><span>Logo empresa</span></div>
-              <div>
-                <h1 class="amp-company-title" id="ampSheetCompanyNameLib">Tu Empresa de Telecomunicaciones</h1>
-                <div class="amp-company-meta">
-                  <div><strong>CIF:</strong> <span id="ampSheetCompanyCifLib">—</span></div>
-                  <div><strong>Tel.:</strong> <span id="ampSheetCompanyPhoneLib">—</span></div>
-                  <div><strong>Dirección:</strong> <span id="ampSheetCompanyAddressLib">—</span></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="amp-doc-title-row">
-              <h2 class="amp-doc-title">BIBLIOTECA DE PRECIOS</h2>
-              <div class="amp-muted">Fecha: <strong id="ampLibPrintDate">--/--/----</strong></div>
-            </div>
-
-            <table class="amp-sheet-table">
-              <thead><tr><th>Servicio / Producto</th><th class="amp-text-right">Precio base</th></tr></thead>
-              <tbody id="ampLibPrintBody"><tr><td colspan="2" class="amp-muted">No hay servicios guardados.</td></tr></tbody>
-            </table>
-
-            <div class="amp-footer-print">Documento generado con AntenaManager PRO.</div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= CONFIG ================= -->
-    <section id="ampSectionConfig" class="amp-section">
-      <div class="amp-card amp-no-print">
-        <h2>Configuración de empresa</h2>
-
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampCfgCompanyName">Nombre comercial</label>
-            <input id="ampCfgCompanyName" class="amp-input" type="text" placeholder="Antenas López Telecom" />
-          </div>
-          <div class="amp-field">
-            <label for="ampCfgCompanyCif">CIF</label>
-            <input id="ampCfgCompanyCif" class="amp-input" type="text" placeholder="B12345678" />
-          </div>
-          <div class="amp-field">
-            <label for="ampCfgCompanyPhone">Teléfono</label>
-            <input id="ampCfgCompanyPhone" class="amp-input" type="tel" placeholder="+34 600 000 000" />
-          </div>
-          <div class="amp-field">
-            <label for="ampCfgCompanyAddress">Dirección</label>
-            <input id="ampCfgCompanyAddress" class="amp-input" type="text" placeholder="C/ Ejemplo, 123 - 28000 Madrid" />
-          </div>
-        </div>
-
-        <div class="amp-field" style="margin-top:10px;">
-          <label for="ampCfgDefaultNotes">Notas predeterminadas (garantía / condiciones de pago)</label>
-          <textarea id="ampCfgDefaultNotes" class="amp-textarea" placeholder="Ej. Garantía 2 años. Pago 50% aceptación y 50% finalización."></textarea>
-          <div class="amp-muted">Estas notas se copian al campo “Notas” del presupuesto al crear uno nuevo o al pulsar “Cargar notas de CONFIG”.</div>
         </div>
 
         <div class="amp-grid amp-grid-2" style="margin-top:10px;">
@@ -3340,7 +431,31 @@
     </section>
   </main>
 
+  <div id="ampToast" class="amp-toast amp-no-print">📋 Nombre copiado al portapapeles</div>
+
+  <!-- ===== MODAL FIRMA CLIENTE ===== -->
+  <div id="ampSigModal" class="amp-sig-modal" role="dialog" aria-modal="true" aria-label="Firma del cliente">
+    <div class="amp-sig-modal-inner">
+      <p class="amp-sig-modal-title">✍️ Firma del cliente</p>
+      <p class="amp-sig-modal-subtitle">Firma con el ratón o con el dedo en el recuadro</p>
+      <canvas id="ampSigPad" class="amp-sig-pad" width="520" height="200"></canvas>
+      <div class="amp-sig-modal-actions">
+        <button id="ampBtnSigClear" class="amp-btn amp-btn-secondary" type="button">Borrar</button>
+        <button id="ampBtnSigCancel" class="amp-btn amp-btn-secondary" type="button">Cancelar</button>
+        <button id="ampBtnSigConfirm" class="amp-btn amp-btn-primary" type="button">Aceptar firma</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+      /* ===== CSS INJECTION (evita truncado de <style> en GitHub Pages) ===== */
+      (function(){
+        var b64 = "OnJvb3R7LS1hbXAtYmx1ZTojMjU2M2ViOy0tYW1wLXNsYXRlOiMwZjE3MmE7LS1hbXAtYmc6I2YxZjVmOTstLWFtcC13aGl0ZTojZmZmZmZmOy0tYW1wLWJvcmRlcjojY2JkNWUxOy0tYW1wLW11dGVkOiM2NDc0OGI7LS1hbXAtZGFuZ2VyOiNkYzI2MjY7LS1hbXAtc3VjY2VzczojMTZhMzRhOy0tYW1wLXNoYWRvdzowIDEwcHggMjVweCByZ2JhKDE1LDIzLDQyLC4wOCk7LS1hbXAtcmFkaXVzOjEycHh9Kntib3gtc2l6aW5nOmJvcmRlci1ib3h9aHRtbCxib2R5e21hcmdpbjowO3BhZGRpbmc6MH1ib2R5e2ZvbnQtZmFtaWx5OnN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLFNlZ29lIFVJLFJvYm90byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZjtiYWNrZ3JvdW5kOnZhcigtLWFtcC1iZyk7Y29sb3I6dmFyKC0tYW1wLXNsYXRlKTtsaW5lLWhlaWdodDoxLjM1Oy13ZWJraXQtZm9udC1zbW9vdGhpbmc6YW50aWFsaWFzZWQ7cGFkZGluZy10b3A6NjhweH0uYW1wLW5hdntwb3NpdGlvbjpmaXhlZDt0b3A6MDtsZWZ0OjA7cmlnaHQ6MDt6LWluZGV4OjEwMDA7YmFja2dyb3VuZDp2YXIoLS1hbXAtc2xhdGUpO2JvcmRlci1ib3R0b206MXB4IHNvbGlkIHJnYmEoMjU1LDI1NSwyNTUsLjA4KTtib3gtc2hhZG93OjAgNnB4IDIwcHggcmdiYSgxNSwyMyw0MiwuMTgpfS5hbXAtbmF2LWlubmVye21heC13aWR0aDoxMjAwcHg7bWFyZ2luOjAgYXV0bztkaXNwbGF5OmdyaWQ7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOnJlcGVhdCgzLDFmcik7Z2FwOjhweDtwYWRkaW5nOjEwcHh9LmFtcC1uYXYtYnRue21pbi1oZWlnaHQ6NDRweDtib3JkZXI6MDtib3JkZXItcmFkaXVzOjEwcHg7Y29sb3I6I2RiZWFmZTtiYWNrZ3JvdW5kOnJnYmEoMzcsOTksMjM1LC4xOCk7Zm9udC13ZWlnaHQ6ODAwO2xldHRlci1zcGFjaW5nOi4zcHg7Y3Vyc29yOnBvaW50ZXI7dHJhbnNpdGlvbjouMnMgZWFzZX0uYW1wLW5hdi1idG4uYWN0aXZle2JhY2tncm91bmQ6dmFyKC0tYW1wLWJsdWUpO2NvbG9yOiNmZmY7Ym94LXNoYWRvdzppbnNldCAwIC0ycHggMCByZ2JhKDI1NSwyNTUsMjU1LC4xNSl9LmFtcC1hcHB7bWF4LXdpZHRoOjEyMDBweDttYXJnaW46MCBhdXRvO3BhZGRpbmc6MTJweH0uYW1wLXNlY3Rpb257ZGlzcGxheTpub25lO2FuaW1hdGlvbjphbXBGYWRlIC4xOHMgZWFzZX0uYW1wLXNlY3Rpb24uYWN0aXZle2Rpc3BsYXk6YmxvY2t9QGtleWZyYW1lcyBhbXBGYWRle2Zyb217b3BhY2l0eTowO3RyYW5zZm9ybTp0cmFuc2xhdGVZKDRweCl9dG97b3BhY2l0eToxO3RyYW5zZm9ybTp0cmFuc2xhdGVZKDApfX0uYW1wLWNhcmR7YmFja2dyb3VuZDp2YXIoLS1hbXAtd2hpdGUpO2JvcmRlcjoxcHggc29saWQgdmFyKC0tYW1wLWJvcmRlcik7Ym9yZGVyLXJhZGl1czp2YXIoLS1hbXAtcmFkaXVzKTtib3gtc2hhZG93OnZhcigtLWFtcC1zaGFkb3cpO3BhZGRpbmc6MTJweDttYXJnaW4tYm90dG9tOjEycHh9LmFtcC1jYXJkIGgyLC5hbXAtY2FyZCBoM3ttYXJnaW46MCAwIDEwcHg7Zm9udC1zaXplOjFyZW19LmFtcC1ncmlke2Rpc3BsYXk6Z3JpZDtnYXA6MTBweH0uYW1wLWdyaWQtMntncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyIDFmcn0uYW1wLWdyaWQtM3tncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyIDFmciAxZnJ9QG1lZGlhIChtYXgtd2lkdGg6NjgwcHgpey5hbXAtZ3JpZC0yLC5hbXAtZ3JpZC0ze2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnJ9fS5hbXAtZmllbGR7ZGlzcGxheTpmbGV4O2ZsZXgtZGlyZWN0aW9uOmNvbHVtbjtnYXA6NnB4fS5hbXAtZmllbGQgbGFiZWx7Zm9udC1zaXplOi44NXJlbTtmb250LXdlaWdodDo2NTA7Y29sb3I6IzMzNDE1NX0uYW1wLWlucHV0LC5hbXAtc2VsZWN0LC5hbXAtdGV4dGFyZWF7d2lkdGg6MTAwJTttaW4taGVpZ2h0OjQ0cHg7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1hbXAtYm9yZGVyKTtib3JkZXItcmFkaXVzOjEwcHg7cGFkZGluZzoxMHB4IDEycHg7Zm9udC1zaXplOi45NXJlbTtiYWNrZ3JvdW5kOiNmZmY7Y29sb3I6dmFyKC0tYW1wLXNsYXRlKTtvdXRsaW5lOm5vbmV9LmFtcC1pbnB1dDpmb2N1cywuYW1wLXNlbGVjdDpmb2N1cywuYW1wLXRleHRhcmVhOmZvY3Vze2JvcmRlci1jb2xvcjp2YXIoLS1hbXAtYmx1ZSk7Ym94LXNoYWRvdzowIDAgMCAzcHggcmdiYSgzNyw5OSwyMzUsLjEyKX0uYW1wLXRleHRhcmVhe21pbi1oZWlnaHQ6MTAwcHg7cmVzaXplOnZlcnRpY2FsfS5hbXAtYWN0aW9uc3tkaXNwbGF5OmZsZXg7ZmxleC13cmFwOndyYXA7Z2FwOjhweDttYXJnaW4tdG9wOjEwcHh9LmFtcC1idG57bWluLWhlaWdodDo0NHB4O2JvcmRlcjoxcHggc29saWQgdHJhbnNwYXJlbnQ7Ym9yZGVyLXJhZGl1czoxMHB4O3BhZGRpbmc6MTBweCAxNHB4O2ZvbnQtd2VpZ2h0OjgwMDtjdXJzb3I6cG9pbnRlcjt0cmFuc2l0aW9uOi4xNXMgZWFzZX0uYW1wLWJ0bi1wcmltYXJ5e2JhY2tncm91bmQ6dmFyKC0tYW1wLWJsdWUpO2NvbG9yOiNmZmZ9LmFtcC1idG4tc2Vjb25kYXJ5e2JhY2tncm91bmQ6I2ZmZjtjb2xvcjp2YXIoLS1hbXAtc2xhdGUpO2JvcmRlci1jb2xvcjp2YXIoLS1hbXAtYm9yZGVyKX0uYW1wLWJ0bi1kYW5nZXJ7YmFja2dyb3VuZDojZmZmMWYyO2NvbG9yOnZhcigtLWFtcC1kYW5nZXIpO2JvcmRlci1jb2xvcjojZmVjZGQzfS5hbXAtYnRuLXN1Y2Nlc3N7YmFja2dyb3VuZDojZWNmZGY1O2NvbG9yOnZhcigtLWFtcC1zdWNjZXNzKTtib3JkZXItY29sb3I6I2JiZjdkMH0uYW1wLW11dGVke2NvbG9yOnZhcigtLWFtcC1tdXRlZCk7Zm9udC1zaXplOi44NXJlbX0uYW1wLXN0YXR1c3ttYXJnaW4tdG9wOjhweDtmb250LXNpemU6Ljg1cmVtO2NvbG9yOiMwZjc2NmU7bWluLWhlaWdodDoxLjFlbX0uYW1wLWxpbmVzLXRhYmxlLXdyYXB7b3ZlcmZsb3c6YXV0bztib3JkZXI6MXB4IHNvbGlkIHZhcigtLWFtcC1ib3JkZXIpO2JvcmRlci1yYWRpdXM6MTJweDtiYWNrZ3JvdW5kOiNmZmZ9LmFtcC1saW5lcy10YWJsZXt3aWR0aDoxMDAlO2JvcmRlci1jb2xsYXBzZTpjb2xsYXBzZTttaW4td2lkdGg6NTIwcHh9LmFtcC1saW5lcy10YWJsZSB0aCwuYW1wLWxpbmVzLXRhYmxlIHRke2JvcmRlci1ib3R0b206MXB4IHNvbGlkICNlMmU4ZjA7cGFkZGluZzoxMHB4IDhweDtmb250LXNpemU6LjlyZW19LmFtcC1saW5lcy10YWJsZSB0aHtiYWNrZ3JvdW5kOiNmOGZhZmM7Y29sb3I6IzMzNDE1NTtmb250LXdlaWdodDo4MDA7cG9zaXRpb246c3RpY2t5O3RvcDowfS5hbXAtbGluZS1hY3Rpb25zIGJ1dHRvbnttaW4taGVpZ2h0OjM2cHg7cGFkZGluZzo2cHggMTBweDtib3JkZXItcmFkaXVzOjhweDtib3JkZXI6MXB4IHNvbGlkICNmZWNkZDM7YmFja2dyb3VuZDojZmZmMWYyO2NvbG9yOiNiZTEyM2M7Y3Vyc29yOnBvaW50ZXI7Zm9udC13ZWlnaHQ6ODAwfS5hbXAtbGlzdC13cmFwe2Rpc3BsYXk6Z3JpZDtnYXA6MTBweH0uYW1wLXNlcnZpY2Utcm93e2Rpc3BsYXk6Z3JpZDtncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyIGF1dG8gYXV0bztnYXA6OHB4O2FsaWduLWl0ZW1zOmNlbnRlcjtwYWRkaW5nOjEwcHg7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1hbXAtYm9yZGVyKTtib3JkZXItcmFkaXVzOjEycHg7YmFja2dyb3VuZDojZmZmfS5hbXAtc2VydmljZS1uYW1le2ZvbnQtd2VpZ2h0OjcwMDt3b3JkLWJyZWFrOmJyZWFrLXdvcmR9LmFtcC1zZXJ2aWNlLXByaWNle2ZvbnQtd2VpZ2h0OjkwMDt3aGl0ZS1zcGFjZTpub3dyYXB9QG1lZGlhIChtYXgtd2lkdGg6NTQwcHgpey5hbXAtc2VydmljZS1yb3d7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmciBhdXRvfS5hbXAtc2VydmljZS1wcmljZXtncmlkLWNvbHVtbjoxLzI7Y29sb3I6dmFyKC0tYW1wLW11dGVkKTtmb250LXdlaWdodDo3MDB9LmFtcC1zZXJ2aWNlLXJvdyAuYW1wLWJ0bi1kYW5nZXJ7Z3JpZC1jb2x1bW46Mi8zO2dyaWQtcm93OjEvc3BhbiAyfX0uYW1wLXNoZWV0LXdyYXB7ZGlzcGxheTpmbGV4O2p1c3RpZnktY29udGVudDpjZW50ZXI7bWFyZ2luLXRvcDoxMnB4fS5hbXAtc2hlZXR7d2lkdGg6MTAwJTttYXgtd2lkdGg6ODYwcHg7YmFja2dyb3VuZDojZmZmO2JvcmRlcjoxcHggc29saWQgI2RiZWFmZTtib3JkZXItcmFkaXVzOjEycHg7Ym94LXNoYWRvdzowIDE4cHggNDBweCByZ2JhKDE1LDIzLDQyLC4xMCk7cGFkZGluZzoxOHB4O2NvbG9yOiMxMTE4Mjd9QG1lZGlhIChtaW4td2lkdGg6OTAwcHgpey5hbXAtc2hlZXR7bWluLWhlaWdodDoxMTIwcHh9fS5hbXAtc2hlZXQtaGVhZGVye2Rpc3BsYXk6Z3JpZDtncmlkLXRlbXBsYXRlLWNvbHVtbnM6MTEwcHggMWZyO2dhcDoxNHB4O2FsaWduLWl0ZW1zOnN0YXJ0O2JvcmRlci1ib3R0b206MnB4IHNvbGlkICNlMmU4ZjA7cGFkZGluZy1ib3R0b206MTJweDttYXJnaW4tYm90dG9tOjEycHh9QG1lZGlhIChtYXgtd2lkdGg6NjAwcHgpey5hbXAtc2hlZXQtaGVhZGVye2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnJ9fS5hbXAtbG9nby1ib3h7d2lkdGg6MTEwcHg7aGVpZ2h0OjExMHB4O2JvcmRlcjoxcHggZGFzaGVkICNjYmQ1ZTE7Ym9yZGVyLXJhZGl1czoxMnB4O2Rpc3BsYXk6ZmxleDthbGlnbi1pdGVtczpjZW50ZXI7anVzdGlmeS1jb250ZW50OmNlbnRlcjtvdmVyZmxvdzpoaWRkZW47YmFja2dyb3VuZDojZjhmYWZjO2NvbG9yOiM2NDc0OGI7Zm9udC1zaXplOi43NXJlbTt0ZXh0LWFsaWduOmNlbnRlcjtwYWRkaW5nOjhweH0uYW1wLWxvZ28tYm94IGltZ3t3aWR0aDoxMDAlO2hlaWdodDoxMDAlO29iamVjdC1maXQ6Y29udGFpbjtkaXNwbGF5OmJsb2NrO2JhY2tncm91bmQ6I2ZmZn0uYW1wLWNvbXBhbnktdGl0bGV7bWFyZ2luOjA7Y29sb3I6IzFlM2E4YTtmb250LXNpemU6MS4xNXJlbTtmb250LXdlaWdodDo5MDB9LmFtcC1jb21wYW55LW1ldGF7bWFyZ2luLXRvcDo2cHg7ZGlzcGxheTpncmlkO2dhcDoycHg7Zm9udC1zaXplOi44OHJlbTtjb2xvcjojMzc0MTUxfS5hbXAtZG9jLXRpdGxlLXJvd3tkaXNwbGF5OmZsZXg7anVzdGlmeS1jb250ZW50OnNwYWNlLWJldHdlZW47Z2FwOjEycHg7ZmxleC13cmFwOndyYXA7bWFyZ2luLWJvdHRvbToxMHB4fS5hbXAtZG9jLXRpdGxle2ZvbnQtc2l6ZToxLjFyZW07Zm9udC13ZWlnaHQ6OTAwO21hcmdpbjowfS5hbXAtdHdvLWNvbHN7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnIgMWZyO2dhcDoxMnB4O21hcmdpbi1ib3R0b206MTJweH1AbWVkaWEgKG1heC13aWR0aDo3MDBweCl7LmFtcC10d28tY29sc3tncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyfX0uYW1wLWJveHtib3JkZXI6MXB4IHNvbGlkICNlMmU4ZjA7Ym9yZGVyLXJhZGl1czoxMHB4O3BhZGRpbmc6MTBweDtiYWNrZ3JvdW5kOiNmY2ZkZmZ9LmFtcC1ib3ggaDR7bWFyZ2luOjAgMCA4cHg7Zm9udC1zaXplOi44NXJlbTtjb2xvcjojNDc1NTY5O3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTtsZXR0ZXItc3BhY2luZzouNXB4fS5hbXAtc2hlZXQtdGFibGV7d2lkdGg6MTAwJTtib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7bWFyZ2luLXRvcDo2cHg7Ym9yZGVyOjFweCBzb2xpZCAjZTJlOGYwfS5hbXAtc2hlZXQtdGFibGUgdGgsLmFtcC1zaGVldC10YWJsZSB0ZHtib3JkZXI6MXB4IHNvbGlkICNlMmU4ZjA7cGFkZGluZzo4cHg7Zm9udC1zaXplOi45cmVtfS5hbXAtc2hlZXQtdGFibGUgdGh7YmFja2dyb3VuZDojZjhmYWZjO3RleHQtYWxpZ246bGVmdH0uYW1wLXRleHQtcmlnaHR7dGV4dC1hbGlnbjpyaWdodH0uYW1wLXRvdGFsc3ttYXJnaW4tdG9wOjEycHg7bWFyZ2luLWxlZnQ6YXV0bzt3aWR0aDoxMDAlO21heC13aWR0aDozNjBweDtib3JkZXI6MXB4IHNvbGlkICNlMmU4ZjA7Ym9yZGVyLXJhZGl1czoxMHB4O292ZXJmbG93OmhpZGRlbn0uYW1wLXRvdGFscy1yb3d7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnIgYXV0bztnYXA6MTBweDtwYWRkaW5nOjEwcHggMTJweDtib3JkZXItYm90dG9tOjFweCBzb2xpZCAjZTJlOGYwO2JhY2tncm91bmQ6I2ZmZjtmb250LXNpemU6LjkycmVtfS5hbXAtdG90YWxzLXJvdzpsYXN0LWNoaWxke2JvcmRlci1ib3R0b206MDtiYWNrZ3JvdW5kOiNlZmY2ZmY7Zm9udC13ZWlnaHQ6OTAwO2NvbG9yOiMxZTNhOGE7Zm9udC1zaXplOjFyZW19LmFtcC1ub3Rlcy1lZGl0YWJsZXttYXJnaW4tdG9wOjE0cHg7Ym9yZGVyOjFweCBkYXNoZWQgI2NiZDVlMTtib3JkZXItcmFkaXVzOjEwcHg7cGFkZGluZzoxMHB4O21pbi1oZWlnaHQ6ODBweDtiYWNrZ3JvdW5kOiNmYWZjZmY7b3V0bGluZTpub25lO3doaXRlLXNwYWNlOnByZS13cmFwfS5hbXAtZm9vdGVyLXByaW50e21hcmdpbi10b3A6MTZweDtwYWRkaW5nLXRvcDo4cHg7Ym9yZGVyLXRvcDoxcHggc29saWQgI2UyZThmMDtjb2xvcjojNjQ3NDhiO2ZvbnQtc2l6ZTouOHJlbX0uYW1wLXBpbGx7ZGlzcGxheTppbmxpbmUtYmxvY2s7Zm9udC1zaXplOi43OHJlbTtib3JkZXItcmFkaXVzOjk5OXB4O3BhZGRpbmc6NHB4IDhweDtiYWNrZ3JvdW5kOiNlZmY2ZmY7Y29sb3I6IzFkNGVkODtib3JkZXI6MXB4IHNvbGlkICNiZmRiZmV9LmFtcC1pbmxpbmUtdG90YWx7Zm9udC13ZWlnaHQ6OTAwO2NvbG9yOiMxZTNhOGE7Zm9udC1zaXplOjFyZW19LmFtcC1ib3R0b20tYmFye3Bvc2l0aW9uOnN0aWNreTtib3R0b206MTBweDt6LWluZGV4OjIwO2Rpc3BsYXk6ZmxleDtqdXN0aWZ5LWNvbnRlbnQ6Y2VudGVyO3BhZGRpbmc6MTBweCAwIDB9LmFtcC1ib3R0b20taW5uZXJ7d2lkdGg6MTAwJTttYXgtd2lkdGg6ODYwcHg7ZGlzcGxheTpmbGV4O2dhcDo4cHg7ZmxleC13cmFwOndyYXA7anVzdGlmeS1jb250ZW50OmZsZXgtZW5kO2JhY2tncm91bmQ6cmdiYSgyNDEsMjQ1LDI0OSwuODUpO2JhY2tkcm9wLWZpbHRlcjpibHVyKDZweCk7Ym9yZGVyOjFweCBzb2xpZCByZ2JhKDIwMywyMTMsMjI1LC42NSk7Ym9yZGVyLXJhZGl1czoxNHB4O3BhZGRpbmc6MTBweDtib3gtc2hhZG93OjAgMTBweCAyNXB4IHJnYmEoMTUsMjMsNDIsLjA4KX0uYW1wLWJvdHRvbS1pbm5lciAuYW1wLWJ0bntmbGV4OjEgMSAxODBweH0uYW1wLW5vLXByaW50e30uYW1wLWhpZGRlbntkaXNwbGF5Om5vbmUgIWltcG9ydGFudH0uYW1wLXRvYXN0e3Bvc2l0aW9uOmZpeGVkO2JvdHRvbToyNHB4O2xlZnQ6NTAlO3RyYW5zZm9ybTp0cmFuc2xhdGVYKC01MCUpO2JhY2tncm91bmQ6IzBmMTcyYTtjb2xvcjojZmZmO3BhZGRpbmc6MTBweCAxOHB4O2JvcmRlci1yYWRpdXM6MTBweDtmb250LXNpemU6Ljg1cmVtO2ZvbnQtd2VpZ2h0OjcwMDtib3gtc2hhZG93OjAgOHB4IDI0cHggcmdiYSgxNSwyMyw0MiwuMjIpO3otaW5kZXg6MzAwMDtwb2ludGVyLWV2ZW50czpub25lO29wYWNpdHk6MDt0cmFuc2l0aW9uOm9wYWNpdHkgLjJzIGVhc2U7d2hpdGUtc3BhY2U6bm93cmFwfS5hbXAtdG9hc3Quc2hvd3tvcGFjaXR5OjF9LmFtcC1zaWduYXR1cmVzLXJvd3tkaXNwbGF5OmdyaWQ7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmciAxZnI7Z2FwOjIwcHg7bWFyZ2luLXRvcDoyNHB4fUBtZWRpYSAobWF4LXdpZHRoOjYwMHB4KXsuYW1wLXNpZ25hdHVyZXMtcm93e2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnJ9fS5hbXAtc2lnbmF0dXJlLWJveHtib3JkZXI6MXB4IHNvbGlkICNlMmU4ZjA7Ym9yZGVyLXJhZGl1czoxMHB4O3BhZGRpbmc6MTBweCAxMnB4O2JhY2tncm91bmQ6I2ZjZmRmZn0uYW1wLXNpZ25hdHVyZS1ib3ggaDR7bWFyZ2luOjAgMCA2cHg7Zm9udC1zaXplOi44MnJlbTtjb2xvcjojNDc1NTY5O3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTtsZXR0ZXItc3BhY2luZzouNXB4fS5hbXAtc2lnbmF0dXJlLW5hbWV7Zm9udC1zaXplOi45cmVtO2ZvbnQtd2VpZ2h0OjcwMDtjb2xvcjojMWUzYThhO21hcmdpbi1ib3R0b206NnB4O21pbi1oZWlnaHQ6MS4xZW19LmFtcC1zaWctY2FudmFzLXByZXZpZXd7ZGlzcGxheTpibG9jazt3aWR0aDoxMDAlO2hlaWdodDo3MHB4O2JvcmRlci1ib3R0b206MS41cHggc29saWQgIzMzNDE1NTtiYWNrZ3JvdW5kOnRyYW5zcGFyZW50O21hcmdpbi1ib3R0b206NnB4fS5hbXAtc2lnbmF0dXJlLWxhYmVse2ZvbnQtc2l6ZTouNzhyZW07Y29sb3I6IzY0NzQ4Yjt0ZXh0LWFsaWduOmNlbnRlcn0uYW1wLXNpZy1idG57ZGlzcGxheTppbmxpbmUtYmxvY2s7bWFyZ2luLXRvcDo2cHg7bWluLWhlaWdodDozNnB4O3BhZGRpbmc6NnB4IDE0cHg7Ym9yZGVyOjFweCBzb2xpZCAjYmZkYmZlO2JvcmRlci1yYWRpdXM6OHB4O2JhY2tncm91bmQ6I2VmZjZmZjtjb2xvcjojMWQ0ZWQ4O2ZvbnQtc2l6ZTouODJyZW07Zm9udC13ZWlnaHQ6ODAwO2N1cnNvcjpwb2ludGVyfS5hbXAtc2lnLWJ0bjpob3ZlcntiYWNrZ3JvdW5kOiNkYmVhZmV9LmFtcC1zaWctbW9kYWx7ZGlzcGxheTpub25lO3Bvc2l0aW9uOmZpeGVkO2luc2V0OjA7ei1pbmRleDoyMDAwO2JhY2tncm91bmQ6cmdiYSgxNSwyMyw0MiwuNTUpO2JhY2tkcm9wLWZpbHRlcjpibHVyKDNweCk7YWxpZ24taXRlbXM6Y2VudGVyO2p1c3RpZnktY29udGVudDpjZW50ZXJ9LmFtcC1zaWctbW9kYWwub3BlbntkaXNwbGF5OmZsZXh9LmFtcC1zaWctbW9kYWwtaW5uZXJ7YmFja2dyb3VuZDojZmZmO2JvcmRlci1yYWRpdXM6MTZweDtib3gtc2hhZG93OjAgMjRweCA2MHB4IHJnYmEoMTUsMjMsNDIsLjIyKTtwYWRkaW5nOjIwcHg7d2lkdGg6bWluKDk2dncsNTYwcHgpO2Rpc3BsYXk6ZmxleDtmbGV4LWRpcmVjdGlvbjpjb2x1bW47Z2FwOjEycHh9LmFtcC1zaWctbW9kYWwtdGl0bGV7Zm9udC1zaXplOjFyZW07Zm9udC13ZWlnaHQ6OTAwO2NvbG9yOiMwZjE3MmE7bWFyZ2luOjB9LmFtcC1zaWctbW9kYWwtc3VidGl0bGV7Zm9udC1zaXplOi44MnJlbTtjb2xvcjojNjQ3NDhiO21hcmdpbjowfS5hbXAtc2lnLXBhZHtkaXNwbGF5OmJsb2NrO3dpZHRoOjEwMCU7aGVpZ2h0OjIwMHB4O2JvcmRlcjoycHggZGFzaGVkICNjYmQ1ZTE7Ym9yZGVyLXJhZGl1czoxMnB4O2JhY2tncm91bmQ6I2Y4ZmFmYztjdXJzb3I6Y3Jvc3NoYWlyO3RvdWNoLWFjdGlvbjpub25lfS5hbXAtc2lnLXBhZC5oYXMtc2lne2JvcmRlci1jb2xvcjojMjU2M2ViO2JhY2tncm91bmQ6I2ZmZn0uYW1wLXNpZy1tb2RhbC1hY3Rpb25ze2Rpc3BsYXk6ZmxleDtnYXA6OHB4O2ZsZXgtd3JhcDp3cmFwO2p1c3RpZnktY29udGVudDpmbGV4LWVuZH0uYW1wLWNmZy1zaWctcGFke2Rpc3BsYXk6YmxvY2s7d2lkdGg6MTAwJTtoZWlnaHQ6MTYwcHg7Ym9yZGVyOjJweCBkYXNoZWQgI2NiZDVlMTtib3JkZXItcmFkaXVzOjEycHg7YmFja2dyb3VuZDojZjhmYWZjO2N1cnNvcjpjcm9zc2hhaXI7dG91Y2gtYWN0aW9uOm5vbmV9LmFtcC1jZmctc2lnLXBhZC5oYXMtc2lne2JvcmRlci1jb2xvcjojMjU2M2ViO2JhY2tncm91bmQ6I2ZmZn1AbWVkaWEgcHJpbnR7QHBhZ2V7c2l6ZTpBNDttYXJnaW46MTBtbX1ib2R5e2JhY2tncm91bmQ6I2ZmZiAhaW1wb3J0YW50O3BhZGRpbmctdG9wOjAgIWltcG9ydGFudH0uYW1wLW5hdiwuYW1wLW5vLXByaW50e2Rpc3BsYXk6bm9uZSAhaW1wb3J0YW50fS5hbXAtc2VjdGlvbntkaXNwbGF5Om5vbmUgIWltcG9ydGFudH1ib2R5W2RhdGEtcHJpbnQtbW9kZT0iYnVkZ2V0Il0gI2FtcFNlY3Rpb25OdWV2b3tkaXNwbGF5OmJsb2NrICFpbXBvcnRhbnR9Ym9keVtkYXRhLXByaW50LW1vZGU9ImxpYnJhcnkiXSAjYW1wU2VjdGlvbkxpc3Rhe2Rpc3BsYXk6YmxvY2sgIWltcG9ydGFudH1ib2R5W2RhdGEtcHJpbnQtbW9kZT0iY29uZmlnIl0gI2FtcFNlY3Rpb25Db25maWd7ZGlzcGxheTpibG9jayAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJidWRnZXQiXSAjYW1wU2VjdGlvbk51ZXZvPip7ZGlzcGxheTpub25lICFpbXBvcnRhbnR9Ym9keVtkYXRhLXByaW50LW1vZGU9ImJ1ZGdldCJdICNhbXBQcmludEJ1ZGdldEhvc3R7ZGlzcGxheTpibG9jayAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJsaWJyYXJ5Il0gI2FtcFNlY3Rpb25MaXN0YT4qe2Rpc3BsYXk6bm9uZSAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJsaWJyYXJ5Il0gI2FtcFByaW50TGlicmFyeUhvc3R7ZGlzcGxheTpibG9jayAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJjb25maWciXSAjYW1wU2VjdGlvbkNvbmZpZz4qe2Rpc3BsYXk6bm9uZSAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJjb25maWciXSAjYW1wUHJpbnRDb25maWdIb3N0e2Rpc3BsYXk6YmxvY2sgIWltcG9ydGFudH0uYW1wLWFwcHtwYWRkaW5nOjAgIWltcG9ydGFudDttYXJnaW46MCAhaW1wb3J0YW50O21heC13aWR0aDpub25lICFpbXBvcnRhbnR9LmFtcC1zaGVldC13cmFwe21hcmdpbjowICFpbXBvcnRhbnQ7ZGlzcGxheTpibG9jayAhaW1wb3J0YW50fS5hbXAtc2hlZXR7Ym94LXNoYWRvdzpub25lICFpbXBvcnRhbnQ7Ym9yZGVyOm5vbmUgIWltcG9ydGFudDtib3JkZXItcmFkaXVzOjAgIWltcG9ydGFudDttYXgtd2lkdGg6bm9uZSAhaW1wb3J0YW50O3dpZHRoOjEwMCUgIWltcG9ydGFudDtwYWRkaW5nOjAgIWltcG9ydGFudDttaW4taGVpZ2h0OmF1dG8gIWltcG9ydGFudH0uYW1wLW5vdGVzLWVkaXRhYmxle2JvcmRlcjoxcHggc29saWQgI2RkZCAhaW1wb3J0YW50O2JhY2tncm91bmQ6I2ZmZiAhaW1wb3J0YW50fS5hbXAtc2lnbmF0dXJlLWJveHtiYWNrZ3JvdW5kOiNmZmYgIWltcG9ydGFudH0uYW1wLXNpZy1jYW52YXMtcHJldmlld3tib3JkZXItYm90dG9tOjEuNXB4IHNvbGlkICMzMzQxNTUgIWltcG9ydGFudH0uYW1wLXNpZy1idG57ZGlzcGxheTpub25lICFpbXBvcnRhbnR9LmFtcC1zaWctbW9kYWx7ZGlzcGxheTpub25lICFpbXBvcnRhbnR9fQ==";
+        var css = decodeURIComponent(escape(atob(b64)));
+        var st = document.getElementById("amp-css-placeholder");
+        if(st) { st.textContent = css; st.id = "amp-styles"; }
+      })();
+
     /* ============================================================
        AntenaManager PRO - Single-file SPA (offline)
        Cache-busting / unique prefix: antmPro_20260307_
@@ -3358,102 +473,21 @@
         library: [],
         config: {
           companyName:"", companyCif:"", companyPhone:"", companyAddress:"",
-          defaultNotes:"", logoBase64:""
+          defaultNotes:"", logoBase64:"",
+          techName:"", techSigBase64:"",
+          bankAccount:""   /* IBAN para transferencias */
         },
         budgetLines: [],
-        sheetNotesDirty: false
+        sheetNotesDirty: false,
+        clientSigBase64: "",
+        paymentMethod: "efectivo"  /* metodo de pago activo */
       };
 
       const $ = (s)=>document.querySelector(s);
       const $$ = (s)=>Array.from(document.querySelectorAll(s));
 
-      const navButtons = $$(".amp-nav-btn");
-      const sections = $$(".amp-section");
-
-      const el = {
-        // Nuevo
-        clientName: $("#ampClientName"),
-        clientCif: $("#ampClientCif"),
-        clientPhone: $("#ampClientPhone"),
-        clientAddress: $("#ampClientAddress"),
-        budgetNumber: $("#ampBudgetNumber"),
-        budgetDate: $("#ampBudgetDate"),
-        ivaMode: $("#ampIvaMode"),
-        btnNewNumber: $("#ampBtnNewNumber"),
-        btnUseDefaultNotes: $("#ampBtnUseDefaultNotes"),
-        productSelect: $("#ampProductSelect"),
-        lineDesc: $("#ampLineDesc"),
-        lineQty: $("#ampLineQty"),
-        linePrice: $("#ampLinePrice"),
-        btnAddLine: $("#ampBtnAddLine"),
-        btnResetBudget: $("#ampBtnResetBudget"),
-        btnPrintBudget: $("#ampBtnPrintBudget"),
-        lineMsg: $("#ampLineMsg"),
-        linesTbody: $("#ampLinesTbody"),
-        quickTotal: $("#ampQuickTotal"),
-
-        // Hoja presupuesto
-        sheetLogoBox: $("#ampSheetLogoBox"),
-        sheetCompanyName: $("#ampSheetCompanyName"),
-        sheetCompanyCif: $("#ampSheetCompanyCif"),
-        sheetCompanyPhone: $("#ampSheetCompanyPhone"),
-        sheetCompanyAddress: $("#ampSheetCompanyAddress"),
-        sheetBudgetNo: $("#ampSheetBudgetNo"),
-        sheetBudgetDate: $("#ampSheetBudgetDate"),
-        sheetClientName: $("#ampSheetClientName"),
-        sheetClientCif: $("#ampSheetClientCif"),
-        sheetClientPhone: $("#ampSheetClientPhone"),
-        sheetClientAddress: $("#ampSheetClientAddress"),
-        sheetIvaModeText: $("#ampSheetIvaModeText"),
-        sheetLinesBody: $("#ampSheetLinesBody"),
-        sheetBaseTotal: $("#ampSheetBaseTotal"),
-        sheetIvaTotal: $("#ampSheetIvaTotal"),
-        sheetGrandTotal: $("#ampSheetGrandTotal"),
-        sheetNotesEditable: $("#ampSheetNotesEditable"),
-
-        // Lista
-        libName: $("#ampLibName"),
-        libPrice: $("#ampLibPrice"),
-        btnAddLib: $("#ampBtnAddLib"),
-        btnClearLib: $("#ampBtnClearLib"),
-        btnPrintLibrary: $("#ampBtnPrintLibrary"),
-        libraryList: $("#ampLibraryList"),
-        libMsg: $("#ampLibMsg"),
-        libPrintBody: $("#ampLibPrintBody"),
-        libPrintDate: $("#ampLibPrintDate"),
-
-        sheetLogoBoxLib: $("#ampSheetLogoBoxLib"),
-        sheetCompanyNameLib: $("#ampSheetCompanyNameLib"),
-        sheetCompanyCifLib: $("#ampSheetCompanyCifLib"),
-        sheetCompanyPhoneLib: $("#ampSheetCompanyPhoneLib"),
-        sheetCompanyAddressLib: $("#ampSheetCompanyAddressLib"),
-
-        // Config
-        cfgCompanyName: $("#ampCfgCompanyName"),
-        cfgCompanyCif: $("#ampCfgCompanyCif"),
-        cfgCompanyPhone: $("#ampCfgCompanyPhone"),
-        cfgCompanyAddress: $("#ampCfgCompanyAddress"),
-        cfgDefaultNotes: $("#ampCfgDefaultNotes"),
-        cfgLogoFile: $("#ampCfgLogoFile"),
-        cfgLogoPreviewBox: $("#ampCfgLogoPreviewBox"),
-        btnSaveConfig: $("#ampBtnSaveConfig"),
-        btnPrintConfig: $("#ampBtnPrintConfig"),
-        cfgMsg: $("#ampCfgMsg"),
-        cfgPrintDate: $("#ampCfgPrintDate"),
-        cfgPrintNotes: $("#ampCfgPrintNotes"),
-
-        sheetLogoBoxCfg: $("#ampSheetLogoBoxCfg"),
-        sheetCompanyNameCfg: $("#ampSheetCompanyNameCfg"),
-        sheetCompanyCifCfg: $("#ampSheetCompanyCifCfg"),
-        sheetCompanyPhoneCfg: $("#ampSheetCompanyPhoneCfg"),
-        sheetCompanyAddressCfg: $("#ampSheetCompanyAddressCfg"),
-
-        // Export/Import buttons (duplicados en LISTA/CONFIG)
-        btnExportAll1: $("#ampBtnExportAll1"),
-        btnExportAll2: $("#ampBtnExportAll2"),
-        importFile1: $("#ampImportFile1"),
-        importFile2: $("#ampImportFile2")
-      };
+      /* navButtons, sections y el se inicializan en init() cuando el DOM ya existe */
+      let navButtons, sections, el;
 
       /* ===== Helpers ===== */
       function safeParse(t,f){ try{ return JSON.parse(t); } catch { return f; } }
@@ -3467,6 +501,54 @@
         node.textContent = txt || "";
         node.style.color = err ? "#b91c1c" : "#0f766e";
         if(txt) setTimeout(()=>{ if(node.textContent===txt) node.textContent=""; }, 2600);
+      }
+
+      /* ===== NUEVO: etiquetas seg\u00FAn tipo de documento ===== */
+      const DOC_LABELS = {
+        presupuesto: { title:"Nuevo presupuesto", sheetTitle:"PRESUPUESTO", numLabel:"N\u00BA Presupuesto", preview:"presupuesto" },
+        albaran:     { title:"Nuevo albar\u00E1n",     sheetTitle:"ALBAR\u00C1N",     numLabel:"N\u00BA Albar\u00E1n",     preview:"albar\u00E1n" },
+        factura:     { title:"Nueva factura",      sheetTitle:"FACTURA",     numLabel:"N\u00BA Factura",     preview:"factura" }
+      };
+
+      function updateDocTypeLabels(){
+        const type = el.docType.value || "presupuesto";
+        const labels = DOC_LABELS[type] || DOC_LABELS.presupuesto;
+        el.formTitle.textContent = labels.title;
+        el.sheetDocTitle.textContent = labels.sheetTitle;
+        el.docNumberLabel.textContent = labels.numLabel;
+        el.previewLabel.textContent = labels.preview;
+        el.btnPrintBudget.textContent = `Imprimir / Guardar PDF (${labels.preview.charAt(0).toUpperCase()+labels.preview.slice(1)})`;
+        // Mostrar m\u00E9todo de pago solo en albar\u00E1n y factura
+        const showPayment = (type === "albaran" || type === "factura");
+        el.paymentRow.style.display = showPayment ? "" : "none";
+        updatePaymentUI();
+      }
+
+      function updatePaymentUI(){
+        const type = el.docType.value || "presupuesto";
+        const showPayment = (type === "albaran" || type === "factura");
+        const method = el.paymentMethod.value;
+        const iban = antmPro_20260307_state.config.bankAccount || "";
+        const isTransfer = method === "transferencia";
+
+        // Mostrar IBAN en el formulario si hay cuenta guardada
+        el.bankAccountInfo.style.display = (showPayment && isTransfer && iban) ? "" : "none";
+        el.bankAccountDisplay.textContent = iban || "\u2014";
+
+        // Sincronizar con la hoja imprimible
+        el.sheetPaymentRow.style.display = showPayment ? "" : "none";
+        el.sheetBankRow.style.display = (showPayment && isTransfer && iban) ? "" : "none";
+
+        const PAYMENT_LABELS = {
+          efectivo: "Efectivo",
+          transferencia: "Transferencia bancaria",
+          tarjeta: "Tarjeta",
+          bizum: "Bizum"
+        };
+        el.sheetPaymentMethod.textContent = PAYMENT_LABELS[method] || method;
+        el.sheetBankAccount.textContent = iban || "\u2014";
+
+        antmPro_20260307_state.paymentMethod = method;
       }
 
       /* ===== Offline unique IDs ===== */
@@ -3521,15 +603,15 @@
             companyPhone: parsed.companyPhone || "",
             companyAddress: parsed.companyAddress || "",
             defaultNotes: parsed.defaultNotes || "",
-            logoBase64: parsed.logoBase64 || ""
+            logoBase64: parsed.logoBase64 || "",
+            techName: parsed.techName || "",
+            techSigBase64: parsed.techSigBase64 || "",
+            bankAccount: parsed.bankAccount || ""
           };
         }
       }
 
-      /* ===== Export / Import =====
-         Exporta biblioteca + config + meta (version/timestamp)
-         Importa y reemplaza (con confirmación)
-      */
+      /* ===== Export / Import ===== */
       function buildExportObject(){
         return {
           app: "AntenaManager PRO",
@@ -3567,26 +649,27 @@
         const text = await file.text();
         const obj = safeParse(text, null);
         if(!obj || typeof obj !== "object"){
-          throw new Error("Archivo JSON inválido.");
+          throw new Error("Archivo JSON inv\u00E1lido.");
         }
-        // Validación suave
         const data = obj.data || obj;
         const cfg = data.config;
         const lib = data.library;
 
-        if(!cfg || typeof cfg !== "object") throw new Error("No se encontró 'config' en el archivo.");
-        if(!Array.isArray(lib)) throw new Error("No se encontró 'library' (array) en el archivo.");
+        if(!cfg || typeof cfg !== "object") throw new Error("No se encontr\u00F3 'config' en el archivo.");
+        if(!Array.isArray(lib)) throw new Error("No se encontr\u00F3 'library' (array) en el archivo.");
 
-        if(!confirm("Esto reemplazará tu CONFIGURACIÓN y BIBLIOTECA actuales. ¿Continuar?")) return;
+        if(!confirm("Esto reemplazar\u00E1 tu CONFIGURACI\u00D3N y BIBLIOTECA actuales. \u00BFContinuar?")) return;
 
-        // Reemplazar en memoria
         antmPro_20260307_state.config = {
           companyName: cfg.companyName || "",
           companyCif: cfg.companyCif || "",
           companyPhone: cfg.companyPhone || "",
           companyAddress: cfg.companyAddress || "",
           defaultNotes: cfg.defaultNotes || "",
-          logoBase64: cfg.logoBase64 || ""
+          logoBase64: cfg.logoBase64 || "",
+          techName: cfg.techName || "",
+          techSigBase64: cfg.techSigBase64 || "",
+          bankAccount: cfg.bankAccount || ""
         };
 
         antmPro_20260307_state.library = lib.map((it)=>({
@@ -3595,17 +678,14 @@
           basePrice: round2(num(it.basePrice))
         })).filter(it => it.name.trim().length > 0);
 
-        // Guardar a localStorage
         saveConfig();
         saveLibrary();
 
-        // Refrescar UI
         fillConfigForm();
         applyConfigToAllPrintSheets();
         renderLibraryList();
         renderProductSelect();
 
-        // Notas: si no estaban editadas, recargar desde CONFIG
         applyDefaultNotesToBudget(true);
 
         renderBudgetLines();
@@ -3629,7 +709,7 @@
       function applyDefaultNotesToBudget(force=false){
         if(!force && antmPro_20260307_state.sheetNotesDirty) return;
         const cfgNotes = (antmPro_20260307_state.config.defaultNotes || "").trim();
-        const fallback = "Añade aquí condiciones, garantía y observaciones del trabajo.";
+        const fallback = "A\u00F1ade aqu\u00ED condiciones, garant\u00EDa y observaciones del trabajo.";
         el.sheetNotesEditable.textContent = cfgNotes ? cfgNotes : fallback;
         antmPro_20260307_state.sheetNotesDirty = false;
       }
@@ -3640,7 +720,7 @@
         const current = sel.value;
         let html = `<option value="">-- Seleccionar de la biblioteca --</option>`;
         antmPro_20260307_state.library.forEach(item=>{
-          html += `<option value="${item.id}">${esc(item.name)} · ${money(item.basePrice)}</option>`;
+          html += `<option value="${item.id}">${esc(item.name)} \u00B7 ${money(item.basePrice)}</option>`;
         });
         sel.innerHTML = html;
         if([...sel.options].some(o=>o.value===current)) sel.value = current;
@@ -3651,7 +731,7 @@
         const lib = antmPro_20260307_state.library;
 
         if(!lib.length){
-          wrap.innerHTML = `<div class="amp-muted">No hay servicios guardados todavía.</div>`;
+          wrap.innerHTML = `<div class="amp-muted">No hay servicios guardados todav\u00EDa.</div>`;
           renderProductSelect();
           return;
         }
@@ -3693,7 +773,7 @@
       }
 
       function clearLibrary(){
-        if(!confirm("¿Vaciar toda la biblioteca de precios?")) return;
+        if(!confirm("\u00BFVaciar toda la biblioteca de precios?")) return;
         antmPro_20260307_state.library = [];
         saveLibrary();
         renderLibraryList();
@@ -3707,29 +787,36 @@
         el.cfgCompanyCif.value = c.companyCif;
         el.cfgCompanyPhone.value = c.companyPhone;
         el.cfgCompanyAddress.value = c.companyAddress;
+        el.cfgBankAccount.value = c.bankAccount || "";
         el.cfgDefaultNotes.value = c.defaultNotes;
+        el.cfgTechName.value = c.techName || "";
         el.cfgLogoPreviewBox.innerHTML = c.logoBase64 ? `<img src="${c.logoBase64}" alt="Logo empresa" />` : `<span>Sin logo</span>`;
+        restoreSigToCanvas(el.cfgTechSigPad, c.techSigBase64);
       }
 
       function applyConfigToAllPrintSheets(){
         const c = antmPro_20260307_state.config;
         // Budget
         el.sheetCompanyName.textContent = c.companyName || "Tu Empresa de Telecomunicaciones";
-        el.sheetCompanyCif.textContent = c.companyCif || "—";
-        el.sheetCompanyPhone.textContent = c.companyPhone || "—";
-        el.sheetCompanyAddress.textContent = c.companyAddress || "—";
+        el.sheetCompanyCif.textContent = c.companyCif || "\u2014";
+        el.sheetCompanyPhone.textContent = c.companyPhone || "\u2014";
+        el.sheetCompanyAddress.textContent = c.companyAddress || "\u2014";
         el.sheetLogoBox.innerHTML = c.logoBase64 ? `<img src="${c.logoBase64}" alt="Logo empresa" />` : `<span>Logo empresa</span>`;
+        // Nombre t\u00E9cnico en bloque de firmas
+        el.sheetTechName.textContent = c.techName || "\u2014";
+        // Dibujar firma t\u00E9cnico en canvas del documento
+        restoreSigToCanvas(el.sheetTechSigCanvas, c.techSigBase64);
         // Library
         el.sheetCompanyNameLib.textContent = c.companyName || "Tu Empresa de Telecomunicaciones";
-        el.sheetCompanyCifLib.textContent = c.companyCif || "—";
-        el.sheetCompanyPhoneLib.textContent = c.companyPhone || "—";
-        el.sheetCompanyAddressLib.textContent = c.companyAddress || "—";
+        el.sheetCompanyCifLib.textContent = c.companyCif || "\u2014";
+        el.sheetCompanyPhoneLib.textContent = c.companyPhone || "\u2014";
+        el.sheetCompanyAddressLib.textContent = c.companyAddress || "\u2014";
         el.sheetLogoBoxLib.innerHTML = c.logoBase64 ? `<img src="${c.logoBase64}" alt="Logo empresa" />` : `<span>Logo empresa</span>`;
         // Config
         el.sheetCompanyNameCfg.textContent = c.companyName || "Tu Empresa de Telecomunicaciones";
-        el.sheetCompanyCifCfg.textContent = c.companyCif || "—";
-        el.sheetCompanyPhoneCfg.textContent = c.companyPhone || "—";
-        el.sheetCompanyAddressCfg.textContent = c.companyAddress || "—";
+        el.sheetCompanyCifCfg.textContent = c.companyCif || "\u2014";
+        el.sheetCompanyPhoneCfg.textContent = c.companyPhone || "\u2014";
+        el.sheetCompanyAddressCfg.textContent = c.companyAddress || "\u2014";
         el.sheetLogoBoxCfg.innerHTML = c.logoBase64 ? `<img src="${c.logoBase64}" alt="Logo empresa" />` : `<span>Logo empresa</span>`;
       }
 
@@ -3738,21 +825,23 @@
         antmPro_20260307_state.config.companyCif = el.cfgCompanyCif.value.trim();
         antmPro_20260307_state.config.companyPhone = el.cfgCompanyPhone.value.trim();
         antmPro_20260307_state.config.companyAddress = el.cfgCompanyAddress.value.trim();
+        antmPro_20260307_state.config.bankAccount = el.cfgBankAccount.value.trim();
         antmPro_20260307_state.config.defaultNotes = el.cfgDefaultNotes.value;
+        antmPro_20260307_state.config.techName = el.cfgTechName.value.trim();
+        antmPro_20260307_state.config.techSigBase64 = canvasIsEmpty(el.cfgTechSigPad) ? "" : el.cfgTechSigPad.toDataURL("image/png");
 
         saveConfig();
         applyConfigToAllPrintSheets();
-
-        // Si el usuario no editó notas manualmente, refrescar desde CONFIG
         applyDefaultNotesToBudget(false);
+        updatePaymentUI(); // refrescar IBAN mostrado
 
-        showMsg(el.cfgMsg, "Configuración guardada.");
+        showMsg(el.cfgMsg, "Configuraci\u00F3n guardada.");
       }
 
       function handleLogoUpload(file){
         if(!file) return;
         if(!file.type.startsWith("image/")){
-          showMsg(el.cfgMsg, "Selecciona una imagen válida.", true);
+          showMsg(el.cfgMsg, "Selecciona una imagen v\u00E1lida.", true);
           return;
         }
         const r = new FileReader();
@@ -3762,14 +851,14 @@
             ? `<img src="${antmPro_20260307_state.config.logoBase64}" alt="Logo empresa" />`
             : `<span>Sin logo</span>`;
           applyConfigToAllPrintSheets();
-          showMsg(el.cfgMsg, "Logo cargado. Guarda configuración para persistir.");
+          showMsg(el.cfgMsg, "Logo cargado. Guarda configuraci\u00F3n para persistir.");
         };
         r.readAsDataURL(file);
       }
 
       /* ===== Budget calc ===== */
       function getIvaMode(){ return el.ivaMode.value === "incluido" ? "incluido" : "base"; }
-      function getIvaModeLabel(){ return getIvaMode()==="base" ? "Precio Base (añadir 21%)" : "IVA Incluido (desglosar 21%)"; }
+      function getIvaModeLabel(){ return getIvaMode()==="base" ? "Precio Base (a\u00F1adir 21%)" : "IVA Incluido (desglosar 21%)"; }
 
       function computeLine(line){
         const qty = num(line.qty);
@@ -3802,11 +891,13 @@
       function syncHeaderAndClientToSheet(){
         el.sheetBudgetNo.textContent = el.budgetNumber.value.trim() || "---";
         el.sheetBudgetDate.textContent = formatDateEs(el.budgetDate.value);
-        el.sheetClientName.textContent = el.clientName.value.trim() || "—";
-        el.sheetClientCif.textContent = el.clientCif.value.trim() || "—";
-        el.sheetClientPhone.textContent = el.clientPhone.value.trim() || "—";
-        el.sheetClientAddress.textContent = el.clientAddress.value.trim() || "—";
+        el.sheetClientName.textContent = el.clientName.value.trim() || "\u2014";
+        el.sheetClientCif.textContent = el.clientCif.value.trim() || "\u2014";
+        el.sheetClientPhone.textContent = el.clientPhone.value.trim() || "\u2014";
+        el.sheetClientAddress.textContent = el.clientAddress.value.trim() || "\u2014";
         el.sheetIvaModeText.textContent = getIvaModeLabel();
+        /* NUEVO: firma del cliente */
+        el.sheetClientSigName.textContent = el.clientSignatureName.value.trim() || "\u2014";
       }
 
       function renderBudgetLines(){
@@ -3815,7 +906,7 @@
         const mode = getIvaMode();
 
         if(!lines.length){
-          tbody.innerHTML = `<tr><td colspan="5" class="amp-muted">No hay conceptos añadidos todavía.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="5" class="amp-muted">No hay conceptos a\u00F1adidos todav\u00EDa.</td></tr>`;
           el.quickTotal.textContent = money(0);
           return;
         }
@@ -3842,7 +933,7 @@
         const lines = antmPro_20260307_state.budgetLines;
 
         if(!lines.length){
-          el.sheetLinesBody.innerHTML = `<tr><td colspan="4" class="amp-muted">Añade conceptos desde el formulario para generar el presupuesto.</td></tr>`;
+          el.sheetLinesBody.innerHTML = `<tr><td colspan="4" class="amp-muted">A\u00F1ade conceptos desde el formulario para generar el presupuesto.</td></tr>`;
         } else {
           el.sheetLinesBody.innerHTML = lines.map(l=>{
             const c = computeLine(l);
@@ -3876,7 +967,7 @@
           if(it) desc = it.name;
         }
 
-        if(!desc){ showMsg(el.lineMsg, "Introduce una descripción o selecciona un servicio.", true); return; }
+        if(!desc){ showMsg(el.lineMsg, "Introduce una descripci\u00F3n o selecciona un servicio.", true); return; }
         if(!(qty>0)){ showMsg(el.lineMsg, "La cantidad debe ser mayor que 0.", true); return; }
         if(unitPriceInput < 0){ showMsg(el.lineMsg, "El precio unitario no puede ser negativo.", true); return; }
 
@@ -3894,7 +985,7 @@
 
         renderBudgetLines();
         renderBudgetSheet();
-        showMsg(el.lineMsg, "Concepto añadido.");
+        showMsg(el.lineMsg, "Concepto a\u00F1adido.");
       }
 
       function deleteBudgetLine(id){
@@ -3904,7 +995,7 @@
       }
 
       function resetBudget(){
-        if(!confirm("¿Limpiar todos los datos del presupuesto actual?")) return;
+        if(!confirm("\u00BFLimpiar todos los datos del presupuesto actual?")) return;
 
         antmPro_20260307_state.budgetLines = [];
         el.clientName.value = "";
@@ -3914,14 +1005,23 @@
         el.budgetNumber.value = generateBudgetNumber();
         el.budgetDate.value = todayIso();
         el.ivaMode.value = "base";
+        el.docType.value = "presupuesto";
+        el.paymentMethod.value = "efectivo";
+        el.clientSignatureName.value = "";
+        antmPro_20260307_state.clientSigBase64 = "";
+        if(el.sheetClientSigCanvas){
+          const ctx = el.sheetClientSigCanvas.getContext("2d");
+          ctx.clearRect(0,0,el.sheetClientSigCanvas.width,el.sheetClientSigCanvas.height);
+          el.sheetClientSigCanvas.classList.remove("has-sig");
+        }
         el.productSelect.value = "";
         el.lineDesc.value = "";
         el.lineQty.value = "1";
         el.linePrice.value = "";
 
-        // Al crear nuevo presupuesto -> cargar SIEMPRE desde CONFIG
-        applyDefaultNotesToBudget(true);
+        updateDocTypeLabels();  /* NUEVO */
 
+        applyDefaultNotesToBudget(true);
         antmPro_20260307_state.sheetNotesDirty = false;
 
         renderBudgetLines();
@@ -3931,11 +1031,57 @@
       /* ===== Printing modes ===== */
       function setPrintMode(mode){ document.body.setAttribute("data-print-mode", mode); }
 
+      function triggerPrint(titleSuffix){
+        const originalTitle = document.title;
+        if(titleSuffix){
+          document.title = titleSuffix;
+          // Copiar nombre al portapapeles (con fallback para ficheros locales sin HTTPS)
+          if(navigator.clipboard && window.isSecureContext){
+            navigator.clipboard.writeText(titleSuffix)
+              .then(()=> showToast("\u1F4CB Nombre copiado \u2014 p\u00E9galo en Drive con Ctrl+V"))
+              .catch(()=> clipboardFallback(titleSuffix));
+          } else {
+            clipboardFallback(titleSuffix);
+          }
+        }
+        window.addEventListener("afterprint", function restoreTitle(){
+          document.title = originalTitle;
+          window.removeEventListener("afterprint", restoreTitle);
+        });
+        setTimeout(()=> window.print(), 80);
+      }
+
+      function clipboardFallback(text){
+        try {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.cssText = "position:fixed;top:-999px;left:-999px;opacity:0;";
+          document.body.appendChild(ta);
+          ta.focus(); ta.select();
+          document.execCommand("copy");
+          ta.remove();
+          showToast("\u1F4CB Nombre copiado \u2014 p\u00E9galo en Drive con Ctrl+V");
+        } catch(e){ /* silencioso */ }
+      }
+
+      function showToast(msg){
+        const t = document.getElementById("ampToast");
+        if(!t) return;
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(()=> t.classList.remove("show"), 3500);
+      }
+
       function printBudget(){
         setPrintMode("budget");
         applyConfigToAllPrintSheets();
+        updateDocTypeLabels();
         renderBudgetSheet();
-        window.print();
+
+        const company = (antmPro_20260307_state.config.companyName || "AntenaManager").trim();
+        const docType = DOC_LABELS[el.docType.value]?.sheetTitle || "DOCUMENTO";
+        const docNum  = (el.budgetNumber.value.trim() || "SN");
+        triggerPrint(`${company} - ${docType} ${docNum}`);
       }
 
       function renderLibraryPrint(){
@@ -3950,19 +1096,141 @@
         setPrintMode("library");
         applyConfigToAllPrintSheets();
         renderLibraryPrint();
-        window.print();
+        triggerPrint();
       }
 
       function renderConfigPrint(){
         el.cfgPrintDate.textContent = formatDateEs(todayIso());
-        el.cfgPrintNotes.textContent = (antmPro_20260307_state.config.defaultNotes || "—");
+        el.cfgPrintNotes.textContent = (antmPro_20260307_state.config.defaultNotes || "\u2014");
       }
 
       function printConfig(){
         setPrintMode("config");
         applyConfigToAllPrintSheets();
         renderConfigPrint();
-        window.print();
+        triggerPrint();
+      }
+
+      /* ===== CANVAS SIGNATURE ENGINE ===== */
+
+      function makeSignaturePad(canvas){
+        /* Returns controller object { clear, isEmpty, getDataURL } */
+        const ctx = canvas.getContext("2d");
+        let drawing = false;
+        let lastX = 0, lastY = 0;
+
+        function getPos(ev){
+          const r = canvas.getBoundingClientRect();
+          const scaleX = canvas.width / r.width;
+          const scaleY = canvas.height / r.height;
+          if(ev.touches){
+            return {
+              x: (ev.touches[0].clientX - r.left) * scaleX,
+              y: (ev.touches[0].clientY - r.top) * scaleY
+            };
+          }
+          return {
+            x: (ev.clientX - r.left) * scaleX,
+            y: (ev.clientY - r.top) * scaleY
+          };
+        }
+
+        function startDraw(ev){
+          ev.preventDefault();
+          drawing = true;
+          const p = getPos(ev);
+          lastX = p.x; lastY = p.y;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 1.2, 0, Math.PI*2);
+          ctx.fillStyle = "#0f172a";
+          ctx.fill();
+          canvas.classList.add("has-sig");
+        }
+        function moveDraw(ev){
+          if(!drawing) return;
+          ev.preventDefault();
+          const p = getPos(ev);
+          ctx.beginPath();
+          ctx.moveTo(lastX, lastY);
+          ctx.lineTo(p.x, p.y);
+          ctx.strokeStyle = "#0f172a";
+          ctx.lineWidth = 2.2;
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+          ctx.stroke();
+          lastX = p.x; lastY = p.y;
+        }
+        function endDraw(){ drawing = false; }
+
+        canvas.addEventListener("mousedown", startDraw);
+        canvas.addEventListener("mousemove", moveDraw);
+        canvas.addEventListener("mouseup", endDraw);
+        canvas.addEventListener("mouseleave", endDraw);
+        canvas.addEventListener("touchstart", startDraw, {passive:false});
+        canvas.addEventListener("touchmove", moveDraw, {passive:false});
+        canvas.addEventListener("touchend", endDraw);
+
+        return {
+          clear(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.classList.remove("has-sig");
+          },
+          isEmpty(){ return !canvas.classList.contains("has-sig"); },
+          getDataURL(){ return canvas.toDataURL("image/png"); }
+        };
+      }
+
+      function canvasIsEmpty(canvas){
+        const ctx = canvas.getContext("2d");
+        const data = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+        return !data.some(v => v !== 0);
+      }
+
+      function restoreSigToCanvas(canvas, base64){
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        canvas.classList.remove("has-sig");
+        if(!base64) return;
+        const img = new Image();
+        img.onload = ()=>{
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.classList.add("has-sig");
+        };
+        img.src = base64;
+      }
+
+      /* Pad instances */
+      let cfgTechPad = null;   /* CONFIG: firma t\u00E9cnico */
+      let modalClientPad = null; /* Modal: firma cliente */
+
+      function initSignaturePads(){
+        cfgTechPad = makeSignaturePad(el.cfgTechSigPad);
+        modalClientPad = makeSignaturePad(el.sigPad);
+      }
+
+      /* ===== MODAL DE FIRMA CLIENTE ===== */
+      function openClientSigModal(){
+        // Copiar firma existente al pad del modal si la hay
+        const existing = antmPro_20260307_state.clientSigBase64;
+        if(existing){
+          restoreSigToCanvas(el.sigPad, existing);
+        } else {
+          modalClientPad.clear();
+        }
+        el.sigModal.classList.add("open");
+      }
+
+      function closeClientSigModal(save){
+        if(save){
+          if(modalClientPad.isEmpty()){
+            antmPro_20260307_state.clientSigBase64 = "";
+          } else {
+            antmPro_20260307_state.clientSigBase64 = modalClientPad.getDataURL();
+          }
+          // Dibujar en el canvas del documento
+          restoreSigToCanvas(el.sheetClientSigCanvas, antmPro_20260307_state.clientSigBase64);
+        }
+        el.sigModal.classList.remove("open");
       }
 
       /* ===== Bind events ===== */
@@ -4014,11 +1282,30 @@
         // Budget misc
         el.btnResetBudget.addEventListener("click", resetBudget);
         el.btnPrintBudget.addEventListener("click", printBudget);
+        el.btnCopyRef.addEventListener("click", ()=>{
+          const ref = el.budgetNumber.value.trim() || "SN";
+          clipboardFallback(ref);
+          showToast("\u1F4CB Referencia copiada: " + ref);
+        });
         el.btnNewNumber.addEventListener("click", ()=>{
           el.budgetNumber.value = generateBudgetNumber();
           renderBudgetSheet();
         });
         el.btnUseDefaultNotes.addEventListener("click", ()=>applyDefaultNotesToBudget(true));
+
+        // NUEVO: cambio de tipo de documento
+        el.docType.addEventListener("change", ()=>{
+          updateDocTypeLabels();
+          renderBudgetSheet();
+        });
+
+        // M\u00E9todo de pago
+        el.paymentMethod.addEventListener("change", ()=>{
+          updatePaymentUI();
+        });
+
+        // NUEVO: sincronizar firma cliente al escribir
+        el.clientSignatureName.addEventListener("input", ()=>renderBudgetSheet());
 
         // Keep sheet in sync
         [el.clientName,el.clientCif,el.clientPhone,el.clientAddress,el.budgetNumber,el.budgetDate,el.ivaMode].forEach(inp=>{
@@ -4037,9 +1324,134 @@
           handleLogoUpload(file);
           ev.target.value = "";
         });
+
+        // Firma t\u00E9cnico en CONFIG: borrar
+        el.btnClearTechSig.addEventListener("click", ()=>{
+          cfgTechPad.clear();
+        });
+
+        // Modal firma cliente
+        el.btnOpenClientSig.addEventListener("click", openClientSigModal);
+        el.btnSigClear.addEventListener("click", ()=> modalClientPad.clear());
+        el.btnSigCancel.addEventListener("click", ()=> closeClientSigModal(false));
+        el.btnSigConfirm.addEventListener("click", ()=> closeClientSigModal(true));
+        // Cerrar modal al hacer clic en el fondo
+        el.sigModal.addEventListener("click", (ev)=>{
+          if(ev.target === el.sigModal) closeClientSigModal(false);
+        });
+        // ESC cierra modal
+        document.addEventListener("keydown",(ev)=>{
+          if(ev.key==="Escape" && el.sigModal.classList.contains("open")) closeClientSigModal(false);
+        });
       }
 
       function init(){
+        // Inicializar referencias DOM aqu\u00ED, cuando el DOM ya est\u00E1 listo
+        navButtons = $$(".amp-nav-btn");
+        sections   = $$(".amp-section");
+        el = {
+          clientName: $("#ampClientName"),
+          clientCif: $("#ampClientCif"),
+          clientPhone: $("#ampClientPhone"),
+          clientAddress: $("#ampClientAddress"),
+          budgetNumber: $("#ampBudgetNumber"),
+          budgetDate: $("#ampBudgetDate"),
+          ivaMode: $("#ampIvaMode"),
+          docType: $("#ampDocType"),
+          clientSignatureName: $("#ampClientSignatureName"),
+          btnNewNumber: $("#ampBtnNewNumber"),
+          btnUseDefaultNotes: $("#ampBtnUseDefaultNotes"),
+          productSelect: $("#ampProductSelect"),
+          lineDesc: $("#ampLineDesc"),
+          lineQty: $("#ampLineQty"),
+          linePrice: $("#ampLinePrice"),
+          btnAddLine: $("#ampBtnAddLine"),
+          btnResetBudget: $("#ampBtnResetBudget"),
+          btnPrintBudget: $("#ampBtnPrintBudget"),
+          btnCopyRef: $("#ampBtnCopyRef"),
+          lineMsg: $("#ampLineMsg"),
+          linesTbody: $("#ampLinesTbody"),
+          quickTotal: $("#ampQuickTotal"),
+          formTitle: $("#ampFormTitle"),
+          docNumberLabel: $("#ampDocNumberLabel"),
+          previewLabel: $("#ampPreviewLabel"),
+          paymentRow: $("#ampPaymentRow"),
+          paymentMethod: $("#ampPaymentMethod"),
+          bankAccountInfo: $("#ampBankAccountInfo"),
+          bankAccountDisplay: $("#ampBankAccountDisplay"),
+          sheetLogoBox: $("#ampSheetLogoBox"),
+          sheetCompanyName: $("#ampSheetCompanyName"),
+          sheetCompanyCif: $("#ampSheetCompanyCif"),
+          sheetCompanyPhone: $("#ampSheetCompanyPhone"),
+          sheetCompanyAddress: $("#ampSheetCompanyAddress"),
+          sheetBudgetNo: $("#ampSheetBudgetNo"),
+          sheetBudgetDate: $("#ampSheetBudgetDate"),
+          sheetClientName: $("#ampSheetClientName"),
+          sheetClientCif: $("#ampSheetClientCif"),
+          sheetClientPhone: $("#ampSheetClientPhone"),
+          sheetClientAddress: $("#ampSheetClientAddress"),
+          sheetIvaModeText: $("#ampSheetIvaModeText"),
+          sheetLinesBody: $("#ampSheetLinesBody"),
+          sheetBaseTotal: $("#ampSheetBaseTotal"),
+          sheetIvaTotal: $("#ampSheetIvaTotal"),
+          sheetGrandTotal: $("#ampSheetGrandTotal"),
+          sheetNotesEditable: $("#ampSheetNotesEditable"),
+          sheetDocTitle: $("#ampSheetDocTitle"),
+          sheetTechName: $("#ampSheetTechName"),
+          sheetClientSigName: $("#ampSheetClientSigName"),
+          sheetPaymentRow: $("#ampSheetPaymentRow"),
+          sheetPaymentMethod: $("#ampSheetPaymentMethod"),
+          sheetBankRow: $("#ampSheetBankRow"),
+          sheetBankAccount: $("#ampSheetBankAccount"),
+          sheetTechSigCanvas: $("#ampSheetTechSigCanvas"),
+          sheetClientSigCanvas: $("#ampSheetClientSigCanvas"),
+          sigModal: $("#ampSigModal"),
+          sigPad: $("#ampSigPad"),
+          btnSigClear: $("#ampBtnSigClear"),
+          btnSigCancel: $("#ampBtnSigCancel"),
+          btnSigConfirm: $("#ampBtnSigConfirm"),
+          btnOpenClientSig: $("#ampBtnOpenClientSig"),
+          cfgTechSigPad: $("#ampCfgTechSigPad"),
+          btnClearTechSig: $("#ampBtnClearTechSig"),
+          libName: $("#ampLibName"),
+          libPrice: $("#ampLibPrice"),
+          btnAddLib: $("#ampBtnAddLib"),
+          btnClearLib: $("#ampBtnClearLib"),
+          btnPrintLibrary: $("#ampBtnPrintLibrary"),
+          libraryList: $("#ampLibraryList"),
+          libMsg: $("#ampLibMsg"),
+          libPrintBody: $("#ampLibPrintBody"),
+          libPrintDate: $("#ampLibPrintDate"),
+          sheetLogoBoxLib: $("#ampSheetLogoBoxLib"),
+          sheetCompanyNameLib: $("#ampSheetCompanyNameLib"),
+          sheetCompanyCifLib: $("#ampSheetCompanyCifLib"),
+          sheetCompanyPhoneLib: $("#ampSheetCompanyPhoneLib"),
+          sheetCompanyAddressLib: $("#ampSheetCompanyAddressLib"),
+          cfgCompanyName: $("#ampCfgCompanyName"),
+          cfgCompanyCif: $("#ampCfgCompanyCif"),
+          cfgCompanyPhone: $("#ampCfgCompanyPhone"),
+          cfgCompanyAddress: $("#ampCfgCompanyAddress"),
+          cfgBankAccount: $("#ampCfgBankAccount"),
+          cfgDefaultNotes: $("#ampCfgDefaultNotes"),
+          cfgTechName: $("#ampCfgTechName"),
+          cfgLogoFile: $("#ampCfgLogoFile"),
+          cfgLogoPreviewBox: $("#ampCfgLogoPreviewBox"),
+          btnSaveConfig: $("#ampBtnSaveConfig"),
+          btnPrintConfig: $("#ampBtnPrintConfig"),
+          cfgMsg: $("#ampCfgMsg"),
+          cfgPrintDate: $("#ampCfgPrintDate"),
+          cfgPrintNotes: $("#ampCfgPrintNotes"),
+          sheetLogoBoxCfg: $("#ampSheetLogoBoxCfg"),
+          sheetCompanyNameCfg: $("#ampSheetCompanyNameCfg"),
+          sheetCompanyCifCfg: $("#ampSheetCompanyCifCfg"),
+          sheetCompanyPhoneCfg: $("#ampSheetCompanyPhoneCfg"),
+          sheetCompanyAddressCfg: $("#ampSheetCompanyAddressCfg"),
+          btnExportAll1: $("#ampBtnExportAll1"),
+          btnExportAll2: $("#ampBtnExportAll2"),
+          importFile1: $("#ampImportFile1"),
+          importFile2: $("#ampImportFile2")
+        };
+
         loadLibrary();
         loadConfig();
 
@@ -4055,6 +1467,14 @@
 
         // Notes: must load from CONFIG on startup
         applyDefaultNotesToBudget(true);
+
+        // Inicializar etiquetas de tipo doc
+        updateDocTypeLabels();
+
+        // Inicializar pads de firma
+        initSignaturePads();
+        // Restaurar firma t\u00E9cnico en CONFIG pad si ya estaba guardada
+        restoreSigToCanvas(el.cfgTechSigPad, antmPro_20260307_state.config.techSigBase64 || "");
 
         renderBudgetLines();
         renderBudgetSheet();

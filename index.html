@@ -377,6 +377,349 @@
         <h2>Configuración de empresa</h2>
 
         <div class="amp-grid amp-grid-2">
+          <div class="amp-          </div>
+          <div id="ampParseResult" class="amp-parse-result"></div>
+        </div>
+      </div>
+
+      <!-- CARD: Datos del cliente y documento -->
+      <div class="amp-card amp-no-print" id="ampCardForm">
+        <div class="amp-card-hd" data-acc="ampCardForm">
+          <h2 id="ampFormTitle">Nuevo presupuesto</h2>
+          <span class="amp-chevron">&#9660;</span>
+        </div>
+        <div class="amp-card-bd">
+
+        <div class="amp-grid amp-grid-2">
+          <div class="amp-field">
+            <label for="ampClientName">Cliente / Empresa</label>
+            <input id="ampClientName" class="amp-input" type="text" placeholder="Nombre del cliente o empresa" />
+          </div>
+          <div class="amp-field">
+            <label for="ampClientCif">DNI / CIF</label>
+            <input id="ampClientCif" class="amp-input" type="text" placeholder="Identificación fiscal" />
+          </div>
+          <div class="amp-field">
+            <label for="ampClientPhone">Teléfono cliente</label>
+            <input id="ampClientPhone" class="amp-input" type="tel" placeholder="Teléfono de contacto" />
+          </div>
+          <div class="amp-field">
+            <label for="ampClientAddress">Dirección cliente</label>
+            <input id="ampClientAddress" class="amp-input" type="text" placeholder="Dirección de instalación / facturación" />
+          </div>
+        </div>
+
+        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
+          <!-- Tipo de documento -->
+          <div class="amp-field">
+            <label for="ampDocType">Tipo de documento</label>
+            <select id="ampDocType" class="amp-select">
+              <option value="presupuesto">Presupuesto</option>
+              <option value="albaran">Albarán</option>
+              <option value="factura">Factura</option>
+            </select>
+          </div>
+          <div class="amp-field">
+            <label for="ampWorkOrder">Orden de trabajo (OT)</label>
+            <input id="ampWorkOrder" class="amp-input" type="number" min="1" step="1" placeholder="Ej. 1042 (opcional)" />
+            <div class="amp-muted">Si se indica, se añade a la referencia y al documento.</div>
+          </div>
+          <div class="amp-field">
+            <label for="ampBudgetDate">Fecha</label>
+            <input id="ampBudgetDate" class="amp-input" type="date" />
+          </div>
+        </div>
+
+        <div class="amp-grid amp-grid-2" style="margin-top:10px;">
+          <div class="amp-field">
+            <label for="ampBudgetNumber"><span id="ampDocNumberLabel">Nº Presupuesto</span> (irrepetible)</label>
+            <div style="display:flex; gap:8px;">
+              <input id="ampBudgetNumber" class="amp-input" type="text" readonly style="background:#f8fafc; font-family:monospace; font-size:.85rem;" />
+              <button id="ampBtnNewNumber" class="amp-btn amp-btn-secondary" type="button" style="min-width:120px;">Nuevo Nº</button>
+            </div>
+            <div class="amp-muted">Generado offline: fecha + dispositivo + aleatorio + OT (si aplica).</div>
+          </div>
+          <div class="amp-field" style="justify-content:flex-end;">
+            <label class="amp-hidden">ref</label>
+            <div id="ampRefPreview" style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:10px 14px; font-family:monospace; font-size:.9rem; color:#1d4ed8; display:flex; align-items:center; min-height:44px; word-break:break-all;"></div>
+            <div class="amp-muted">Referencia completa del documento.</div>
+          </div>
+        </div>
+
+        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
+          <div class="amp-field">
+            <label for="ampIvaMode">Modo de IVA</label>
+            <select id="ampIvaMode" class="amp-select">
+              <option value="base">Precio Base (añadir 21%)</option>
+              <option value="incluido">IVA Incluido (desglosar 21%)</option>
+            </select>
+          </div>
+          <!-- NUEVO: firma del cliente -->
+          <div class="amp-field" style="grid-column: span 2;">
+            <label for="ampClientSignatureName">Nombre firmante cliente (para documento impreso)</label>
+            <input id="ampClientSignatureName" class="amp-input" type="text" placeholder="Nombre y apellidos del cliente que firma" />
+          </div>
+        </div>
+
+        <!-- Método de pago: solo visible en albarán/factura -->
+        <div id="ampPaymentRow" class="amp-grid amp-grid-2" style="margin-top:10px; display:none;">
+          <div class="amp-field">
+            <label for="ampPaymentMethod">Método de pago</label>
+            <select id="ampPaymentMethod" class="amp-select">
+              <option value="efectivo">Efectivo</option>
+              <option value="transferencia">Transferencia bancaria</option>
+              <option value="tarjeta">Tarjeta</option>
+              <option value="bizum">Bizum</option>
+            </select>
+          </div>
+          <div class="amp-field" id="ampBankAccountInfo" style="display:none;">
+            <label>Número de cuenta (desde CONFIG)</label>
+            <div id="ampBankAccountDisplay" class="amp-input" style="background:#f8fafc; color:#334155; display:flex; align-items:center; font-family:monospace;">—</div>
+          </div>
+        </div>
+
+        <div class="amp-actions">
+          <button id="ampBtnResetBudget" class="amp-btn amp-btn-secondary" type="button">Limpiar presupuesto</button>
+          <button id="ampBtnUseDefaultNotes" class="amp-btn amp-btn-secondary" type="button">Cargar notas de CONFIG</button>
+        </div>
+        </div><!-- /.amp-card-bd -->
+      </div>
+
+      <div class="amp-card amp-no-print" id="ampCardAddLine">
+        <div class="amp-card-hd" data-acc="ampCardAddLine">
+          <h3>A&#241;adir concepto</h3>
+          <span class="amp-chevron">&#9660;</span>
+        </div>
+        <div class="amp-card-bd">
+        <div class="amp-grid amp-grid-2">
+          <div class="amp-field">
+            <label for="ampProductSelect">Servicio / Producto (biblioteca)</label>
+            <select id="ampProductSelect" class="amp-select">
+              <option value="">-- Seleccionar de la biblioteca --</option>
+            </select>
+          </div>
+          <div class="amp-field">
+            <label for="ampLineDesc">Descripción manual</label>
+            <input id="ampLineDesc" class="amp-input" type="text" placeholder="Ej. Instalación antena TDT y orientación" />
+          </div>
+        </div>
+
+        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
+          <div class="amp-field">
+            <label for="ampLineQty">Cantidad</label>
+            <input id="ampLineQty" class="amp-input" type="number" min="0" step="0.01" value="1" />
+          </div>
+          <div class="amp-field">
+            <label for="ampLinePrice">Precio unitario (€)</label>
+            <input id="ampLinePrice" class="amp-input" type="number" min="0" step="0.01" placeholder="0.00" />
+          </div>
+          <div class="amp-field" style="justify-content:flex-end;">
+            <label class="amp-hidden">Acción</label>
+            <button id="ampBtnAddLine" class="amp-btn amp-btn-success" type="button">Añadir concepto</button>
+          </div>
+        </div>
+        <div class="amp-muted" style="margin-top:8px;">
+          En modo <strong>Precio Base</strong>, el precio unitario se considera sin IVA. En modo <strong>IVA Incluido</strong>, se desglosa automáticamente.
+        </div>
+        <div id="ampLineMsg" class="amp-status"></div>
+        </div><!-- /.amp-card-bd -->
+      </div>
+
+      <div class="amp-card amp-no-print" id="ampCardLines">
+        <div class="amp-card-hd" data-acc="ampCardLines">
+          <h3>Conceptos a&#241;adidos &nbsp;<span id="ampQuickTotal" class="amp-inline-total" style="font-size:.9rem;">0,00 &#8364;</span></h3>
+          <span class="amp-chevron">&#9660;</span>
+        </div>
+        <div class="amp-card-bd">
+        <div class="amp-lines-table-wrap">
+          <table class="amp-lines-table">
+            <thead>
+              <tr><th>Descripci&#243;n</th><th>Cant.</th><th>Precio Unit.</th><th>Importe</th><th>Acci&#243;n</th></tr>
+            </thead>
+            <tbody id="ampLinesTbody">
+              <tr><td colspan="5" class="amp-muted">No hay conceptos a&#241;adidos todav&#237;a.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        </div><!-- /.amp-card-bd -->
+      </div>
+
+      <!-- Host imprimible: PRESUPUESTO / ALBARÁN / FACTURA -->
+      <div id="ampPrintBudgetHost">
+        <div class="amp-card">
+          <h3 class="amp-no-print">Vista previa de hoja de <span id="ampPreviewLabel">presupuesto</span></h3>
+          <div class="amp-sheet-wrap">
+            <article class="amp-sheet">
+              <div class="amp-sheet-header">
+                <div class="amp-logo-box" id="ampSheetLogoBox"><span>Logo empresa</span></div>
+                <div>
+                  <h1 class="amp-company-title" id="ampSheetCompanyName">Tu Empresa de Telecomunicaciones</h1>
+                  <div class="amp-company-meta">
+                    <div><strong>CIF:</strong> <span id="ampSheetCompanyCif">—</span></div>
+                    <div><strong>Tel.:</strong> <span id="ampSheetCompanyPhone">—</span></div>
+                    <div><strong>Dirección:</strong> <span id="ampSheetCompanyAddress">—</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="amp-doc-title-row">
+                <h2 class="amp-doc-title" id="ampSheetDocTitle">PRESUPUESTO</h2>
+                <div style="text-align:right;">
+                  <div class="amp-muted">N\u00BA <strong id="ampSheetBudgetNo">---</strong> &middot; Fecha: <strong id="ampSheetBudgetDate">--/--/----</strong></div>
+                  <div id="ampSheetWorkOrderRow" style="display:none; margin-top:4px;"><span style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:6px; padding:2px 8px; font-size:.82rem; color:#1d4ed8; font-weight:800;">OT <span id="ampSheetWorkOrder">—</span></span></div>
+                </div>
+              </div>
+
+              <div class="amp-two-cols">
+                <div class="amp-box">
+                  <h4>Datos del cliente</h4>
+                  <div><strong>Nombre / Empresa:</strong> <span id="ampSheetClientName">—</span></div>
+                  <div><strong>DNI/CIF:</strong> <span id="ampSheetClientCif">—</span></div>
+                  <div><strong>Teléfono:</strong> <span id="ampSheetClientPhone">—</span></div>
+                  <div><strong>Dirección:</strong> <span id="ampSheetClientAddress">—</span></div>
+                </div>
+                <div class="amp-box">
+                  <h4>Resumen</h4>
+                  <div><strong>Modo IVA:</strong> <span id="ampSheetIvaModeText">Precio Base (añadir 21%)</span></div>
+                  <div><strong>Moneda:</strong> EUR (€)</div>
+                  <div id="ampSheetPaymentRow" style="display:none;"><strong>Método de pago:</strong> <span id="ampSheetPaymentMethod">—</span></div>
+                  <div id="ampSheetBankRow" style="display:none;"><strong>Cuenta bancaria:</strong> <span id="ampSheetBankAccount" style="font-family:monospace;">—</span></div>
+                </div>
+              </div>
+
+              <table class="amp-sheet-table">
+                <thead>
+                  <tr>
+                    <th style="width:52%;">Concepto</th>
+                    <th style="width:12%;" class="amp-text-right">Cant.</th>
+                    <th style="width:18%;" class="amp-text-right">P. Unit. (Base)</th>
+                    <th style="width:18%;" class="amp-text-right">Importe (Base)</th>
+                  </tr>
+                </thead>
+                <tbody id="ampSheetLinesBody">
+                  <tr><td colspan="4" class="amp-muted">Añade conceptos desde el formulario para generar el presupuesto.</td></tr>
+                </tbody>
+              </table>
+
+              <div class="amp-totals">
+                <div class="amp-totals-row"><span>Base imponible</span><span id="ampSheetBaseTotal">0,00 €</span></div>
+                <div class="amp-totals-row"><span>IVA 21%</span><span id="ampSheetIvaTotal">0,00 €</span></div>
+                <div class="amp-totals-row"><span>Total</span><span id="ampSheetGrandTotal">0,00 €</span></div>
+              </div>
+
+              <div style="margin-top:14px;">
+                <h4 style="margin:0 0 6px; color:#475569; font-size:.85rem; text-transform:uppercase; letter-spacing:.5px;">Notas</h4>
+                <div id="ampSheetNotesEditable" class="amp-notes-editable" contenteditable="true" spellcheck="true"></div>
+                <div class="amp-muted amp-no-print" style="margin-top:6px;">
+                  Estas notas se cargan desde <strong>CONFIG → Notas predeterminadas</strong> al crear un presupuesto nuevo (o con "Cargar notas de CONFIG").
+                </div>
+              </div>
+
+              <!-- Bloque de firmas con canvas -->
+              <div class="amp-signatures-row">
+                <div class="amp-signature-box">
+                  <h4>Firma del técnico</h4>
+                  <div class="amp-signature-name" id="ampSheetTechName">—</div>
+                  <canvas id="ampSheetTechSigCanvas" class="amp-sig-canvas-preview" width="400" height="70"></canvas>
+                  <div class="amp-signature-label">Firma y sello de la empresa</div>
+                </div>
+                <div class="amp-signature-box">
+                  <h4>Firma del cliente</h4>
+                  <div class="amp-signature-name" id="ampSheetClientSigName">—</div>
+                  <canvas id="ampSheetClientSigCanvas" class="amp-sig-canvas-preview" width="400" height="70"></canvas>
+                  <div class="amp-signature-label">Conforme y aceptado</div>
+                  <button class="amp-sig-btn amp-no-print" id="ampBtnOpenClientSig" type="button">✍️ Firma del cliente</button>
+                </div>
+              </div>
+
+              <div class="amp-footer-print">Documento generado con AntenaManager PRO.</div>
+            </article>
+          </div>
+
+          <div class="amp-bottom-bar amp-no-print">
+            <div class="amp-bottom-inner">
+              <button id="ampBtnPrintBudget" class="amp-btn amp-btn-primary" type="button">Imprimir / Guardar PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= LISTA ================= -->
+    <section id="ampSectionLista" class="amp-section">
+      <div class="amp-card amp-no-print">
+        <h2>Biblioteca de precios</h2>
+
+        <div class="amp-grid amp-grid-2">
+          <div class="amp-field">
+            <label for="ampLibName">Nombre del servicio / producto</label>
+            <input id="ampLibName" class="amp-input" type="text" placeholder="Ej. Instalación antena TDT" />
+          </div>
+          <div class="amp-field">
+            <label for="ampLibPrice">Precio base (€)</label>
+            <input id="ampLibPrice" class="amp-input" type="number" min="0" step="0.01" placeholder="0.00" />
+          </div>
+        </div>
+
+        <div class="amp-actions">
+          <button id="ampBtnAddLib" class="amp-btn amp-btn-primary" type="button">Guardar en biblioteca</button>
+          <button id="ampBtnClearLib" class="amp-btn amp-btn-danger" type="button">Vaciar biblioteca</button>
+          <button id="ampBtnPrintLibrary" class="amp-btn amp-btn-secondary" type="button">Imprimir / PDF (Biblioteca)</button>
+          <button id="ampBtnExportAll1" class="amp-btn amp-btn-secondary" type="button">Exportar datos</button>
+          <label class="amp-btn amp-btn-secondary" style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
+            Importar datos
+            <input id="ampImportFile1" type="file" accept="application/json" style="display:none;">
+          </label>
+        </div>
+        <div class="amp-muted">Exporta/Importa: configuración + biblioteca (localStorage) para actualizaciones offline.</div>
+        <div id="ampLibMsg" class="amp-status"></div>
+      </div>
+
+      <div class="amp-card amp-no-print">
+        <h3>Servicios guardados</h3>
+        <div id="ampLibraryList" class="amp-list-wrap">
+          <div class="amp-muted">No hay servicios guardados todavía.</div>
+        </div>
+      </div>
+
+      <!-- Host imprimible: BIBLIOTECA -->
+      <div id="ampPrintLibraryHost">
+        <div class="amp-sheet-wrap">
+          <article class="amp-sheet">
+            <div class="amp-sheet-header">
+              <div class="amp-logo-box" id="ampSheetLogoBoxLib"><span>Logo empresa</span></div>
+              <div>
+                <h1 class="amp-company-title" id="ampSheetCompanyNameLib">Tu Empresa de Telecomunicaciones</h1>
+                <div class="amp-company-meta">
+                  <div><strong>CIF:</strong> <span id="ampSheetCompanyCifLib">—</span></div>
+                  <div><strong>Tel.:</strong> <span id="ampSheetCompanyPhoneLib">—</span></div>
+                  <div><strong>Dirección:</strong> <span id="ampSheetCompanyAddressLib">—</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="amp-doc-title-row">
+              <h2 class="amp-doc-title">BIBLIOTECA DE PRECIOS</h2>
+              <div class="amp-muted">Fecha: <strong id="ampLibPrintDate">--/--/----</strong></div>
+            </div>
+
+            <table class="amp-sheet-table">
+              <thead><tr><th>Servicio / Producto</th><th class="amp-text-right">Precio base</th></tr></thead>
+              <tbody id="ampLibPrintBody"><tr><td colspan="2" class="amp-muted">No hay servicios guardados.</td></tr></tbody>
+            </table>
+
+            <div class="amp-footer-print">Documento generado con AntenaManager PRO.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CONFIG ================= -->
+    <section id="ampSectionConfig" class="amp-section">
+      <div class="amp-card amp-no-print">
+        <h2>Configuración de empresa</h2>
+
+        <div class="amp-grid amp-grid-2">
           <div class="amp-field">
             <label for="ampCfgCompanyName">Nombre comercial</label>
             <input id="ampCfgCompanyName" class="amp-input" type="text" placeholder="Antenas López Telecom" />

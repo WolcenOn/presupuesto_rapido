@@ -377,349 +377,6 @@
         <h2>Configuración de empresa</h2>
 
         <div class="amp-grid amp-grid-2">
-          <div class="amp-          </div>
-          <div id="ampParseResult" class="amp-parse-result"></div>
-        </div>
-      </div>
-
-      <!-- CARD: Datos del cliente y documento -->
-      <div class="amp-card amp-no-print" id="ampCardForm">
-        <div class="amp-card-hd" data-acc="ampCardForm">
-          <h2 id="ampFormTitle">Nuevo presupuesto</h2>
-          <span class="amp-chevron">&#9660;</span>
-        </div>
-        <div class="amp-card-bd">
-
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampClientName">Cliente / Empresa</label>
-            <input id="ampClientName" class="amp-input" type="text" placeholder="Nombre del cliente o empresa" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientCif">DNI / CIF</label>
-            <input id="ampClientCif" class="amp-input" type="text" placeholder="Identificación fiscal" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientPhone">Teléfono cliente</label>
-            <input id="ampClientPhone" class="amp-input" type="tel" placeholder="Teléfono de contacto" />
-          </div>
-          <div class="amp-field">
-            <label for="ampClientAddress">Dirección cliente</label>
-            <input id="ampClientAddress" class="amp-input" type="text" placeholder="Dirección de instalación / facturación" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <!-- Tipo de documento -->
-          <div class="amp-field">
-            <label for="ampDocType">Tipo de documento</label>
-            <select id="ampDocType" class="amp-select">
-              <option value="presupuesto">Presupuesto</option>
-              <option value="albaran">Albarán</option>
-              <option value="factura">Factura</option>
-            </select>
-          </div>
-          <div class="amp-field">
-            <label for="ampWorkOrder">Orden de trabajo (OT)</label>
-            <input id="ampWorkOrder" class="amp-input" type="number" min="1" step="1" placeholder="Ej. 1042 (opcional)" />
-            <div class="amp-muted">Si se indica, se añade a la referencia y al documento.</div>
-          </div>
-          <div class="amp-field">
-            <label for="ampBudgetDate">Fecha</label>
-            <input id="ampBudgetDate" class="amp-input" type="date" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-2" style="margin-top:10px;">
-          <div class="amp-field">
-            <label for="ampBudgetNumber"><span id="ampDocNumberLabel">Nº Presupuesto</span> (irrepetible)</label>
-            <div style="display:flex; gap:8px;">
-              <input id="ampBudgetNumber" class="amp-input" type="text" readonly style="background:#f8fafc; font-family:monospace; font-size:.85rem;" />
-              <button id="ampBtnNewNumber" class="amp-btn amp-btn-secondary" type="button" style="min-width:120px;">Nuevo Nº</button>
-            </div>
-            <div class="amp-muted">Generado offline: fecha + dispositivo + aleatorio + OT (si aplica).</div>
-          </div>
-          <div class="amp-field" style="justify-content:flex-end;">
-            <label class="amp-hidden">ref</label>
-            <div id="ampRefPreview" style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:10px 14px; font-family:monospace; font-size:.9rem; color:#1d4ed8; display:flex; align-items:center; min-height:44px; word-break:break-all;"></div>
-            <div class="amp-muted">Referencia completa del documento.</div>
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <div class="amp-field">
-            <label for="ampIvaMode">Modo de IVA</label>
-            <select id="ampIvaMode" class="amp-select">
-              <option value="base">Precio Base (añadir 21%)</option>
-              <option value="incluido">IVA Incluido (desglosar 21%)</option>
-            </select>
-          </div>
-          <!-- NUEVO: firma del cliente -->
-          <div class="amp-field" style="grid-column: span 2;">
-            <label for="ampClientSignatureName">Nombre firmante cliente (para documento impreso)</label>
-            <input id="ampClientSignatureName" class="amp-input" type="text" placeholder="Nombre y apellidos del cliente que firma" />
-          </div>
-        </div>
-
-        <!-- Método de pago: solo visible en albarán/factura -->
-        <div id="ampPaymentRow" class="amp-grid amp-grid-2" style="margin-top:10px; display:none;">
-          <div class="amp-field">
-            <label for="ampPaymentMethod">Método de pago</label>
-            <select id="ampPaymentMethod" class="amp-select">
-              <option value="efectivo">Efectivo</option>
-              <option value="transferencia">Transferencia bancaria</option>
-              <option value="tarjeta">Tarjeta</option>
-              <option value="bizum">Bizum</option>
-            </select>
-          </div>
-          <div class="amp-field" id="ampBankAccountInfo" style="display:none;">
-            <label>Número de cuenta (desde CONFIG)</label>
-            <div id="ampBankAccountDisplay" class="amp-input" style="background:#f8fafc; color:#334155; display:flex; align-items:center; font-family:monospace;">—</div>
-          </div>
-        </div>
-
-        <div class="amp-actions">
-          <button id="ampBtnResetBudget" class="amp-btn amp-btn-secondary" type="button">Limpiar presupuesto</button>
-          <button id="ampBtnUseDefaultNotes" class="amp-btn amp-btn-secondary" type="button">Cargar notas de CONFIG</button>
-        </div>
-        </div><!-- /.amp-card-bd -->
-      </div>
-
-      <div class="amp-card amp-no-print" id="ampCardAddLine">
-        <div class="amp-card-hd" data-acc="ampCardAddLine">
-          <h3>A&#241;adir concepto</h3>
-          <span class="amp-chevron">&#9660;</span>
-        </div>
-        <div class="amp-card-bd">
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampProductSelect">Servicio / Producto (biblioteca)</label>
-            <select id="ampProductSelect" class="amp-select">
-              <option value="">-- Seleccionar de la biblioteca --</option>
-            </select>
-          </div>
-          <div class="amp-field">
-            <label for="ampLineDesc">Descripción manual</label>
-            <input id="ampLineDesc" class="amp-input" type="text" placeholder="Ej. Instalación antena TDT y orientación" />
-          </div>
-        </div>
-
-        <div class="amp-grid amp-grid-3" style="margin-top:10px;">
-          <div class="amp-field">
-            <label for="ampLineQty">Cantidad</label>
-            <input id="ampLineQty" class="amp-input" type="number" min="0" step="0.01" value="1" />
-          </div>
-          <div class="amp-field">
-            <label for="ampLinePrice">Precio unitario (€)</label>
-            <input id="ampLinePrice" class="amp-input" type="number" min="0" step="0.01" placeholder="0.00" />
-          </div>
-          <div class="amp-field" style="justify-content:flex-end;">
-            <label class="amp-hidden">Acción</label>
-            <button id="ampBtnAddLine" class="amp-btn amp-btn-success" type="button">Añadir concepto</button>
-          </div>
-        </div>
-        <div class="amp-muted" style="margin-top:8px;">
-          En modo <strong>Precio Base</strong>, el precio unitario se considera sin IVA. En modo <strong>IVA Incluido</strong>, se desglosa automáticamente.
-        </div>
-        <div id="ampLineMsg" class="amp-status"></div>
-        </div><!-- /.amp-card-bd -->
-      </div>
-
-      <div class="amp-card amp-no-print" id="ampCardLines">
-        <div class="amp-card-hd" data-acc="ampCardLines">
-          <h3>Conceptos a&#241;adidos &nbsp;<span id="ampQuickTotal" class="amp-inline-total" style="font-size:.9rem;">0,00 &#8364;</span></h3>
-          <span class="amp-chevron">&#9660;</span>
-        </div>
-        <div class="amp-card-bd">
-        <div class="amp-lines-table-wrap">
-          <table class="amp-lines-table">
-            <thead>
-              <tr><th>Descripci&#243;n</th><th>Cant.</th><th>Precio Unit.</th><th>Importe</th><th>Acci&#243;n</th></tr>
-            </thead>
-            <tbody id="ampLinesTbody">
-              <tr><td colspan="5" class="amp-muted">No hay conceptos a&#241;adidos todav&#237;a.</td></tr>
-            </tbody>
-          </table>
-        </div>
-        </div><!-- /.amp-card-bd -->
-      </div>
-
-      <!-- Host imprimible: PRESUPUESTO / ALBARÁN / FACTURA -->
-      <div id="ampPrintBudgetHost">
-        <div class="amp-card">
-          <h3 class="amp-no-print">Vista previa de hoja de <span id="ampPreviewLabel">presupuesto</span></h3>
-          <div class="amp-sheet-wrap">
-            <article class="amp-sheet">
-              <div class="amp-sheet-header">
-                <div class="amp-logo-box" id="ampSheetLogoBox"><span>Logo empresa</span></div>
-                <div>
-                  <h1 class="amp-company-title" id="ampSheetCompanyName">Tu Empresa de Telecomunicaciones</h1>
-                  <div class="amp-company-meta">
-                    <div><strong>CIF:</strong> <span id="ampSheetCompanyCif">—</span></div>
-                    <div><strong>Tel.:</strong> <span id="ampSheetCompanyPhone">—</span></div>
-                    <div><strong>Dirección:</strong> <span id="ampSheetCompanyAddress">—</span></div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="amp-doc-title-row">
-                <h2 class="amp-doc-title" id="ampSheetDocTitle">PRESUPUESTO</h2>
-                <div style="text-align:right;">
-                  <div class="amp-muted">N\u00BA <strong id="ampSheetBudgetNo">---</strong> &middot; Fecha: <strong id="ampSheetBudgetDate">--/--/----</strong></div>
-                  <div id="ampSheetWorkOrderRow" style="display:none; margin-top:4px;"><span style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:6px; padding:2px 8px; font-size:.82rem; color:#1d4ed8; font-weight:800;">OT <span id="ampSheetWorkOrder">—</span></span></div>
-                </div>
-              </div>
-
-              <div class="amp-two-cols">
-                <div class="amp-box">
-                  <h4>Datos del cliente</h4>
-                  <div><strong>Nombre / Empresa:</strong> <span id="ampSheetClientName">—</span></div>
-                  <div><strong>DNI/CIF:</strong> <span id="ampSheetClientCif">—</span></div>
-                  <div><strong>Teléfono:</strong> <span id="ampSheetClientPhone">—</span></div>
-                  <div><strong>Dirección:</strong> <span id="ampSheetClientAddress">—</span></div>
-                </div>
-                <div class="amp-box">
-                  <h4>Resumen</h4>
-                  <div><strong>Modo IVA:</strong> <span id="ampSheetIvaModeText">Precio Base (añadir 21%)</span></div>
-                  <div><strong>Moneda:</strong> EUR (€)</div>
-                  <div id="ampSheetPaymentRow" style="display:none;"><strong>Método de pago:</strong> <span id="ampSheetPaymentMethod">—</span></div>
-                  <div id="ampSheetBankRow" style="display:none;"><strong>Cuenta bancaria:</strong> <span id="ampSheetBankAccount" style="font-family:monospace;">—</span></div>
-                </div>
-              </div>
-
-              <table class="amp-sheet-table">
-                <thead>
-                  <tr>
-                    <th style="width:52%;">Concepto</th>
-                    <th style="width:12%;" class="amp-text-right">Cant.</th>
-                    <th style="width:18%;" class="amp-text-right">P. Unit. (Base)</th>
-                    <th style="width:18%;" class="amp-text-right">Importe (Base)</th>
-                  </tr>
-                </thead>
-                <tbody id="ampSheetLinesBody">
-                  <tr><td colspan="4" class="amp-muted">Añade conceptos desde el formulario para generar el presupuesto.</td></tr>
-                </tbody>
-              </table>
-
-              <div class="amp-totals">
-                <div class="amp-totals-row"><span>Base imponible</span><span id="ampSheetBaseTotal">0,00 €</span></div>
-                <div class="amp-totals-row"><span>IVA 21%</span><span id="ampSheetIvaTotal">0,00 €</span></div>
-                <div class="amp-totals-row"><span>Total</span><span id="ampSheetGrandTotal">0,00 €</span></div>
-              </div>
-
-              <div style="margin-top:14px;">
-                <h4 style="margin:0 0 6px; color:#475569; font-size:.85rem; text-transform:uppercase; letter-spacing:.5px;">Notas</h4>
-                <div id="ampSheetNotesEditable" class="amp-notes-editable" contenteditable="true" spellcheck="true"></div>
-                <div class="amp-muted amp-no-print" style="margin-top:6px;">
-                  Estas notas se cargan desde <strong>CONFIG → Notas predeterminadas</strong> al crear un presupuesto nuevo (o con "Cargar notas de CONFIG").
-                </div>
-              </div>
-
-              <!-- Bloque de firmas con canvas -->
-              <div class="amp-signatures-row">
-                <div class="amp-signature-box">
-                  <h4>Firma del técnico</h4>
-                  <div class="amp-signature-name" id="ampSheetTechName">—</div>
-                  <canvas id="ampSheetTechSigCanvas" class="amp-sig-canvas-preview" width="400" height="70"></canvas>
-                  <div class="amp-signature-label">Firma y sello de la empresa</div>
-                </div>
-                <div class="amp-signature-box">
-                  <h4>Firma del cliente</h4>
-                  <div class="amp-signature-name" id="ampSheetClientSigName">—</div>
-                  <canvas id="ampSheetClientSigCanvas" class="amp-sig-canvas-preview" width="400" height="70"></canvas>
-                  <div class="amp-signature-label">Conforme y aceptado</div>
-                  <button class="amp-sig-btn amp-no-print" id="ampBtnOpenClientSig" type="button">✍️ Firma del cliente</button>
-                </div>
-              </div>
-
-              <div class="amp-footer-print">Documento generado con AntenaManager PRO.</div>
-            </article>
-          </div>
-
-          <div class="amp-bottom-bar amp-no-print">
-            <div class="amp-bottom-inner">
-              <button id="ampBtnPrintBudget" class="amp-btn amp-btn-primary" type="button">Imprimir / Guardar PDF</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= LISTA ================= -->
-    <section id="ampSectionLista" class="amp-section">
-      <div class="amp-card amp-no-print">
-        <h2>Biblioteca de precios</h2>
-
-        <div class="amp-grid amp-grid-2">
-          <div class="amp-field">
-            <label for="ampLibName">Nombre del servicio / producto</label>
-            <input id="ampLibName" class="amp-input" type="text" placeholder="Ej. Instalación antena TDT" />
-          </div>
-          <div class="amp-field">
-            <label for="ampLibPrice">Precio base (€)</label>
-            <input id="ampLibPrice" class="amp-input" type="number" min="0" step="0.01" placeholder="0.00" />
-          </div>
-        </div>
-
-        <div class="amp-actions">
-          <button id="ampBtnAddLib" class="amp-btn amp-btn-primary" type="button">Guardar en biblioteca</button>
-          <button id="ampBtnClearLib" class="amp-btn amp-btn-danger" type="button">Vaciar biblioteca</button>
-          <button id="ampBtnPrintLibrary" class="amp-btn amp-btn-secondary" type="button">Imprimir / PDF (Biblioteca)</button>
-          <button id="ampBtnExportAll1" class="amp-btn amp-btn-secondary" type="button">Exportar datos</button>
-          <label class="amp-btn amp-btn-secondary" style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
-            Importar datos
-            <input id="ampImportFile1" type="file" accept="application/json" style="display:none;">
-          </label>
-        </div>
-        <div class="amp-muted">Exporta/Importa: configuración + biblioteca (localStorage) para actualizaciones offline.</div>
-        <div id="ampLibMsg" class="amp-status"></div>
-      </div>
-
-      <div class="amp-card amp-no-print">
-        <h3>Servicios guardados</h3>
-        <div id="ampLibraryList" class="amp-list-wrap">
-          <div class="amp-muted">No hay servicios guardados todavía.</div>
-        </div>
-      </div>
-
-      <!-- Host imprimible: BIBLIOTECA -->
-      <div id="ampPrintLibraryHost">
-        <div class="amp-sheet-wrap">
-          <article class="amp-sheet">
-            <div class="amp-sheet-header">
-              <div class="amp-logo-box" id="ampSheetLogoBoxLib"><span>Logo empresa</span></div>
-              <div>
-                <h1 class="amp-company-title" id="ampSheetCompanyNameLib">Tu Empresa de Telecomunicaciones</h1>
-                <div class="amp-company-meta">
-                  <div><strong>CIF:</strong> <span id="ampSheetCompanyCifLib">—</span></div>
-                  <div><strong>Tel.:</strong> <span id="ampSheetCompanyPhoneLib">—</span></div>
-                  <div><strong>Dirección:</strong> <span id="ampSheetCompanyAddressLib">—</span></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="amp-doc-title-row">
-              <h2 class="amp-doc-title">BIBLIOTECA DE PRECIOS</h2>
-              <div class="amp-muted">Fecha: <strong id="ampLibPrintDate">--/--/----</strong></div>
-            </div>
-
-            <table class="amp-sheet-table">
-              <thead><tr><th>Servicio / Producto</th><th class="amp-text-right">Precio base</th></tr></thead>
-              <tbody id="ampLibPrintBody"><tr><td colspan="2" class="amp-muted">No hay servicios guardados.</td></tr></tbody>
-            </table>
-
-            <div class="amp-footer-print">Documento generado con AntenaManager PRO.</div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= CONFIG ================= -->
-    <section id="ampSectionConfig" class="amp-section">
-      <div class="amp-card amp-no-print">
-        <h2>Configuración de empresa</h2>
-
-        <div class="amp-grid amp-grid-2">
           <div class="amp-field">
             <label for="ampCfgCompanyName">Nombre comercial</label>
             <input id="ampCfgCompanyName" class="amp-input" type="text" placeholder="Antenas López Telecom" />
@@ -787,6 +444,55 @@
         <div id="ampCfgMsg" class="amp-status"></div>
       </div>
 
+      <!-- CARD: Historial de documentos -->
+      <div class="amp-card amp-no-print" id="ampCardHistory">
+        <div class="amp-card-hd" data-acc="ampCardHistory">
+          <h2>&#128196; Historial de documentos</h2>
+          <span class="amp-chevron">&#9660;</span>
+        </div>
+        <div class="amp-card-bd">
+
+          <!-- Filtros -->
+          <div class="amp-grid amp-grid-2" style="margin-bottom:10px;">
+            <div class="amp-field">
+              <label>Tipo de documento</label>
+              <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;">
+                <label style="display:flex;align-items:center;gap:6px;font-size:.9rem;cursor:pointer;">
+                  <input type="checkbox" id="ampFilterType_presupuesto" checked /> Presupuesto
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.9rem;cursor:pointer;">
+                  <input type="checkbox" id="ampFilterType_albaran" checked /> Albar&#225;n
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.9rem;cursor:pointer;">
+                  <input type="checkbox" id="ampFilterType_factura" checked /> Factura
+                </label>
+              </div>
+            </div>
+            <div class="amp-field">
+              <label>Rango de fechas</label>
+              <div style="display:flex;gap:8px;align-items:center;margin-top:6px;">
+                <input id="ampFilterDateFrom" class="amp-input" type="date" style="min-height:40px;" />
+                <span class="amp-muted">—</span>
+                <input id="ampFilterDateTo" class="amp-input" type="date" style="min-height:40px;" />
+              </div>
+            </div>
+          </div>
+
+          <div class="amp-actions" style="margin-bottom:10px;">
+            <button id="ampBtnFilterDocs" class="amp-btn amp-btn-secondary" type="button">&#128269; Aplicar filtro</button>
+            <button id="ampBtnSelectAllDocs" class="amp-btn amp-btn-secondary" type="button">Seleccionar todos</button>
+            <button id="ampBtnExportExcel" class="amp-btn amp-btn-success" type="button">&#128196; Exportar a Excel</button>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span id="ampDocHistoryCount" class="amp-muted">0 documentos</span>
+            <button id="ampBtnClearHistory" class="amp-btn amp-btn-danger" type="button" style="min-height:32px;padding:4px 12px;font-size:.82rem;">Borrar historial</button>
+          </div>
+
+          <div id="ampDocHistoryList" class="amp-doc-history-list"></div>
+        </div>
+      </div>
+
       <!-- Host imprimible: CONFIG -->
       <div id="ampPrintConfigHost">
         <div class="amp-sheet-wrap">
@@ -839,7 +545,7 @@
   <script>
       /* ===== CSS INJECTION (evita truncado de <style> en GitHub Pages) ===== */
       (function(){
-        var b64 = "OnJvb3R7LS1hbXAtYmx1ZTojMjU2M2ViOy0tYW1wLXNsYXRlOiMwZjE3MmE7LS1hbXAtYmc6I2YxZjVmOTstLWFtcC13aGl0ZTojZmZmZmZmOy0tYW1wLWJvcmRlcjojY2JkNWUxOy0tYW1wLW11dGVkOiM2NDc0OGI7LS1hbXAtZGFuZ2VyOiNkYzI2MjY7LS1hbXAtc3VjY2VzczojMTZhMzRhOy0tYW1wLXNoYWRvdzowIDEwcHggMjVweCByZ2JhKDE1LDIzLDQyLC4wOCk7LS1hbXAtcmFkaXVzOjEycHh9Kntib3gtc2l6aW5nOmJvcmRlci1ib3h9aHRtbCxib2R5e21hcmdpbjowO3BhZGRpbmc6MH1ib2R5e2ZvbnQtZmFtaWx5OnN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLFNlZ29lIFVJLFJvYm90byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZjtiYWNrZ3JvdW5kOnZhcigtLWFtcC1iZyk7Y29sb3I6dmFyKC0tYW1wLXNsYXRlKTtsaW5lLWhlaWdodDoxLjM1Oy13ZWJraXQtZm9udC1zbW9vdGhpbmc6YW50aWFsaWFzZWQ7cGFkZGluZy10b3A6NjhweH0uYW1wLW5hdntwb3NpdGlvbjpmaXhlZDt0b3A6MDtsZWZ0OjA7cmlnaHQ6MDt6LWluZGV4OjEwMDA7YmFja2dyb3VuZDp2YXIoLS1hbXAtc2xhdGUpO2JvcmRlci1ib3R0b206MXB4IHNvbGlkIHJnYmEoMjU1LDI1NSwyNTUsLjA4KTtib3gtc2hhZG93OjAgNnB4IDIwcHggcmdiYSgxNSwyMyw0MiwuMTgpfS5hbXAtbmF2LWlubmVye21heC13aWR0aDoxMjAwcHg7bWFyZ2luOjAgYXV0bztkaXNwbGF5OmdyaWQ7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOnJlcGVhdCgzLDFmcik7Z2FwOjhweDtwYWRkaW5nOjEwcHh9LmFtcC1uYXYtYnRue21pbi1oZWlnaHQ6NDRweDtib3JkZXI6MDtib3JkZXItcmFkaXVzOjEwcHg7Y29sb3I6I2RiZWFmZTtiYWNrZ3JvdW5kOnJnYmEoMzcsOTksMjM1LC4xOCk7Zm9udC13ZWlnaHQ6ODAwO2xldHRlci1zcGFjaW5nOi4zcHg7Y3Vyc29yOnBvaW50ZXI7dHJhbnNpdGlvbjouMnMgZWFzZX0uYW1wLW5hdi1idG4uYWN0aXZle2JhY2tncm91bmQ6dmFyKC0tYW1wLWJsdWUpO2NvbG9yOiNmZmY7Ym94LXNoYWRvdzppbnNldCAwIC0ycHggMCByZ2JhKDI1NSwyNTUsMjU1LC4xNSl9LmFtcC1hcHB7bWF4LXdpZHRoOjEyMDBweDttYXJnaW46MCBhdXRvO3BhZGRpbmc6MTJweH0uYW1wLXNlY3Rpb257ZGlzcGxheTpub25lO2FuaW1hdGlvbjphbXBGYWRlIC4xOHMgZWFzZX0uYW1wLXNlY3Rpb24uYWN0aXZle2Rpc3BsYXk6YmxvY2t9QGtleWZyYW1lcyBhbXBGYWRle2Zyb217b3BhY2l0eTowO3RyYW5zZm9ybTp0cmFuc2xhdGVZKDRweCl9dG97b3BhY2l0eToxO3RyYW5zZm9ybTp0cmFuc2xhdGVZKDApfX0uYW1wLWNhcmR7YmFja2dyb3VuZDp2YXIoLS1hbXAtd2hpdGUpO2JvcmRlcjoxcHggc29saWQgdmFyKC0tYW1wLWJvcmRlcik7Ym9yZGVyLXJhZGl1czp2YXIoLS1hbXAtcmFkaXVzKTtib3gtc2hhZG93OnZhcigtLWFtcC1zaGFkb3cpO3BhZGRpbmc6MTJweDttYXJnaW4tYm90dG9tOjEycHh9LmFtcC1jYXJkIGgyLC5hbXAtY2FyZCBoM3ttYXJnaW46MCAwIDEwcHg7Zm9udC1zaXplOjFyZW19LmFtcC1ncmlke2Rpc3BsYXk6Z3JpZDtnYXA6MTBweH0uYW1wLWdyaWQtMntncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyIDFmcn0uYW1wLWdyaWQtM3tncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyIDFmciAxZnJ9QG1lZGlhIChtYXgtd2lkdGg6NjgwcHgpey5hbXAtZ3JpZC0yLC5hbXAtZ3JpZC0ze2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnJ9fS5hbXAtZmllbGR7ZGlzcGxheTpmbGV4O2ZsZXgtZGlyZWN0aW9uOmNvbHVtbjtnYXA6NnB4fS5hbXAtZmllbGQgbGFiZWx7Zm9udC1zaXplOi44NXJlbTtmb250LXdlaWdodDo2NTA7Y29sb3I6IzMzNDE1NX0uYW1wLWlucHV0LC5hbXAtc2VsZWN0LC5hbXAtdGV4dGFyZWF7d2lkdGg6MTAwJTttaW4taGVpZ2h0OjQ0cHg7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1hbXAtYm9yZGVyKTtib3JkZXItcmFkaXVzOjEwcHg7cGFkZGluZzoxMHB4IDEycHg7Zm9udC1zaXplOi45NXJlbTtiYWNrZ3JvdW5kOiNmZmY7Y29sb3I6dmFyKC0tYW1wLXNsYXRlKTtvdXRsaW5lOm5vbmV9LmFtcC1pbnB1dDpmb2N1cywuYW1wLXNlbGVjdDpmb2N1cywuYW1wLXRleHRhcmVhOmZvY3Vze2JvcmRlci1jb2xvcjp2YXIoLS1hbXAtYmx1ZSk7Ym94LXNoYWRvdzowIDAgMCAzcHggcmdiYSgzNyw5OSwyMzUsLjEyKX0uYW1wLXRleHRhcmVhe21pbi1oZWlnaHQ6MTAwcHg7cmVzaXplOnZlcnRpY2FsfS5hbXAtYWN0aW9uc3tkaXNwbGF5OmZsZXg7ZmxleC13cmFwOndyYXA7Z2FwOjhweDttYXJnaW4tdG9wOjEwcHh9LmFtcC1idG57bWluLWhlaWdodDo0NHB4O2JvcmRlcjoxcHggc29saWQgdHJhbnNwYXJlbnQ7Ym9yZGVyLXJhZGl1czoxMHB4O3BhZGRpbmc6MTBweCAxNHB4O2ZvbnQtd2VpZ2h0OjgwMDtjdXJzb3I6cG9pbnRlcjt0cmFuc2l0aW9uOi4xNXMgZWFzZX0uYW1wLWJ0bi1wcmltYXJ5e2JhY2tncm91bmQ6dmFyKC0tYW1wLWJsdWUpO2NvbG9yOiNmZmZ9LmFtcC1idG4tc2Vjb25kYXJ5e2JhY2tncm91bmQ6I2ZmZjtjb2xvcjp2YXIoLS1hbXAtc2xhdGUpO2JvcmRlci1jb2xvcjp2YXIoLS1hbXAtYm9yZGVyKX0uYW1wLWJ0bi1kYW5nZXJ7YmFja2dyb3VuZDojZmZmMWYyO2NvbG9yOnZhcigtLWFtcC1kYW5nZXIpO2JvcmRlci1jb2xvcjojZmVjZGQzfS5hbXAtYnRuLXN1Y2Nlc3N7YmFja2dyb3VuZDojZWNmZGY1O2NvbG9yOnZhcigtLWFtcC1zdWNjZXNzKTtib3JkZXItY29sb3I6I2JiZjdkMH0uYW1wLW11dGVke2NvbG9yOnZhcigtLWFtcC1tdXRlZCk7Zm9udC1zaXplOi44NXJlbX0uYW1wLXN0YXR1c3ttYXJnaW4tdG9wOjhweDtmb250LXNpemU6Ljg1cmVtO2NvbG9yOiMwZjc2NmU7bWluLWhlaWdodDoxLjFlbX0uYW1wLWxpbmVzLXRhYmxlLXdyYXB7b3ZlcmZsb3c6YXV0bztib3JkZXI6MXB4IHNvbGlkIHZhcigtLWFtcC1ib3JkZXIpO2JvcmRlci1yYWRpdXM6MTJweDtiYWNrZ3JvdW5kOiNmZmZ9LmFtcC1saW5lcy10YWJsZXt3aWR0aDoxMDAlO2JvcmRlci1jb2xsYXBzZTpjb2xsYXBzZTttaW4td2lkdGg6NTIwcHh9LmFtcC1saW5lcy10YWJsZSB0aCwuYW1wLWxpbmVzLXRhYmxlIHRke2JvcmRlci1ib3R0b206MXB4IHNvbGlkICNlMmU4ZjA7cGFkZGluZzoxMHB4IDhweDtmb250LXNpemU6LjlyZW19LmFtcC1saW5lcy10YWJsZSB0aHtiYWNrZ3JvdW5kOiNmOGZhZmM7Y29sb3I6IzMzNDE1NTtmb250LXdlaWdodDo4MDA7cG9zaXRpb246c3RpY2t5O3RvcDowfS5hbXAtbGluZS1hY3Rpb25zIGJ1dHRvbnttaW4taGVpZ2h0OjM2cHg7cGFkZGluZzo2cHggMTBweDtib3JkZXItcmFkaXVzOjhweDtib3JkZXI6MXB4IHNvbGlkICNmZWNkZDM7YmFja2dyb3VuZDojZmZmMWYyO2NvbG9yOiNiZTEyM2M7Y3Vyc29yOnBvaW50ZXI7Zm9udC13ZWlnaHQ6ODAwfS5hbXAtbGlzdC13cmFwe2Rpc3BsYXk6Z3JpZDtnYXA6MTBweH0uYW1wLXNlcnZpY2Utcm93e2Rpc3BsYXk6Z3JpZDtncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyIGF1dG8gYXV0bztnYXA6OHB4O2FsaWduLWl0ZW1zOmNlbnRlcjtwYWRkaW5nOjEwcHg7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1hbXAtYm9yZGVyKTtib3JkZXItcmFkaXVzOjEycHg7YmFja2dyb3VuZDojZmZmfS5hbXAtc2VydmljZS1uYW1le2ZvbnQtd2VpZ2h0OjcwMDt3b3JkLWJyZWFrOmJyZWFrLXdvcmR9LmFtcC1zZXJ2aWNlLXByaWNle2ZvbnQtd2VpZ2h0OjkwMDt3aGl0ZS1zcGFjZTpub3dyYXB9QG1lZGlhIChtYXgtd2lkdGg6NTQwcHgpey5hbXAtc2VydmljZS1yb3d7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmciBhdXRvfS5hbXAtc2VydmljZS1wcmljZXtncmlkLWNvbHVtbjoxLzI7Y29sb3I6dmFyKC0tYW1wLW11dGVkKTtmb250LXdlaWdodDo3MDB9LmFtcC1zZXJ2aWNlLXJvdyAuYW1wLWJ0bi1kYW5nZXJ7Z3JpZC1jb2x1bW46Mi8zO2dyaWQtcm93OjEvc3BhbiAyfX0uYW1wLXNoZWV0LXdyYXB7ZGlzcGxheTpmbGV4O2p1c3RpZnktY29udGVudDpjZW50ZXI7bWFyZ2luLXRvcDoxMnB4fS5hbXAtc2hlZXR7d2lkdGg6MTAwJTttYXgtd2lkdGg6ODYwcHg7YmFja2dyb3VuZDojZmZmO2JvcmRlcjoxcHggc29saWQgI2RiZWFmZTtib3JkZXItcmFkaXVzOjEycHg7Ym94LXNoYWRvdzowIDE4cHggNDBweCByZ2JhKDE1LDIzLDQyLC4xMCk7cGFkZGluZzoxOHB4O2NvbG9yOiMxMTE4Mjd9QG1lZGlhIChtaW4td2lkdGg6OTAwcHgpey5hbXAtc2hlZXR7bWluLWhlaWdodDoxMTIwcHh9fS5hbXAtc2hlZXQtaGVhZGVye2Rpc3BsYXk6Z3JpZDtncmlkLXRlbXBsYXRlLWNvbHVtbnM6MTEwcHggMWZyO2dhcDoxNHB4O2FsaWduLWl0ZW1zOnN0YXJ0O2JvcmRlci1ib3R0b206MnB4IHNvbGlkICNlMmU4ZjA7cGFkZGluZy1ib3R0b206MTJweDttYXJnaW4tYm90dG9tOjEycHh9QG1lZGlhIChtYXgtd2lkdGg6NjAwcHgpey5hbXAtc2hlZXQtaGVhZGVye2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnJ9fS5hbXAtbG9nby1ib3h7d2lkdGg6MTEwcHg7aGVpZ2h0OjExMHB4O2JvcmRlcjoxcHggZGFzaGVkICNjYmQ1ZTE7Ym9yZGVyLXJhZGl1czoxMnB4O2Rpc3BsYXk6ZmxleDthbGlnbi1pdGVtczpjZW50ZXI7anVzdGlmeS1jb250ZW50OmNlbnRlcjtvdmVyZmxvdzpoaWRkZW47YmFja2dyb3VuZDojZjhmYWZjO2NvbG9yOiM2NDc0OGI7Zm9udC1zaXplOi43NXJlbTt0ZXh0LWFsaWduOmNlbnRlcjtwYWRkaW5nOjhweH0uYW1wLWxvZ28tYm94IGltZ3t3aWR0aDoxMDAlO2hlaWdodDoxMDAlO29iamVjdC1maXQ6Y29udGFpbjtkaXNwbGF5OmJsb2NrO2JhY2tncm91bmQ6I2ZmZn0uYW1wLWNvbXBhbnktdGl0bGV7bWFyZ2luOjA7Y29sb3I6IzFlM2E4YTtmb250LXNpemU6MS4xNXJlbTtmb250LXdlaWdodDo5MDB9LmFtcC1jb21wYW55LW1ldGF7bWFyZ2luLXRvcDo2cHg7ZGlzcGxheTpncmlkO2dhcDoycHg7Zm9udC1zaXplOi44OHJlbTtjb2xvcjojMzc0MTUxfS5hbXAtZG9jLXRpdGxlLXJvd3tkaXNwbGF5OmZsZXg7anVzdGlmeS1jb250ZW50OnNwYWNlLWJldHdlZW47Z2FwOjEycHg7ZmxleC13cmFwOndyYXA7bWFyZ2luLWJvdHRvbToxMHB4fS5hbXAtZG9jLXRpdGxle2ZvbnQtc2l6ZToxLjFyZW07Zm9udC13ZWlnaHQ6OTAwO21hcmdpbjowfS5hbXAtdHdvLWNvbHN7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnIgMWZyO2dhcDoxMnB4O21hcmdpbi1ib3R0b206MTJweH1AbWVkaWEgKG1heC13aWR0aDo3MDBweCl7LmFtcC10d28tY29sc3tncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyfX0uYW1wLWJveHtib3JkZXI6MXB4IHNvbGlkICNlMmU4ZjA7Ym9yZGVyLXJhZGl1czoxMHB4O3BhZGRpbmc6MTBweDtiYWNrZ3JvdW5kOiNmY2ZkZmZ9LmFtcC1ib3ggaDR7bWFyZ2luOjAgMCA4cHg7Zm9udC1zaXplOi44NXJlbTtjb2xvcjojNDc1NTY5O3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTtsZXR0ZXItc3BhY2luZzouNXB4fS5hbXAtc2hlZXQtdGFibGV7d2lkdGg6MTAwJTtib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7bWFyZ2luLXRvcDo2cHg7Ym9yZGVyOjFweCBzb2xpZCAjZTJlOGYwfS5hbXAtc2hlZXQtdGFibGUgdGgsLmFtcC1zaGVldC10YWJsZSB0ZHtib3JkZXI6MXB4IHNvbGlkICNlMmU4ZjA7cGFkZGluZzo4cHg7Zm9udC1zaXplOi45cmVtfS5hbXAtc2hlZXQtdGFibGUgdGh7YmFja2dyb3VuZDojZjhmYWZjO3RleHQtYWxpZ246bGVmdH0uYW1wLXRleHQtcmlnaHR7dGV4dC1hbGlnbjpyaWdodH0uYW1wLXRvdGFsc3ttYXJnaW4tdG9wOjEycHg7bWFyZ2luLWxlZnQ6YXV0bzt3aWR0aDoxMDAlO21heC13aWR0aDozNjBweDtib3JkZXI6MXB4IHNvbGlkICNlMmU4ZjA7Ym9yZGVyLXJhZGl1czoxMHB4O292ZXJmbG93OmhpZGRlbn0uYW1wLXRvdGFscy1yb3d7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnIgYXV0bztnYXA6MTBweDtwYWRkaW5nOjEwcHggMTJweDtib3JkZXItYm90dG9tOjFweCBzb2xpZCAjZTJlOGYwO2JhY2tncm91bmQ6I2ZmZjtmb250LXNpemU6LjkycmVtfS5hbXAtdG90YWxzLXJvdzpsYXN0LWNoaWxke2JvcmRlci1ib3R0b206MDtiYWNrZ3JvdW5kOiNlZmY2ZmY7Zm9udC13ZWlnaHQ6OTAwO2NvbG9yOiMxZTNhOGE7Zm9udC1zaXplOjFyZW19LmFtcC1ub3Rlcy1lZGl0YWJsZXttYXJnaW4tdG9wOjE0cHg7Ym9yZGVyOjFweCBkYXNoZWQgI2NiZDVlMTtib3JkZXItcmFkaXVzOjEwcHg7cGFkZGluZzoxMHB4O21pbi1oZWlnaHQ6ODBweDtiYWNrZ3JvdW5kOiNmYWZjZmY7b3V0bGluZTpub25lO3doaXRlLXNwYWNlOnByZS13cmFwfS5hbXAtZm9vdGVyLXByaW50e21hcmdpbi10b3A6MTZweDtwYWRkaW5nLXRvcDo4cHg7Ym9yZGVyLXRvcDoxcHggc29saWQgI2UyZThmMDtjb2xvcjojNjQ3NDhiO2ZvbnQtc2l6ZTouOHJlbX0uYW1wLXBpbGx7ZGlzcGxheTppbmxpbmUtYmxvY2s7Zm9udC1zaXplOi43OHJlbTtib3JkZXItcmFkaXVzOjk5OXB4O3BhZGRpbmc6NHB4IDhweDtiYWNrZ3JvdW5kOiNlZmY2ZmY7Y29sb3I6IzFkNGVkODtib3JkZXI6MXB4IHNvbGlkICNiZmRiZmV9LmFtcC1pbmxpbmUtdG90YWx7Zm9udC13ZWlnaHQ6OTAwO2NvbG9yOiMxZTNhOGE7Zm9udC1zaXplOjFyZW19LmFtcC1ib3R0b20tYmFye3Bvc2l0aW9uOnN0aWNreTtib3R0b206MTBweDt6LWluZGV4OjIwO2Rpc3BsYXk6ZmxleDtqdXN0aWZ5LWNvbnRlbnQ6Y2VudGVyO3BhZGRpbmc6MTBweCAwIDB9LmFtcC1ib3R0b20taW5uZXJ7d2lkdGg6MTAwJTttYXgtd2lkdGg6ODYwcHg7ZGlzcGxheTpmbGV4O2dhcDo4cHg7ZmxleC13cmFwOndyYXA7anVzdGlmeS1jb250ZW50OmZsZXgtZW5kO2JhY2tncm91bmQ6cmdiYSgyNDEsMjQ1LDI0OSwuODUpO2JhY2tkcm9wLWZpbHRlcjpibHVyKDZweCk7Ym9yZGVyOjFweCBzb2xpZCByZ2JhKDIwMywyMTMsMjI1LC42NSk7Ym9yZGVyLXJhZGl1czoxNHB4O3BhZGRpbmc6MTBweDtib3gtc2hhZG93OjAgMTBweCAyNXB4IHJnYmEoMTUsMjMsNDIsLjA4KX0uYW1wLWJvdHRvbS1pbm5lciAuYW1wLWJ0bntmbGV4OjEgMSAxODBweH0uYW1wLW5vLXByaW50e30uYW1wLWhpZGRlbntkaXNwbGF5Om5vbmUgIWltcG9ydGFudH0uYW1wLXRvYXN0e3Bvc2l0aW9uOmZpeGVkO2JvdHRvbToyNHB4O2xlZnQ6NTAlO3RyYW5zZm9ybTp0cmFuc2xhdGVYKC01MCUpO2JhY2tncm91bmQ6IzBmMTcyYTtjb2xvcjojZmZmO3BhZGRpbmc6MTBweCAxOHB4O2JvcmRlci1yYWRpdXM6MTBweDtmb250LXNpemU6Ljg1cmVtO2ZvbnQtd2VpZ2h0OjcwMDtib3gtc2hhZG93OjAgOHB4IDI0cHggcmdiYSgxNSwyMyw0MiwuMjIpO3otaW5kZXg6MzAwMDtwb2ludGVyLWV2ZW50czpub25lO29wYWNpdHk6MDt0cmFuc2l0aW9uOm9wYWNpdHkgLjJzIGVhc2U7d2hpdGUtc3BhY2U6bm93cmFwfS5hbXAtdG9hc3Quc2hvd3tvcGFjaXR5OjF9LmFtcC1zaWduYXR1cmVzLXJvd3tkaXNwbGF5OmdyaWQ7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmciAxZnI7Z2FwOjIwcHg7bWFyZ2luLXRvcDoyNHB4fUBtZWRpYSAobWF4LXdpZHRoOjYwMHB4KXsuYW1wLXNpZ25hdHVyZXMtcm93e2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnJ9fS5hbXAtc2lnbmF0dXJlLWJveHtib3JkZXI6MXB4IHNvbGlkICNlMmU4ZjA7Ym9yZGVyLXJhZGl1czoxMHB4O3BhZGRpbmc6MTBweCAxMnB4O2JhY2tncm91bmQ6I2ZjZmRmZn0uYW1wLXNpZ25hdHVyZS1ib3ggaDR7bWFyZ2luOjAgMCA2cHg7Zm9udC1zaXplOi44MnJlbTtjb2xvcjojNDc1NTY5O3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTtsZXR0ZXItc3BhY2luZzouNXB4fS5hbXAtc2lnbmF0dXJlLW5hbWV7Zm9udC1zaXplOi45cmVtO2ZvbnQtd2VpZ2h0OjcwMDtjb2xvcjojMWUzYThhO21hcmdpbi1ib3R0b206NnB4O21pbi1oZWlnaHQ6MS4xZW19LmFtcC1zaWctY2FudmFzLXByZXZpZXd7ZGlzcGxheTpibG9jazt3aWR0aDoxMDAlO2hlaWdodDo3MHB4O2JvcmRlci1ib3R0b206MS41cHggc29saWQgIzMzNDE1NTtiYWNrZ3JvdW5kOnRyYW5zcGFyZW50O21hcmdpbi1ib3R0b206NnB4fS5hbXAtc2lnbmF0dXJlLWxhYmVse2ZvbnQtc2l6ZTouNzhyZW07Y29sb3I6IzY0NzQ4Yjt0ZXh0LWFsaWduOmNlbnRlcn0uYW1wLXNpZy1idG57ZGlzcGxheTppbmxpbmUtYmxvY2s7bWFyZ2luLXRvcDo2cHg7bWluLWhlaWdodDozNnB4O3BhZGRpbmc6NnB4IDE0cHg7Ym9yZGVyOjFweCBzb2xpZCAjYmZkYmZlO2JvcmRlci1yYWRpdXM6OHB4O2JhY2tncm91bmQ6I2VmZjZmZjtjb2xvcjojMWQ0ZWQ4O2ZvbnQtc2l6ZTouODJyZW07Zm9udC13ZWlnaHQ6ODAwO2N1cnNvcjpwb2ludGVyfS5hbXAtc2lnLWJ0bjpob3ZlcntiYWNrZ3JvdW5kOiNkYmVhZmV9LmFtcC1zaWctbW9kYWx7ZGlzcGxheTpub25lO3Bvc2l0aW9uOmZpeGVkO2luc2V0OjA7ei1pbmRleDoyMDAwO2JhY2tncm91bmQ6cmdiYSgxNSwyMyw0MiwuNTUpO2JhY2tkcm9wLWZpbHRlcjpibHVyKDNweCk7YWxpZ24taXRlbXM6Y2VudGVyO2p1c3RpZnktY29udGVudDpjZW50ZXJ9LmFtcC1zaWctbW9kYWwub3BlbntkaXNwbGF5OmZsZXh9LmFtcC1zaWctbW9kYWwtaW5uZXJ7YmFja2dyb3VuZDojZmZmO2JvcmRlci1yYWRpdXM6MTZweDtib3gtc2hhZG93OjAgMjRweCA2MHB4IHJnYmEoMTUsMjMsNDIsLjIyKTtwYWRkaW5nOjIwcHg7d2lkdGg6bWluKDk2dncsNTYwcHgpO2Rpc3BsYXk6ZmxleDtmbGV4LWRpcmVjdGlvbjpjb2x1bW47Z2FwOjEycHh9LmFtcC1zaWctbW9kYWwtdGl0bGV7Zm9udC1zaXplOjFyZW07Zm9udC13ZWlnaHQ6OTAwO2NvbG9yOiMwZjE3MmE7bWFyZ2luOjB9LmFtcC1zaWctbW9kYWwtc3VidGl0bGV7Zm9udC1zaXplOi44MnJlbTtjb2xvcjojNjQ3NDhiO21hcmdpbjowfS5hbXAtc2lnLXBhZHtkaXNwbGF5OmJsb2NrO3dpZHRoOjEwMCU7aGVpZ2h0OjIwMHB4O2JvcmRlcjoycHggZGFzaGVkICNjYmQ1ZTE7Ym9yZGVyLXJhZGl1czoxMnB4O2JhY2tncm91bmQ6I2Y4ZmFmYztjdXJzb3I6Y3Jvc3NoYWlyO3RvdWNoLWFjdGlvbjpub25lfS5hbXAtc2lnLXBhZC5oYXMtc2lne2JvcmRlci1jb2xvcjojMjU2M2ViO2JhY2tncm91bmQ6I2ZmZn0uYW1wLXNpZy1tb2RhbC1hY3Rpb25ze2Rpc3BsYXk6ZmxleDtnYXA6OHB4O2ZsZXgtd3JhcDp3cmFwO2p1c3RpZnktY29udGVudDpmbGV4LWVuZH0uYW1wLWNmZy1zaWctcGFke2Rpc3BsYXk6YmxvY2s7d2lkdGg6MTAwJTtoZWlnaHQ6MTYwcHg7Ym9yZGVyOjJweCBkYXNoZWQgI2NiZDVlMTtib3JkZXItcmFkaXVzOjEycHg7YmFja2dyb3VuZDojZjhmYWZjO2N1cnNvcjpjcm9zc2hhaXI7dG91Y2gtYWN0aW9uOm5vbmV9LmFtcC1jZmctc2lnLXBhZC5oYXMtc2lne2JvcmRlci1jb2xvcjojMjU2M2ViO2JhY2tncm91bmQ6I2ZmZn1AbWVkaWEgcHJpbnR7QHBhZ2V7c2l6ZTpBNDttYXJnaW46MTBtbX1ib2R5e2JhY2tncm91bmQ6I2ZmZiAhaW1wb3J0YW50O3BhZGRpbmctdG9wOjAgIWltcG9ydGFudH0uYW1wLW5hdiwuYW1wLW5vLXByaW50e2Rpc3BsYXk6bm9uZSAhaW1wb3J0YW50fS5hbXAtc2VjdGlvbntkaXNwbGF5Om5vbmUgIWltcG9ydGFudH1ib2R5W2RhdGEtcHJpbnQtbW9kZT0iYnVkZ2V0Il0gI2FtcFNlY3Rpb25OdWV2b3tkaXNwbGF5OmJsb2NrICFpbXBvcnRhbnR9Ym9keVtkYXRhLXByaW50LW1vZGU9ImxpYnJhcnkiXSAjYW1wU2VjdGlvbkxpc3Rhe2Rpc3BsYXk6YmxvY2sgIWltcG9ydGFudH1ib2R5W2RhdGEtcHJpbnQtbW9kZT0iY29uZmlnIl0gI2FtcFNlY3Rpb25Db25maWd7ZGlzcGxheTpibG9jayAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJidWRnZXQiXSAjYW1wU2VjdGlvbk51ZXZvPip7ZGlzcGxheTpub25lICFpbXBvcnRhbnR9Ym9keVtkYXRhLXByaW50LW1vZGU9ImJ1ZGdldCJdICNhbXBQcmludEJ1ZGdldEhvc3R7ZGlzcGxheTpibG9jayAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJsaWJyYXJ5Il0gI2FtcFNlY3Rpb25MaXN0YT4qe2Rpc3BsYXk6bm9uZSAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJsaWJyYXJ5Il0gI2FtcFByaW50TGlicmFyeUhvc3R7ZGlzcGxheTpibG9jayAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJjb25maWciXSAjYW1wU2VjdGlvbkNvbmZpZz4qe2Rpc3BsYXk6bm9uZSAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJjb25maWciXSAjYW1wUHJpbnRDb25maWdIb3N0e2Rpc3BsYXk6YmxvY2sgIWltcG9ydGFudH0uYW1wLWFwcHtwYWRkaW5nOjAgIWltcG9ydGFudDttYXJnaW46MCAhaW1wb3J0YW50O21heC13aWR0aDpub25lICFpbXBvcnRhbnR9LmFtcC1zaGVldC13cmFwe21hcmdpbjowICFpbXBvcnRhbnQ7ZGlzcGxheTpibG9jayAhaW1wb3J0YW50fS5hbXAtc2hlZXR7Ym94LXNoYWRvdzpub25lICFpbXBvcnRhbnQ7Ym9yZGVyOm5vbmUgIWltcG9ydGFudDtib3JkZXItcmFkaXVzOjAgIWltcG9ydGFudDttYXgtd2lkdGg6bm9uZSAhaW1wb3J0YW50O3dpZHRoOjEwMCUgIWltcG9ydGFudDtwYWRkaW5nOjAgIWltcG9ydGFudDttaW4taGVpZ2h0OmF1dG8gIWltcG9ydGFudH0uYW1wLW5vdGVzLWVkaXRhYmxle2JvcmRlcjoxcHggc29saWQgI2RkZCAhaW1wb3J0YW50O2JhY2tncm91bmQ6I2ZmZiAhaW1wb3J0YW50fS5hbXAtc2lnbmF0dXJlLWJveHtiYWNrZ3JvdW5kOiNmZmYgIWltcG9ydGFudH0uYW1wLXNpZy1jYW52YXMtcHJldmlld3tib3JkZXItYm90dG9tOjEuNXB4IHNvbGlkICMzMzQxNTUgIWltcG9ydGFudH0uYW1wLXNpZy1idG57ZGlzcGxheTpub25lICFpbXBvcnRhbnR9LmFtcC1zaWctbW9kYWx7ZGlzcGxheTpub25lICFpbXBvcnRhbnR9fQouYW1wLWNhcmQtaGR7ZGlzcGxheTpmbGV4O2p1c3RpZnktY29udGVudDpzcGFjZS1iZXR3ZWVuO2FsaWduLWl0ZW1zOmNlbnRlcjtjdXJzb3I6cG9pbnRlcjt1c2VyLXNlbGVjdDpub25lOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTtnYXA6OHB4O21hcmdpbi1ib3R0b206MDt9Ci5hbXAtY2FyZC1oZCBoMiwuYW1wLWNhcmQtaGQgaDN7bWFyZ2luOjA7ZmxleDoxO30KLmFtcC1jYXJkLWJke21hcmdpbi10b3A6MTBweDt9Ci5hbXAtY2FyZC5hbXAtY29sbGFwc2VkIC5hbXAtY2FyZC1iZHtkaXNwbGF5Om5vbmU7fQouYW1wLWNoZXZyb257Zm9udC1zaXplOi43NXJlbTtjb2xvcjojOTRhM2I4O3RyYW5zaXRpb246dHJhbnNmb3JtIC4ycyBlYXNlO2ZsZXgtc2hyaW5rOjA7bGluZS1oZWlnaHQ6MTt9Ci5hbXAtY2FyZC5hbXAtY29sbGFwc2VkIC5hbXAtY2hldnJvbnt0cmFuc2Zvcm06cm90YXRlKC05MGRlZyk7fQouYW1wLXBhc3RlLWFyZWF7d2lkdGg6MTAwJTttaW4taGVpZ2h0OjgwcHg7Ym9yZGVyOjJweCBkYXNoZWQgI2JmZGJmZTtib3JkZXItcmFkaXVzOjEwcHg7cGFkZGluZzoxMHB4IDEycHg7Zm9udC1zaXplOi45cmVtO2JhY2tncm91bmQ6I2Y4ZmFmZjtjb2xvcjojMzM0MTU1O291dGxpbmU6bm9uZTtyZXNpemU6dmVydGljYWw7Zm9udC1mYW1pbHk6aW5oZXJpdDt0cmFuc2l0aW9uOmJvcmRlci1jb2xvciAuMnM7fQouYW1wLXBhc3RlLWFyZWE6Zm9jdXN7Ym9yZGVyLWNvbG9yOiMyNTYzZWI7YmFja2dyb3VuZDojZmZmO30KLmFtcC1wYXJzZS1yZXN1bHR7ZGlzcGxheTpub25lO21hcmdpbi10b3A6OHB4O3BhZGRpbmc6MTBweCAxMnB4O2JhY2tncm91bmQ6I2YwZmRmNDtib3JkZXI6MXB4IHNvbGlkICNiYmY3ZDA7Ym9yZGVyLXJhZGl1czoxMHB4O2ZvbnQtc2l6ZTouODVyZW07Y29sb3I6IzE2NjUzNDtnYXA6NHB4O2ZsZXgtZGlyZWN0aW9uOmNvbHVtbjt9Ci5hbXAtcGFyc2UtcmVzdWx0LnNob3d7ZGlzcGxheTpmbGV4O30KLmFtcC1wYXJzZS1yb3d7ZGlzcGxheTpmbGV4O2dhcDo2cHg7YWxpZ24taXRlbXM6YmFzZWxpbmU7fQouYW1wLXBhcnNlLWxhYmVse2ZvbnQtd2VpZ2h0OjcwMDttaW4td2lkdGg6ODBweDtmbGV4LXNocmluazowO30KLmFtcC1wYXJzZS12YWx7Y29sb3I6IzBmMTcyYTt3b3JkLWJyZWFrOmJyZWFrLXdvcmQ7fQovKiA9PT0gQUNDT1JESU9OID09PSAqLwouYW1wLWNhcmQtaGR7ZGlzcGxheTpmbGV4O2p1c3RpZnktY29udGVudDpzcGFjZS1iZXR3ZWVuO2FsaWduLWl0ZW1zOmNlbnRlcjtjdXJzb3I6cG9pbnRlcjt1c2VyLXNlbGVjdDpub25lO3BhZGRpbmc6MnB4IDAgMTBweDt9Ci5hbXAtY2FyZC1oZCBoMiwuYW1wLWNhcmQtaGQgaDN7bWFyZ2luOjA7cG9pbnRlci1ldmVudHM6bm9uZTt9Ci5hbXAtY2FyZC5jb2xsYXBzZWQgLmFtcC1jYXJkLWJke2Rpc3BsYXk6bm9uZTt9Ci5hbXAtY2FyZC5jb2xsYXBzZWQgLmFtcC1jYXJkLWhke3BhZGRpbmctYm90dG9tOjA7fQouYW1wLWNoZXZyb257Zm9udC1zaXplOi43NXJlbTtjb2xvcjojNjQ3NDhiO3RyYW5zaXRpb246dHJhbnNmb3JtIC4ycztkaXNwbGF5OmlubGluZS1ibG9jazt9Ci5hbXAtY2FyZC5jb2xsYXBzZWQgLmFtcC1jaGV2cm9ue3RyYW5zZm9ybTpyb3RhdGUoLTkwZGVnKTt9Ci8qID09PSBQQVNURSBQQVJTRVIgPT09ICovCi5hbXAtcGFzdGUtYXJlYXt3aWR0aDoxMDAlO21pbi1oZWlnaHQ6ODBweDtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWFtcC1ib3JkZXIpO2JvcmRlci1yYWRpdXM6MTBweDtwYWRkaW5nOjEwcHggMTJweDtmb250LXNpemU6Ljg4cmVtO2JhY2tncm91bmQ6I2ZmZjtjb2xvcjp2YXIoLS1hbXAtc2xhdGUpO291dGxpbmU6bm9uZTtyZXNpemU6dmVydGljYWw7Zm9udC1mYW1pbHk6aW5oZXJpdDt9Ci5hbXAtcGFzdGUtYXJlYTpmb2N1c3tib3JkZXItY29sb3I6dmFyKC0tYW1wLWJsdWUpO2JveC1zaGFkb3c6MCAwIDAgM3B4IHJnYmEoMzcsOTksMjM1LC4xMik7fQouYW1wLXBhcnNlLXJlc3VsdHttYXJnaW4tdG9wOjEwcHg7ZGlzcGxheTpncmlkO2dhcDo2cHg7fQouYW1wLXBhcnNlLXJvd3tkaXNwbGF5OmdyaWQ7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjEwMHB4IDFmcjtnYXA6OHB4O2FsaWduLWl0ZW1zOmNlbnRlcjtmb250LXNpemU6Ljg4cmVtO2JvcmRlcjoxcHggc29saWQgI2UyZThmMDtib3JkZXItcmFkaXVzOjhweDtwYWRkaW5nOjZweCAxMHB4O2JhY2tncm91bmQ6I2Y4ZmFmYzt9Ci5hbXAtcGFyc2UtbGJse2ZvbnQtd2VpZ2h0OjcwMDttaW4td2lkdGg6ODBweDtmbGV4LXNocmluazowO30KLmFtcC1wYXJzZS12YWx7Y29sb3I6IzBmMTcyYTt3b3JkLWJyZWFrOmJyZWFrLXdvcmQ7fQo=";
+        var b64 = "OnJvb3R7LS1hbXAtYmx1ZTojMjU2M2ViOy0tYW1wLXNsYXRlOiMwZjE3MmE7LS1hbXAtYmc6I2YxZjVmOTstLWFtcC13aGl0ZTojZmZmZmZmOy0tYW1wLWJvcmRlcjojY2JkNWUxOy0tYW1wLW11dGVkOiM2NDc0OGI7LS1hbXAtZGFuZ2VyOiNkYzI2MjY7LS1hbXAtc3VjY2VzczojMTZhMzRhOy0tYW1wLXNoYWRvdzowIDEwcHggMjVweCByZ2JhKDE1LDIzLDQyLC4wOCk7LS1hbXAtcmFkaXVzOjEycHh9Kntib3gtc2l6aW5nOmJvcmRlci1ib3h9aHRtbCxib2R5e21hcmdpbjowO3BhZGRpbmc6MH1ib2R5e2ZvbnQtZmFtaWx5OnN5c3RlbS11aSwtYXBwbGUtc3lzdGVtLFNlZ29lIFVJLFJvYm90byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZjtiYWNrZ3JvdW5kOnZhcigtLWFtcC1iZyk7Y29sb3I6dmFyKC0tYW1wLXNsYXRlKTtsaW5lLWhlaWdodDoxLjM1Oy13ZWJraXQtZm9udC1zbW9vdGhpbmc6YW50aWFsaWFzZWQ7cGFkZGluZy10b3A6NjhweH0uYW1wLW5hdntwb3NpdGlvbjpmaXhlZDt0b3A6MDtsZWZ0OjA7cmlnaHQ6MDt6LWluZGV4OjEwMDA7YmFja2dyb3VuZDp2YXIoLS1hbXAtc2xhdGUpO2JvcmRlci1ib3R0b206MXB4IHNvbGlkIHJnYmEoMjU1LDI1NSwyNTUsLjA4KTtib3gtc2hhZG93OjAgNnB4IDIwcHggcmdiYSgxNSwyMyw0MiwuMTgpfS5hbXAtbmF2LWlubmVye21heC13aWR0aDoxMjAwcHg7bWFyZ2luOjAgYXV0bztkaXNwbGF5OmdyaWQ7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOnJlcGVhdCgzLDFmcik7Z2FwOjhweDtwYWRkaW5nOjEwcHh9LmFtcC1uYXYtYnRue21pbi1oZWlnaHQ6NDRweDtib3JkZXI6MDtib3JkZXItcmFkaXVzOjEwcHg7Y29sb3I6I2RiZWFmZTtiYWNrZ3JvdW5kOnJnYmEoMzcsOTksMjM1LC4xOCk7Zm9udC13ZWlnaHQ6ODAwO2xldHRlci1zcGFjaW5nOi4zcHg7Y3Vyc29yOnBvaW50ZXI7dHJhbnNpdGlvbjouMnMgZWFzZX0uYW1wLW5hdi1idG4uYWN0aXZle2JhY2tncm91bmQ6dmFyKC0tYW1wLWJsdWUpO2NvbG9yOiNmZmY7Ym94LXNoYWRvdzppbnNldCAwIC0ycHggMCByZ2JhKDI1NSwyNTUsMjU1LC4xNSl9LmFtcC1hcHB7bWF4LXdpZHRoOjEyMDBweDttYXJnaW46MCBhdXRvO3BhZGRpbmc6MTJweH0uYW1wLXNlY3Rpb257ZGlzcGxheTpub25lO2FuaW1hdGlvbjphbXBGYWRlIC4xOHMgZWFzZX0uYW1wLXNlY3Rpb24uYWN0aXZle2Rpc3BsYXk6YmxvY2t9QGtleWZyYW1lcyBhbXBGYWRle2Zyb217b3BhY2l0eTowO3RyYW5zZm9ybTp0cmFuc2xhdGVZKDRweCl9dG97b3BhY2l0eToxO3RyYW5zZm9ybTp0cmFuc2xhdGVZKDApfX0uYW1wLWNhcmR7YmFja2dyb3VuZDp2YXIoLS1hbXAtd2hpdGUpO2JvcmRlcjoxcHggc29saWQgdmFyKC0tYW1wLWJvcmRlcik7Ym9yZGVyLXJhZGl1czp2YXIoLS1hbXAtcmFkaXVzKTtib3gtc2hhZG93OnZhcigtLWFtcC1zaGFkb3cpO3BhZGRpbmc6MTJweDttYXJnaW4tYm90dG9tOjEycHh9LmFtcC1jYXJkIGgyLC5hbXAtY2FyZCBoM3ttYXJnaW46MCAwIDEwcHg7Zm9udC1zaXplOjFyZW19LmFtcC1ncmlke2Rpc3BsYXk6Z3JpZDtnYXA6MTBweH0uYW1wLWdyaWQtMntncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyIDFmcn0uYW1wLWdyaWQtM3tncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyIDFmciAxZnJ9QG1lZGlhIChtYXgtd2lkdGg6NjgwcHgpey5hbXAtZ3JpZC0yLC5hbXAtZ3JpZC0ze2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnJ9fS5hbXAtZmllbGR7ZGlzcGxheTpmbGV4O2ZsZXgtZGlyZWN0aW9uOmNvbHVtbjtnYXA6NnB4fS5hbXAtZmllbGQgbGFiZWx7Zm9udC1zaXplOi44NXJlbTtmb250LXdlaWdodDo2NTA7Y29sb3I6IzMzNDE1NX0uYW1wLWlucHV0LC5hbXAtc2VsZWN0LC5hbXAtdGV4dGFyZWF7d2lkdGg6MTAwJTttaW4taGVpZ2h0OjQ0cHg7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1hbXAtYm9yZGVyKTtib3JkZXItcmFkaXVzOjEwcHg7cGFkZGluZzoxMHB4IDEycHg7Zm9udC1zaXplOi45NXJlbTtiYWNrZ3JvdW5kOiNmZmY7Y29sb3I6dmFyKC0tYW1wLXNsYXRlKTtvdXRsaW5lOm5vbmV9LmFtcC1pbnB1dDpmb2N1cywuYW1wLXNlbGVjdDpmb2N1cywuYW1wLXRleHRhcmVhOmZvY3Vze2JvcmRlci1jb2xvcjp2YXIoLS1hbXAtYmx1ZSk7Ym94LXNoYWRvdzowIDAgMCAzcHggcmdiYSgzNyw5OSwyMzUsLjEyKX0uYW1wLXRleHRhcmVhe21pbi1oZWlnaHQ6MTAwcHg7cmVzaXplOnZlcnRpY2FsfS5hbXAtYWN0aW9uc3tkaXNwbGF5OmZsZXg7ZmxleC13cmFwOndyYXA7Z2FwOjhweDttYXJnaW4tdG9wOjEwcHh9LmFtcC1idG57bWluLWhlaWdodDo0NHB4O2JvcmRlcjoxcHggc29saWQgdHJhbnNwYXJlbnQ7Ym9yZGVyLXJhZGl1czoxMHB4O3BhZGRpbmc6MTBweCAxNHB4O2ZvbnQtd2VpZ2h0OjgwMDtjdXJzb3I6cG9pbnRlcjt0cmFuc2l0aW9uOi4xNXMgZWFzZX0uYW1wLWJ0bi1wcmltYXJ5e2JhY2tncm91bmQ6dmFyKC0tYW1wLWJsdWUpO2NvbG9yOiNmZmZ9LmFtcC1idG4tc2Vjb25kYXJ5e2JhY2tncm91bmQ6I2ZmZjtjb2xvcjp2YXIoLS1hbXAtc2xhdGUpO2JvcmRlci1jb2xvcjp2YXIoLS1hbXAtYm9yZGVyKX0uYW1wLWJ0bi1kYW5nZXJ7YmFja2dyb3VuZDojZmZmMWYyO2NvbG9yOnZhcigtLWFtcC1kYW5nZXIpO2JvcmRlci1jb2xvcjojZmVjZGQzfS5hbXAtYnRuLXN1Y2Nlc3N7YmFja2dyb3VuZDojZWNmZGY1O2NvbG9yOnZhcigtLWFtcC1zdWNjZXNzKTtib3JkZXItY29sb3I6I2JiZjdkMH0uYW1wLW11dGVke2NvbG9yOnZhcigtLWFtcC1tdXRlZCk7Zm9udC1zaXplOi44NXJlbX0uYW1wLXN0YXR1c3ttYXJnaW4tdG9wOjhweDtmb250LXNpemU6Ljg1cmVtO2NvbG9yOiMwZjc2NmU7bWluLWhlaWdodDoxLjFlbX0uYW1wLWxpbmVzLXRhYmxlLXdyYXB7b3ZlcmZsb3c6YXV0bztib3JkZXI6MXB4IHNvbGlkIHZhcigtLWFtcC1ib3JkZXIpO2JvcmRlci1yYWRpdXM6MTJweDtiYWNrZ3JvdW5kOiNmZmZ9LmFtcC1saW5lcy10YWJsZXt3aWR0aDoxMDAlO2JvcmRlci1jb2xsYXBzZTpjb2xsYXBzZTttaW4td2lkdGg6NTIwcHh9LmFtcC1saW5lcy10YWJsZSB0aCwuYW1wLWxpbmVzLXRhYmxlIHRke2JvcmRlci1ib3R0b206MXB4IHNvbGlkICNlMmU4ZjA7cGFkZGluZzoxMHB4IDhweDtmb250LXNpemU6LjlyZW19LmFtcC1saW5lcy10YWJsZSB0aHtiYWNrZ3JvdW5kOiNmOGZhZmM7Y29sb3I6IzMzNDE1NTtmb250LXdlaWdodDo4MDA7cG9zaXRpb246c3RpY2t5O3RvcDowfS5hbXAtbGluZS1hY3Rpb25zIGJ1dHRvbnttaW4taGVpZ2h0OjM2cHg7cGFkZGluZzo2cHggMTBweDtib3JkZXItcmFkaXVzOjhweDtib3JkZXI6MXB4IHNvbGlkICNmZWNkZDM7YmFja2dyb3VuZDojZmZmMWYyO2NvbG9yOiNiZTEyM2M7Y3Vyc29yOnBvaW50ZXI7Zm9udC13ZWlnaHQ6ODAwfS5hbXAtbGlzdC13cmFwe2Rpc3BsYXk6Z3JpZDtnYXA6MTBweH0uYW1wLXNlcnZpY2Utcm93e2Rpc3BsYXk6Z3JpZDtncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyIGF1dG8gYXV0bztnYXA6OHB4O2FsaWduLWl0ZW1zOmNlbnRlcjtwYWRkaW5nOjEwcHg7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1hbXAtYm9yZGVyKTtib3JkZXItcmFkaXVzOjEycHg7YmFja2dyb3VuZDojZmZmfS5hbXAtc2VydmljZS1uYW1le2ZvbnQtd2VpZ2h0OjcwMDt3b3JkLWJyZWFrOmJyZWFrLXdvcmR9LmFtcC1zZXJ2aWNlLXByaWNle2ZvbnQtd2VpZ2h0OjkwMDt3aGl0ZS1zcGFjZTpub3dyYXB9QG1lZGlhIChtYXgtd2lkdGg6NTQwcHgpey5hbXAtc2VydmljZS1yb3d7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmciBhdXRvfS5hbXAtc2VydmljZS1wcmljZXtncmlkLWNvbHVtbjoxLzI7Y29sb3I6dmFyKC0tYW1wLW11dGVkKTtmb250LXdlaWdodDo3MDB9LmFtcC1zZXJ2aWNlLXJvdyAuYW1wLWJ0bi1kYW5nZXJ7Z3JpZC1jb2x1bW46Mi8zO2dyaWQtcm93OjEvc3BhbiAyfX0uYW1wLXNoZWV0LXdyYXB7ZGlzcGxheTpmbGV4O2p1c3RpZnktY29udGVudDpjZW50ZXI7bWFyZ2luLXRvcDoxMnB4fS5hbXAtc2hlZXR7d2lkdGg6MTAwJTttYXgtd2lkdGg6ODYwcHg7YmFja2dyb3VuZDojZmZmO2JvcmRlcjoxcHggc29saWQgI2RiZWFmZTtib3JkZXItcmFkaXVzOjEycHg7Ym94LXNoYWRvdzowIDE4cHggNDBweCByZ2JhKDE1LDIzLDQyLC4xMCk7cGFkZGluZzoxOHB4O2NvbG9yOiMxMTE4Mjd9QG1lZGlhIChtaW4td2lkdGg6OTAwcHgpey5hbXAtc2hlZXR7bWluLWhlaWdodDoxMTIwcHh9fS5hbXAtc2hlZXQtaGVhZGVye2Rpc3BsYXk6Z3JpZDtncmlkLXRlbXBsYXRlLWNvbHVtbnM6MTEwcHggMWZyO2dhcDoxNHB4O2FsaWduLWl0ZW1zOnN0YXJ0O2JvcmRlci1ib3R0b206MnB4IHNvbGlkICNlMmU4ZjA7cGFkZGluZy1ib3R0b206MTJweDttYXJnaW4tYm90dG9tOjEycHh9QG1lZGlhIChtYXgtd2lkdGg6NjAwcHgpey5hbXAtc2hlZXQtaGVhZGVye2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnJ9fS5hbXAtbG9nby1ib3h7d2lkdGg6MTEwcHg7aGVpZ2h0OjExMHB4O2JvcmRlcjoxcHggZGFzaGVkICNjYmQ1ZTE7Ym9yZGVyLXJhZGl1czoxMnB4O2Rpc3BsYXk6ZmxleDthbGlnbi1pdGVtczpjZW50ZXI7anVzdGlmeS1jb250ZW50OmNlbnRlcjtvdmVyZmxvdzpoaWRkZW47YmFja2dyb3VuZDojZjhmYWZjO2NvbG9yOiM2NDc0OGI7Zm9udC1zaXplOi43NXJlbTt0ZXh0LWFsaWduOmNlbnRlcjtwYWRkaW5nOjhweH0uYW1wLWxvZ28tYm94IGltZ3t3aWR0aDoxMDAlO2hlaWdodDoxMDAlO29iamVjdC1maXQ6Y29udGFpbjtkaXNwbGF5OmJsb2NrO2JhY2tncm91bmQ6I2ZmZn0uYW1wLWNvbXBhbnktdGl0bGV7bWFyZ2luOjA7Y29sb3I6IzFlM2E4YTtmb250LXNpemU6MS4xNXJlbTtmb250LXdlaWdodDo5MDB9LmFtcC1jb21wYW55LW1ldGF7bWFyZ2luLXRvcDo2cHg7ZGlzcGxheTpncmlkO2dhcDoycHg7Zm9udC1zaXplOi44OHJlbTtjb2xvcjojMzc0MTUxfS5hbXAtZG9jLXRpdGxlLXJvd3tkaXNwbGF5OmZsZXg7anVzdGlmeS1jb250ZW50OnNwYWNlLWJldHdlZW47Z2FwOjEycHg7ZmxleC13cmFwOndyYXA7bWFyZ2luLWJvdHRvbToxMHB4fS5hbXAtZG9jLXRpdGxle2ZvbnQtc2l6ZToxLjFyZW07Zm9udC13ZWlnaHQ6OTAwO21hcmdpbjowfS5hbXAtdHdvLWNvbHN7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnIgMWZyO2dhcDoxMnB4O21hcmdpbi1ib3R0b206MTJweH1AbWVkaWEgKG1heC13aWR0aDo3MDBweCl7LmFtcC10d28tY29sc3tncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyfX0uYW1wLWJveHtib3JkZXI6MXB4IHNvbGlkICNlMmU4ZjA7Ym9yZGVyLXJhZGl1czoxMHB4O3BhZGRpbmc6MTBweDtiYWNrZ3JvdW5kOiNmY2ZkZmZ9LmFtcC1ib3ggaDR7bWFyZ2luOjAgMCA4cHg7Zm9udC1zaXplOi44NXJlbTtjb2xvcjojNDc1NTY5O3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTtsZXR0ZXItc3BhY2luZzouNXB4fS5hbXAtc2hlZXQtdGFibGV7d2lkdGg6MTAwJTtib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7bWFyZ2luLXRvcDo2cHg7Ym9yZGVyOjFweCBzb2xpZCAjZTJlOGYwfS5hbXAtc2hlZXQtdGFibGUgdGgsLmFtcC1zaGVldC10YWJsZSB0ZHtib3JkZXI6MXB4IHNvbGlkICNlMmU4ZjA7cGFkZGluZzo4cHg7Zm9udC1zaXplOi45cmVtfS5hbXAtc2hlZXQtdGFibGUgdGh7YmFja2dyb3VuZDojZjhmYWZjO3RleHQtYWxpZ246bGVmdH0uYW1wLXRleHQtcmlnaHR7dGV4dC1hbGlnbjpyaWdodH0uYW1wLXRvdGFsc3ttYXJnaW4tdG9wOjEycHg7bWFyZ2luLWxlZnQ6YXV0bzt3aWR0aDoxMDAlO21heC13aWR0aDozNjBweDtib3JkZXI6MXB4IHNvbGlkICNlMmU4ZjA7Ym9yZGVyLXJhZGl1czoxMHB4O292ZXJmbG93OmhpZGRlbn0uYW1wLXRvdGFscy1yb3d7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnIgYXV0bztnYXA6MTBweDtwYWRkaW5nOjEwcHggMTJweDtib3JkZXItYm90dG9tOjFweCBzb2xpZCAjZTJlOGYwO2JhY2tncm91bmQ6I2ZmZjtmb250LXNpemU6LjkycmVtfS5hbXAtdG90YWxzLXJvdzpsYXN0LWNoaWxke2JvcmRlci1ib3R0b206MDtiYWNrZ3JvdW5kOiNlZmY2ZmY7Zm9udC13ZWlnaHQ6OTAwO2NvbG9yOiMxZTNhOGE7Zm9udC1zaXplOjFyZW19LmFtcC1ub3Rlcy1lZGl0YWJsZXttYXJnaW4tdG9wOjE0cHg7Ym9yZGVyOjFweCBkYXNoZWQgI2NiZDVlMTtib3JkZXItcmFkaXVzOjEwcHg7cGFkZGluZzoxMHB4O21pbi1oZWlnaHQ6ODBweDtiYWNrZ3JvdW5kOiNmYWZjZmY7b3V0bGluZTpub25lO3doaXRlLXNwYWNlOnByZS13cmFwfS5hbXAtZm9vdGVyLXByaW50e21hcmdpbi10b3A6MTZweDtwYWRkaW5nLXRvcDo4cHg7Ym9yZGVyLXRvcDoxcHggc29saWQgI2UyZThmMDtjb2xvcjojNjQ3NDhiO2ZvbnQtc2l6ZTouOHJlbX0uYW1wLXBpbGx7ZGlzcGxheTppbmxpbmUtYmxvY2s7Zm9udC1zaXplOi43OHJlbTtib3JkZXItcmFkaXVzOjk5OXB4O3BhZGRpbmc6NHB4IDhweDtiYWNrZ3JvdW5kOiNlZmY2ZmY7Y29sb3I6IzFkNGVkODtib3JkZXI6MXB4IHNvbGlkICNiZmRiZmV9LmFtcC1pbmxpbmUtdG90YWx7Zm9udC13ZWlnaHQ6OTAwO2NvbG9yOiMxZTNhOGE7Zm9udC1zaXplOjFyZW19LmFtcC1ib3R0b20tYmFye3Bvc2l0aW9uOnN0aWNreTtib3R0b206MTBweDt6LWluZGV4OjIwO2Rpc3BsYXk6ZmxleDtqdXN0aWZ5LWNvbnRlbnQ6Y2VudGVyO3BhZGRpbmc6MTBweCAwIDB9LmFtcC1ib3R0b20taW5uZXJ7d2lkdGg6MTAwJTttYXgtd2lkdGg6ODYwcHg7ZGlzcGxheTpmbGV4O2dhcDo4cHg7ZmxleC13cmFwOndyYXA7anVzdGlmeS1jb250ZW50OmZsZXgtZW5kO2JhY2tncm91bmQ6cmdiYSgyNDEsMjQ1LDI0OSwuODUpO2JhY2tkcm9wLWZpbHRlcjpibHVyKDZweCk7Ym9yZGVyOjFweCBzb2xpZCByZ2JhKDIwMywyMTMsMjI1LC42NSk7Ym9yZGVyLXJhZGl1czoxNHB4O3BhZGRpbmc6MTBweDtib3gtc2hhZG93OjAgMTBweCAyNXB4IHJnYmEoMTUsMjMsNDIsLjA4KX0uYW1wLWJvdHRvbS1pbm5lciAuYW1wLWJ0bntmbGV4OjEgMSAxODBweH0uYW1wLW5vLXByaW50e30uYW1wLWhpZGRlbntkaXNwbGF5Om5vbmUgIWltcG9ydGFudH0uYW1wLXRvYXN0e3Bvc2l0aW9uOmZpeGVkO2JvdHRvbToyNHB4O2xlZnQ6NTAlO3RyYW5zZm9ybTp0cmFuc2xhdGVYKC01MCUpO2JhY2tncm91bmQ6IzBmMTcyYTtjb2xvcjojZmZmO3BhZGRpbmc6MTBweCAxOHB4O2JvcmRlci1yYWRpdXM6MTBweDtmb250LXNpemU6Ljg1cmVtO2ZvbnQtd2VpZ2h0OjcwMDtib3gtc2hhZG93OjAgOHB4IDI0cHggcmdiYSgxNSwyMyw0MiwuMjIpO3otaW5kZXg6MzAwMDtwb2ludGVyLWV2ZW50czpub25lO29wYWNpdHk6MDt0cmFuc2l0aW9uOm9wYWNpdHkgLjJzIGVhc2U7d2hpdGUtc3BhY2U6bm93cmFwfS5hbXAtdG9hc3Quc2hvd3tvcGFjaXR5OjF9LmFtcC1zaWduYXR1cmVzLXJvd3tkaXNwbGF5OmdyaWQ7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmciAxZnI7Z2FwOjIwcHg7bWFyZ2luLXRvcDoyNHB4fUBtZWRpYSAobWF4LXdpZHRoOjYwMHB4KXsuYW1wLXNpZ25hdHVyZXMtcm93e2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnJ9fS5hbXAtc2lnbmF0dXJlLWJveHtib3JkZXI6MXB4IHNvbGlkICNlMmU4ZjA7Ym9yZGVyLXJhZGl1czoxMHB4O3BhZGRpbmc6MTBweCAxMnB4O2JhY2tncm91bmQ6I2ZjZmRmZn0uYW1wLXNpZ25hdHVyZS1ib3ggaDR7bWFyZ2luOjAgMCA2cHg7Zm9udC1zaXplOi44MnJlbTtjb2xvcjojNDc1NTY5O3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTtsZXR0ZXItc3BhY2luZzouNXB4fS5hbXAtc2lnbmF0dXJlLW5hbWV7Zm9udC1zaXplOi45cmVtO2ZvbnQtd2VpZ2h0OjcwMDtjb2xvcjojMWUzYThhO21hcmdpbi1ib3R0b206NnB4O21pbi1oZWlnaHQ6MS4xZW19LmFtcC1zaWctY2FudmFzLXByZXZpZXd7ZGlzcGxheTpibG9jazt3aWR0aDoxMDAlO2hlaWdodDo3MHB4O2JvcmRlci1ib3R0b206MS41cHggc29saWQgIzMzNDE1NTtiYWNrZ3JvdW5kOnRyYW5zcGFyZW50O21hcmdpbi1ib3R0b206NnB4fS5hbXAtc2lnbmF0dXJlLWxhYmVse2ZvbnQtc2l6ZTouNzhyZW07Y29sb3I6IzY0NzQ4Yjt0ZXh0LWFsaWduOmNlbnRlcn0uYW1wLXNpZy1idG57ZGlzcGxheTppbmxpbmUtYmxvY2s7bWFyZ2luLXRvcDo2cHg7bWluLWhlaWdodDozNnB4O3BhZGRpbmc6NnB4IDE0cHg7Ym9yZGVyOjFweCBzb2xpZCAjYmZkYmZlO2JvcmRlci1yYWRpdXM6OHB4O2JhY2tncm91bmQ6I2VmZjZmZjtjb2xvcjojMWQ0ZWQ4O2ZvbnQtc2l6ZTouODJyZW07Zm9udC13ZWlnaHQ6ODAwO2N1cnNvcjpwb2ludGVyfS5hbXAtc2lnLWJ0bjpob3ZlcntiYWNrZ3JvdW5kOiNkYmVhZmV9LmFtcC1zaWctbW9kYWx7ZGlzcGxheTpub25lO3Bvc2l0aW9uOmZpeGVkO2luc2V0OjA7ei1pbmRleDoyMDAwO2JhY2tncm91bmQ6cmdiYSgxNSwyMyw0MiwuNTUpO2JhY2tkcm9wLWZpbHRlcjpibHVyKDNweCk7YWxpZ24taXRlbXM6Y2VudGVyO2p1c3RpZnktY29udGVudDpjZW50ZXJ9LmFtcC1zaWctbW9kYWwub3BlbntkaXNwbGF5OmZsZXh9LmFtcC1zaWctbW9kYWwtaW5uZXJ7YmFja2dyb3VuZDojZmZmO2JvcmRlci1yYWRpdXM6MTZweDtib3gtc2hhZG93OjAgMjRweCA2MHB4IHJnYmEoMTUsMjMsNDIsLjIyKTtwYWRkaW5nOjIwcHg7d2lkdGg6bWluKDk2dncsNTYwcHgpO2Rpc3BsYXk6ZmxleDtmbGV4LWRpcmVjdGlvbjpjb2x1bW47Z2FwOjEycHh9LmFtcC1zaWctbW9kYWwtdGl0bGV7Zm9udC1zaXplOjFyZW07Zm9udC13ZWlnaHQ6OTAwO2NvbG9yOiMwZjE3MmE7bWFyZ2luOjB9LmFtcC1zaWctbW9kYWwtc3VidGl0bGV7Zm9udC1zaXplOi44MnJlbTtjb2xvcjojNjQ3NDhiO21hcmdpbjowfS5hbXAtc2lnLXBhZHtkaXNwbGF5OmJsb2NrO3dpZHRoOjEwMCU7aGVpZ2h0OjIwMHB4O2JvcmRlcjoycHggZGFzaGVkICNjYmQ1ZTE7Ym9yZGVyLXJhZGl1czoxMnB4O2JhY2tncm91bmQ6I2Y4ZmFmYztjdXJzb3I6Y3Jvc3NoYWlyO3RvdWNoLWFjdGlvbjpub25lfS5hbXAtc2lnLXBhZC5oYXMtc2lne2JvcmRlci1jb2xvcjojMjU2M2ViO2JhY2tncm91bmQ6I2ZmZn0uYW1wLXNpZy1tb2RhbC1hY3Rpb25ze2Rpc3BsYXk6ZmxleDtnYXA6OHB4O2ZsZXgtd3JhcDp3cmFwO2p1c3RpZnktY29udGVudDpmbGV4LWVuZH0uYW1wLWNmZy1zaWctcGFke2Rpc3BsYXk6YmxvY2s7d2lkdGg6MTAwJTtoZWlnaHQ6MTYwcHg7Ym9yZGVyOjJweCBkYXNoZWQgI2NiZDVlMTtib3JkZXItcmFkaXVzOjEycHg7YmFja2dyb3VuZDojZjhmYWZjO2N1cnNvcjpjcm9zc2hhaXI7dG91Y2gtYWN0aW9uOm5vbmV9LmFtcC1jZmctc2lnLXBhZC5oYXMtc2lne2JvcmRlci1jb2xvcjojMjU2M2ViO2JhY2tncm91bmQ6I2ZmZn1AbWVkaWEgcHJpbnR7QHBhZ2V7c2l6ZTpBNDttYXJnaW46MTBtbX1ib2R5e2JhY2tncm91bmQ6I2ZmZiAhaW1wb3J0YW50O3BhZGRpbmctdG9wOjAgIWltcG9ydGFudH0uYW1wLW5hdiwuYW1wLW5vLXByaW50e2Rpc3BsYXk6bm9uZSAhaW1wb3J0YW50fS5hbXAtc2VjdGlvbntkaXNwbGF5Om5vbmUgIWltcG9ydGFudH1ib2R5W2RhdGEtcHJpbnQtbW9kZT0iYnVkZ2V0Il0gI2FtcFNlY3Rpb25OdWV2b3tkaXNwbGF5OmJsb2NrICFpbXBvcnRhbnR9Ym9keVtkYXRhLXByaW50LW1vZGU9ImxpYnJhcnkiXSAjYW1wU2VjdGlvbkxpc3Rhe2Rpc3BsYXk6YmxvY2sgIWltcG9ydGFudH1ib2R5W2RhdGEtcHJpbnQtbW9kZT0iY29uZmlnIl0gI2FtcFNlY3Rpb25Db25maWd7ZGlzcGxheTpibG9jayAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJidWRnZXQiXSAjYW1wU2VjdGlvbk51ZXZvPip7ZGlzcGxheTpub25lICFpbXBvcnRhbnR9Ym9keVtkYXRhLXByaW50LW1vZGU9ImJ1ZGdldCJdICNhbXBQcmludEJ1ZGdldEhvc3R7ZGlzcGxheTpibG9jayAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJsaWJyYXJ5Il0gI2FtcFNlY3Rpb25MaXN0YT4qe2Rpc3BsYXk6bm9uZSAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJsaWJyYXJ5Il0gI2FtcFByaW50TGlicmFyeUhvc3R7ZGlzcGxheTpibG9jayAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJjb25maWciXSAjYW1wU2VjdGlvbkNvbmZpZz4qe2Rpc3BsYXk6bm9uZSAhaW1wb3J0YW50fWJvZHlbZGF0YS1wcmludC1tb2RlPSJjb25maWciXSAjYW1wUHJpbnRDb25maWdIb3N0e2Rpc3BsYXk6YmxvY2sgIWltcG9ydGFudH0uYW1wLWFwcHtwYWRkaW5nOjAgIWltcG9ydGFudDttYXJnaW46MCAhaW1wb3J0YW50O21heC13aWR0aDpub25lICFpbXBvcnRhbnR9LmFtcC1zaGVldC13cmFwe21hcmdpbjowICFpbXBvcnRhbnQ7ZGlzcGxheTpibG9jayAhaW1wb3J0YW50fS5hbXAtc2hlZXR7Ym94LXNoYWRvdzpub25lICFpbXBvcnRhbnQ7Ym9yZGVyOm5vbmUgIWltcG9ydGFudDtib3JkZXItcmFkaXVzOjAgIWltcG9ydGFudDttYXgtd2lkdGg6bm9uZSAhaW1wb3J0YW50O3dpZHRoOjEwMCUgIWltcG9ydGFudDtwYWRkaW5nOjAgIWltcG9ydGFudDttaW4taGVpZ2h0OmF1dG8gIWltcG9ydGFudH0uYW1wLW5vdGVzLWVkaXRhYmxle2JvcmRlcjoxcHggc29saWQgI2RkZCAhaW1wb3J0YW50O2JhY2tncm91bmQ6I2ZmZiAhaW1wb3J0YW50fS5hbXAtc2lnbmF0dXJlLWJveHtiYWNrZ3JvdW5kOiNmZmYgIWltcG9ydGFudH0uYW1wLXNpZy1jYW52YXMtcHJldmlld3tib3JkZXItYm90dG9tOjEuNXB4IHNvbGlkICMzMzQxNTUgIWltcG9ydGFudH0uYW1wLXNpZy1idG57ZGlzcGxheTpub25lICFpbXBvcnRhbnR9LmFtcC1zaWctbW9kYWx7ZGlzcGxheTpub25lICFpbXBvcnRhbnR9fQouYW1wLWNhcmQtaGR7ZGlzcGxheTpmbGV4O2p1c3RpZnktY29udGVudDpzcGFjZS1iZXR3ZWVuO2FsaWduLWl0ZW1zOmNlbnRlcjtjdXJzb3I6cG9pbnRlcjt1c2VyLXNlbGVjdDpub25lOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTtnYXA6OHB4O21hcmdpbi1ib3R0b206MDt9Ci5hbXAtY2FyZC1oZCBoMiwuYW1wLWNhcmQtaGQgaDN7bWFyZ2luOjA7ZmxleDoxO30KLmFtcC1jYXJkLWJke21hcmdpbi10b3A6MTBweDt9Ci5hbXAtY2FyZC5hbXAtY29sbGFwc2VkIC5hbXAtY2FyZC1iZHtkaXNwbGF5Om5vbmU7fQouYW1wLWNoZXZyb257Zm9udC1zaXplOi43NXJlbTtjb2xvcjojOTRhM2I4O3RyYW5zaXRpb246dHJhbnNmb3JtIC4ycyBlYXNlO2ZsZXgtc2hyaW5rOjA7bGluZS1oZWlnaHQ6MTt9Ci5hbXAtY2FyZC5hbXAtY29sbGFwc2VkIC5hbXAtY2hldnJvbnt0cmFuc2Zvcm06cm90YXRlKC05MGRlZyk7fQouYW1wLXBhc3RlLWFyZWF7d2lkdGg6MTAwJTttaW4taGVpZ2h0OjgwcHg7Ym9yZGVyOjJweCBkYXNoZWQgI2JmZGJmZTtib3JkZXItcmFkaXVzOjEwcHg7cGFkZGluZzoxMHB4IDEycHg7Zm9udC1zaXplOi45cmVtO2JhY2tncm91bmQ6I2Y4ZmFmZjtjb2xvcjojMzM0MTU1O291dGxpbmU6bm9uZTtyZXNpemU6dmVydGljYWw7Zm9udC1mYW1pbHk6aW5oZXJpdDt0cmFuc2l0aW9uOmJvcmRlci1jb2xvciAuMnM7fQouYW1wLXBhc3RlLWFyZWE6Zm9jdXN7Ym9yZGVyLWNvbG9yOiMyNTYzZWI7YmFja2dyb3VuZDojZmZmO30KLmFtcC1wYXJzZS1yZXN1bHR7ZGlzcGxheTpub25lO21hcmdpbi10b3A6OHB4O3BhZGRpbmc6MTBweCAxMnB4O2JhY2tncm91bmQ6I2YwZmRmNDtib3JkZXI6MXB4IHNvbGlkICNiYmY3ZDA7Ym9yZGVyLXJhZGl1czoxMHB4O2ZvbnQtc2l6ZTouODVyZW07Y29sb3I6IzE2NjUzNDtnYXA6NHB4O2ZsZXgtZGlyZWN0aW9uOmNvbHVtbjt9Ci5hbXAtcGFyc2UtcmVzdWx0LnNob3d7ZGlzcGxheTpmbGV4O30KLmFtcC1wYXJzZS1yb3d7ZGlzcGxheTpmbGV4O2dhcDo2cHg7YWxpZ24taXRlbXM6YmFzZWxpbmU7fQouYW1wLXBhcnNlLWxhYmVse2ZvbnQtd2VpZ2h0OjcwMDttaW4td2lkdGg6ODBweDtmbGV4LXNocmluazowO30KLmFtcC1wYXJzZS12YWx7Y29sb3I6IzBmMTcyYTt3b3JkLWJyZWFrOmJyZWFrLXdvcmQ7fQovKiA9PT0gQUNDT1JESU9OID09PSAqLwouYW1wLWNhcmQtaGR7ZGlzcGxheTpmbGV4O2p1c3RpZnktY29udGVudDpzcGFjZS1iZXR3ZWVuO2FsaWduLWl0ZW1zOmNlbnRlcjtjdXJzb3I6cG9pbnRlcjt1c2VyLXNlbGVjdDpub25lO3BhZGRpbmc6MnB4IDAgMTBweDt9Ci5hbXAtY2FyZC1oZCBoMiwuYW1wLWNhcmQtaGQgaDN7bWFyZ2luOjA7cG9pbnRlci1ldmVudHM6bm9uZTt9Ci5hbXAtY2FyZC5jb2xsYXBzZWQgLmFtcC1jYXJkLWJke2Rpc3BsYXk6bm9uZTt9Ci5hbXAtY2FyZC5jb2xsYXBzZWQgLmFtcC1jYXJkLWhke3BhZGRpbmctYm90dG9tOjA7fQouYW1wLWNoZXZyb257Zm9udC1zaXplOi43NXJlbTtjb2xvcjojNjQ3NDhiO3RyYW5zaXRpb246dHJhbnNmb3JtIC4ycztkaXNwbGF5OmlubGluZS1ibG9jazt9Ci5hbXAtY2FyZC5jb2xsYXBzZWQgLmFtcC1jaGV2cm9ue3RyYW5zZm9ybTpyb3RhdGUoLTkwZGVnKTt9Ci8qID09PSBQQVNURSBQQVJTRVIgPT09ICovCi5hbXAtcGFzdGUtYXJlYXt3aWR0aDoxMDAlO21pbi1oZWlnaHQ6ODBweDtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWFtcC1ib3JkZXIpO2JvcmRlci1yYWRpdXM6MTBweDtwYWRkaW5nOjEwcHggMTJweDtmb250LXNpemU6Ljg4cmVtO2JhY2tncm91bmQ6I2ZmZjtjb2xvcjp2YXIoLS1hbXAtc2xhdGUpO291dGxpbmU6bm9uZTtyZXNpemU6dmVydGljYWw7Zm9udC1mYW1pbHk6aW5oZXJpdDt9Ci5hbXAtcGFzdGUtYXJlYTpmb2N1c3tib3JkZXItY29sb3I6dmFyKC0tYW1wLWJsdWUpO2JveC1zaGFkb3c6MCAwIDAgM3B4IHJnYmEoMzcsOTksMjM1LC4xMik7fQouYW1wLXBhcnNlLXJlc3VsdHttYXJnaW4tdG9wOjEwcHg7ZGlzcGxheTpncmlkO2dhcDo2cHg7fQouYW1wLXBhcnNlLXJvd3tkaXNwbGF5OmdyaWQ7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjEwMHB4IDFmcjtnYXA6OHB4O2FsaWduLWl0ZW1zOmNlbnRlcjtmb250LXNpemU6Ljg4cmVtO2JvcmRlcjoxcHggc29saWQgI2UyZThmMDtib3JkZXItcmFkaXVzOjhweDtwYWRkaW5nOjZweCAxMHB4O2JhY2tncm91bmQ6I2Y4ZmFmYzt9Ci5hbXAtcGFyc2UtbGJse2ZvbnQtd2VpZ2h0OjcwMDttaW4td2lkdGg6ODBweDtmbGV4LXNocmluazowO30KLmFtcC1wYXJzZS12YWx7Y29sb3I6IzBmMTcyYTt3b3JkLWJyZWFrOmJyZWFrLXdvcmQ7fQovKiA9PT0gRE9DIEhJU1RPUlkgPT09ICovCi5hbXAtZG9jLWhpc3RvcnktbGlzdHtkaXNwbGF5OmZsZXg7ZmxleC1kaXJlY3Rpb246Y29sdW1uO2dhcDo4cHg7bWF4LWhlaWdodDo0MjBweDtvdmVyZmxvdy15OmF1dG87cGFkZGluZy1yaWdodDo0cHg7fQouYW1wLWRvYy1yb3d7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczoyOHB4IDFmciBhdXRvIGF1dG87Z2FwOjEwcHg7YWxpZ24taXRlbXM6Y2VudGVyO2JhY2tncm91bmQ6I2Y4ZmFmYztib3JkZXI6MXB4IHNvbGlkICNlMmU4ZjA7Ym9yZGVyLXJhZGl1czoxMHB4O3BhZGRpbmc6MTBweCAxMnB4O30KLmFtcC1kb2Mtcm93OmhvdmVye2JvcmRlci1jb2xvcjojYmZkYmZlO2JhY2tncm91bmQ6I2VmZjZmZjt9Ci5hbXAtZG9jLWluZm97ZGlzcGxheTpmbGV4O2ZsZXgtd3JhcDp3cmFwO2dhcDo2cHg7YWxpZ24taXRlbXM6Y2VudGVyO30KLmFtcC1kb2MtdHlwZXtmb250LXNpemU6Ljc1cmVtO2ZvbnQtd2VpZ2h0OjgwMDtwYWRkaW5nOjJweCA4cHg7Ym9yZGVyLXJhZGl1czoyMHB4O3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTtsZXR0ZXItc3BhY2luZzouNHB4O30KLmFtcC1kb2MtdHlwZS1wcmVzdXB1ZXN0b3tiYWNrZ3JvdW5kOiNkYmVhZmU7Y29sb3I6IzFkNGVkODt9Ci5hbXAtZG9jLXR5cGUtYWxiYXJhbntiYWNrZ3JvdW5kOiNkY2ZjZTc7Y29sb3I6IzE1ODAzZDt9Ci5hbXAtZG9jLXR5cGUtZmFjdHVyYXtiYWNrZ3JvdW5kOiNmZWYzYzc7Y29sb3I6I2I0NTMwOTt9Ci5hbXAtZG9jLXJlZntmb250LWZhbWlseTptb25vc3BhY2U7Zm9udC1zaXplOi44cmVtO2NvbG9yOiMzMzQxNTU7fQouYW1wLWRvYy1vdHtmb250LXNpemU6Ljc1cmVtO2ZvbnQtd2VpZ2h0OjcwMDtiYWNrZ3JvdW5kOiNlZmY2ZmY7Ym9yZGVyOjFweCBzb2xpZCAjYmZkYmZlO2JvcmRlci1yYWRpdXM6NnB4O3BhZGRpbmc6MXB4IDdweDtjb2xvcjojMWQ0ZWQ4O30KLmFtcC1kb2MtY2xpZW50e2ZvbnQtc2l6ZTouODhyZW07Y29sb3I6IzQ3NTU2OTt9Ci5hbXAtZG9jLW1ldGF7ZGlzcGxheTpmbGV4O2ZsZXgtZGlyZWN0aW9uOmNvbHVtbjthbGlnbi1pdGVtczpmbGV4LWVuZDtnYXA6MnB4O2ZvbnQtc2l6ZTouODJyZW07d2hpdGUtc3BhY2U6bm93cmFwO2NvbG9yOiM2NDc0OGI7fQouYW1wLWRvYy1tZXRhIHN0cm9uZ3tjb2xvcjojMGYxNzJhO2ZvbnQtc2l6ZTouOXJlbTt9Cg==";
         var css = decodeURIComponent(escape(atob(b64)));
         var st = document.getElementById("amp-css-placeholder");
         if(st) { st.textContent = css; st.id = "amp-styles"; }
@@ -853,23 +559,25 @@
       "use strict";
 
       const antmPro_20260307_KEYS = {
-        library:  "antmPro_20260307_library",
-        config:   "antmPro_20260307_config",
-        deviceId: "antmPro_20260307_device_id"
+        library:   "antmPro_20260307_library",
+        config:    "antmPro_20260307_config",
+        deviceId:  "antmPro_20260307_device_id",
+        documents: "antmPro_20260307_documents"
       };
 
       const antmPro_20260307_state = {
         library: [],
+        documents: [],   /* historial de documentos guardados */
         config: {
           companyName:"", companyCif:"", companyPhone:"", companyAddress:"",
           defaultNotes:"", logoBase64:"",
           techName:"", techSigBase64:"",
-          bankAccount:""   /* IBAN para transferencias */
+          bankAccount:""
         },
         budgetLines: [],
         sheetNotesDirty: false,
         clientSigBase64: "",
-        paymentMethod: "efectivo"  /* metodo de pago activo */
+        paymentMethod: "efectivo"
       };
 
       const $ = (s)=>document.querySelector(s);
@@ -1014,7 +722,146 @@
         }
       }
 
-      /* ===== Export / Import ===== */
+      /* ===== Document history ===== */
+      function saveDocuments(){ localStorage.setItem(antmPro_20260307_KEYS.documents, JSON.stringify(antmPro_20260307_state.documents)); }
+      function loadDocuments(){
+        const raw = localStorage.getItem(antmPro_20260307_KEYS.documents);
+        const parsed = safeParse(raw, []);
+        antmPro_20260307_state.documents = Array.isArray(parsed) ? parsed : [];
+      }
+
+      function saveCurrentDocument(){
+        const t = computeTotals();
+        const doc = {
+          id: `doc_${Date.now()}_${Math.floor(Math.random()*10000)}`,
+          type: el.docType.value || "presupuesto",
+          ref: buildFullRef(),
+          workOrder: el.workOrder.value.trim(),
+          date: el.budgetDate.value,
+          savedAt: new Date().toISOString(),
+          clientName: el.clientName.value.trim(),
+          clientCif: el.clientCif.value.trim(),
+          clientPhone: el.clientPhone.value.trim(),
+          clientAddress: el.clientAddress.value.trim(),
+          paymentMethod: el.paymentMethod.value,
+          lines: antmPro_20260307_state.budgetLines.map(l => {
+            const c = computeLine(l);
+            return { description: l.description, qty: l.qty, unitPrice: l.unitPriceInput, baseLine: c.baseLine, grossLine: c.grossLine };
+          }),
+          base: t.base, iva: t.iva, total: t.total
+        };
+        // Reemplazar si ya existe la misma ref
+        const idx = antmPro_20260307_state.documents.findIndex(d => d.ref === doc.ref);
+        if(idx >= 0) antmPro_20260307_state.documents[idx] = doc;
+        else antmPro_20260307_state.documents.unshift(doc);
+        saveDocuments();
+        showToast("Documento guardado en historial");
+        renderDocHistory();
+      }
+
+      function deleteDocument(id){
+        antmPro_20260307_state.documents = antmPro_20260307_state.documents.filter(d => d.id !== id);
+        saveDocuments();
+        renderDocHistory();
+      }
+
+      /* ===== Historial UI ===== */
+      function renderDocHistory(){
+        if(!el.docHistoryList) return;
+        const types  = ["presupuesto","albaran","factura"].filter(t => {
+          const cb = document.getElementById(`ampFilterType_${t}`);
+          return cb && cb.checked;
+        });
+        const from   = el.filterDateFrom.value;
+        const to     = el.filterDateTo.value;
+
+        let docs = antmPro_20260307_state.documents.filter(d => {
+          if(types.length && !types.includes(d.type)) return false;
+          if(from && d.date < from) return false;
+          if(to   && d.date > to)   return false;
+          return true;
+        });
+
+        el.docHistoryCount.textContent = `${docs.length} documento${docs.length !== 1 ? "s" : ""}`;
+
+        if(!docs.length){
+          el.docHistoryList.innerHTML = `<div class="amp-muted" style="padding:10px 0;">No hay documentos con esos filtros.</div>`;
+          return;
+        }
+
+        const TYPE_LABELS = { presupuesto:"Presupuesto", albaran:"Albar\u00E1n", factura:"Factura" };
+        el.docHistoryList.innerHTML = docs.map(d => `
+          <div class="amp-doc-row" data-id="${d.id}">
+            <input type="checkbox" class="amp-doc-check" data-id="${d.id}" checked />
+            <div class="amp-doc-info">
+              <span class="amp-doc-type amp-doc-type-${d.type}">${TYPE_LABELS[d.type]||d.type}</span>
+              <span class="amp-doc-ref">${esc(d.ref)}</span>
+              ${d.workOrder ? `<span class="amp-doc-ot">OT ${esc(d.workOrder)}</span>` : ""}
+              <span class="amp-doc-client">${esc(d.clientName||"\u2014")}</span>
+            </div>
+            <div class="amp-doc-meta">
+              <span>${formatDateEs(d.date)}</span>
+              <strong>${money(d.total)}</strong>
+            </div>
+            <button class="amp-btn amp-btn-danger amp-doc-del" type="button" data-del-doc="${d.id}" style="min-height:32px;padding:4px 10px;font-size:.8rem;">&#10005;</button>
+          </div>`).join("");
+      }
+
+      function getCheckedDocIds(){
+        return Array.from(document.querySelectorAll(".amp-doc-check:checked")).map(c => c.dataset.id);
+      }
+
+      /* ===== CSV export (BOM UTF-8 → abre en Excel sin errores) ===== */
+      function exportDocsToExcel(){
+        const ids = getCheckedDocIds();
+        if(!ids.length){ alert("Selecciona al menos un documento."); return; }
+        const docs = antmPro_20260307_state.documents.filter(d => ids.includes(d.id));
+
+        const TYPE_LABELS = { presupuesto:"Presupuesto", albaran:"Albar\u00E1n", factura:"Factura" };
+        const PAYMENT_LABELS = { efectivo:"Efectivo", transferencia:"Transferencia", tarjeta:"Tarjeta", bizum:"Bizum" };
+
+        /* Escapar campo CSV: envolver en comillas y doblar comillas internas */
+        const q = v => `"${String(v??"").replace(/"/g,'""')}"`;
+
+        const headers = ["Tipo","Referencia","N\u00BA OT","Fecha","Cliente","CIF/DNI",
+                         "Tel\u00E9fono","Direcci\u00F3n","M\u00E9todo pago",
+                         "Base (EUR)","IVA (EUR)","Total (EUR)","L\u00EDneas de concepto"];
+
+        const rows = docs.map(d => {
+          const lineas = (d.lines||[]).map(l =>
+            `${l.description} x${l.qty} = ${Number(l.baseLine||0).toFixed(2)}\u20AC`
+          ).join(" | ");
+          return [
+            TYPE_LABELS[d.type] || d.type,
+            d.ref || "",
+            d.workOrder || "",
+            d.date || "",
+            d.clientName || "",
+            d.clientCif || "",
+            d.clientPhone || "",
+            d.clientAddress || "",
+            PAYMENT_LABELS[d.paymentMethod] || d.paymentMethod || "",
+            Number(d.base||0).toFixed(2),
+            Number(d.iva||0).toFixed(2),
+            Number(d.total||0).toFixed(2),
+            lineas
+          ].map(q).join(";");
+        });
+
+        /* BOM \uFEFF para que Excel lo abra en UTF-8 directamente */
+        const csv = "\uFEFF" + [headers.map(q).join(";"), ...rows].join("\r\n");
+
+        const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        const d = new Date();
+        a.download = `AntenaManager_Documentos_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}.csv`;
+        a.href = url;
+        document.body.appendChild(a); a.click(); a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+
       function buildExportObject(){
         return {
           app: "AntenaManager PRO",
@@ -1485,6 +1332,7 @@
         applyConfigToAllPrintSheets();
         updateDocTypeLabels();
         renderBudgetSheet();
+        saveCurrentDocument();   /* guardar en historial automaticamente */
 
         const company = (antmPro_20260307_state.config.companyName || "AntenaManager").trim();
         const docType = DOC_LABELS[el.docType.value]?.sheetTitle || "DOCUMENTO";
@@ -1519,7 +1367,9 @@
           const m = line.match(/^([^:]{2,30}):\s*(.*)$/);
           if(m){
             const key = m[1].trim().toLowerCase()
-              .normalize("NFD").replace(/[\u0300-\u036f]/g,""); // quitar acentos para comparar
+              .normalize("NFD").replace(/[\u0300-\u036f]/g,"")  // quitar acentos
+              .replace(/[º°ª]/g,"")                              // quitar ordinales (Nº → n)
+              .replace(/\s+/g," ").trim();
             const val = m[2].trim();
             labeled[key] = val;
           }
@@ -1531,8 +1381,11 @@
           telefono:  "phone",   tel:       "phone",  movil:   "phone",  contacto: "phone",
           direccion: "address", domicilio: "address", dir:    "address",
           dni:       "cif",     cif:       "cif",    nif:     "cif",
+          "no ot":   "ot",      "ot":      "ot",     "n ot":  "ot",
+          "num ot":  "ot",      "orden":   "ot",     "orden de trabajo": "ot",
         };
 
+        let ot = "";
         Object.entries(labeled).forEach(([k, v]) => {
           if(!v) return;
           const mapped = keyMap[k];
@@ -1540,6 +1393,7 @@
           if(mapped === "phone"   && !phone)   phone = v;
           if(mapped === "address" && !address) address = v;
           if(mapped === "cif"     && !cif)     cif = v;
+          if(mapped === "ot"      && !ot)      ot = v.replace(/\D/g,"");
         });
 
         // Si "Contacto:" estaba vacío pero la siguiente línea tiene "Teléfono:"
@@ -1600,10 +1454,11 @@
 
         // Rellenar campos
         const results = [];
-        if(name)    { el.clientName.value    = name;    results.push({label:"Nombre",       val:name}); }
-        if(phone)   { el.clientPhone.value   = phone;   results.push({label:"Tel\u00E9fono", val:phone}); }
-        if(address) { el.clientAddress.value = address; results.push({label:"Direcci\u00F3n",val:address}); }
-        if(cif)     { el.clientCif.value     = cif;     results.push({label:"DNI/CIF",       val:cif}); }
+        if(ot)      { el.workOrder.value      = ot;      results.push({label:"OT",             val:ot});      updateRefPreview(); }
+        if(name)    { el.clientName.value    = name;    results.push({label:"Nombre",          val:name}); }
+        if(phone)   { el.clientPhone.value   = phone;   results.push({label:"Tel\u00E9fono",    val:phone}); }
+        if(address) { el.clientAddress.value = address; results.push({label:"Direcci\u00F3n",   val:address}); }
+        if(cif)     { el.clientCif.value     = cif;     results.push({label:"DNI/CIF",         val:cif}); }
 
         if(results.length) renderBudgetSheet();
         showParseResult(results);
@@ -1838,6 +1693,28 @@
           el.parseResult.innerHTML = "";
         });
 
+        // Historial de documentos
+        el.btnFilterDocs.addEventListener("click", renderDocHistory);
+        el.btnSelectAllDocs.addEventListener("click", ()=>{
+          document.querySelectorAll(".amp-doc-check").forEach(c => c.checked = true);
+        });
+        el.btnExportExcel.addEventListener("click", exportDocsToExcel);
+        el.btnClearHistory.addEventListener("click", ()=>{
+          if(!confirm("¿Borrar todo el historial de documentos?")) return;
+          antmPro_20260307_state.documents = [];
+          saveDocuments();
+          renderDocHistory();
+        });
+        el.docHistoryList.addEventListener("click", ev => {
+          const btn = ev.target.closest("[data-del-doc]");
+          if(btn) deleteDocument(btn.dataset.delDoc);
+        });
+        // Filtros en tiempo real
+        ["ampFilterType_presupuesto","ampFilterType_albaran","ampFilterType_factura","ampFilterDateFrom","ampFilterDateTo"].forEach(id => {
+          const el2 = document.getElementById(id);
+          if(el2) el2.addEventListener("change", renderDocHistory);
+        });
+
         // NUEVO: cambio de tipo de documento
         el.docType.addEventListener("change", ()=>{
           updateDocTypeLabels();
@@ -2001,11 +1878,24 @@
           btnExportAll1: $("#ampBtnExportAll1"),
           btnExportAll2: $("#ampBtnExportAll2"),
           importFile1: $("#ampImportFile1"),
-          importFile2: $("#ampImportFile2")
+          importFile2: $("#ampImportFile2"),
+          // Historial
+          docHistoryList: $("#ampDocHistoryList"),
+          docHistoryCount: $("#ampDocHistoryCount"),
+          btnFilterDocs: $("#ampBtnFilterDocs"),
+          btnSelectAllDocs: $("#ampBtnSelectAllDocs"),
+          btnExportExcel: $("#ampBtnExportExcel"),
+          btnClearHistory: $("#ampBtnClearHistory"),
+          filterDateFrom: $("#ampFilterDateFrom"),
+          filterDateTo: $("#ampFilterDateTo"),
+          "filterType_presupuesto": $("#ampFilterType_presupuesto"),
+          "filterType_albaran": $("#ampFilterType_albaran"),
+          "filterType_factura": $("#ampFilterType_factura")
         };
 
         loadLibrary();
         loadConfig();
+        loadDocuments();
 
         // Defaults
         el.budgetDate.value = todayIso();
@@ -2031,6 +1921,7 @@
         renderBudgetLines();
         renderBudgetSheet();
         updateRefPreview();
+        renderDocHistory();
         initAccordions();
 
         bindEvents();

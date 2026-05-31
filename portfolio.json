@@ -1,0 +1,10 @@
+{
+  "categoria": "Apps",
+  "icono": "📱",
+  "etiquetas": ["presupuesto", "finanzas", "calculadora", "gestión"],
+  "descripcion": "Aplicación para crear o calcular presupuestos de forma rápida.",
+  "demo": "",
+  "destacado": false,
+  "orden": 42,
+  "ocultar": false
+}

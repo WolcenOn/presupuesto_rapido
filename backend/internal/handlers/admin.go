@@ -24,10 +24,12 @@ func (h Handler) ListUsers(w http.ResponseWriter, r *http.Request) {
 	items := []domain.User{}
 	for rows.Next() {
 		var u domain.User
-		if err := rows.Scan(&u.ID, &u.Name, &u.Email, &u.Role, &u.IsActive, &u.CreatedAt); err != nil {
+		var role string
+		if err := rows.Scan(&u.ID, &u.Name, &u.Email, &role, &u.IsActive, &u.CreatedAt); err != nil {
 			httpx.Error(w, http.StatusInternalServerError, "could not read users")
 			return
 		}
+		u.Role = domain.Role(role)
 		items = append(items, u)
 	}
 	httpx.JSON(w, http.StatusOK, map[string]any{"items": items})

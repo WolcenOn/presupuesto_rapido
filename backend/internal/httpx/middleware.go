@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"presupuesto-rapido/backend/internal/auth"
 	"presupuesto-rapido/backend/internal/domain"
 )
 
@@ -30,7 +31,7 @@ func SecurityHeaders(next http.Handler) http.Handler {
 		w.Header().Set("X-Frame-Options", "DENY")
 		w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
 		w.Header().Set("Permissions-Policy", "geolocation=(), microphone=(), camera=()")
-		if r.TLS != nil {
+		if r.TLS != nil || r.Header.Get("X-Forwarded-Proto") == "https" {
 			w.Header().Set("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
 		}
 		next.ServeHTTP(w, r)
@@ -67,6 +68,25 @@ func RequestTimeout(timeout time.Duration) func(http.Handler) http.Handler {
 			ctx, cancel := context.WithTimeout(r.Context(), timeout)
 			defer cancel()
 			next.ServeHTTP(w, r.WithContext(ctx))
+		})
+	}
+}
+
+func Authenticate(jwtSecret string) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			header := r.Header.Get("Authorization")
+			if !strings.HasPrefix(header, "Bearer ") {
+				Error(w, http.StatusUnauthorized, "bearer token required")
+				return
+			}
+			token := strings.TrimSpace(strings.TrimPrefix(header, "Bearer "))
+			user, err := auth.ParseAccessToken(token, jwtSecret)
+			if err != nil {
+				Error(w, http.StatusUnauthorized, "invalid access token")
+				return
+			}
+			next.ServeHTTP(w, r.WithContext(WithUser(r.Context(), user)))
 		})
 	}
 }

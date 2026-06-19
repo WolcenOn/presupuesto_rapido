@@ -48,6 +48,8 @@ func main() {
 	mux.Handle("POST /api/prices", bossOnly(http.HandlerFunc(h.CreatePrice)))
 	mux.Handle("GET /api/documents", authn(http.HandlerFunc(h.ListDocuments)))
 	mux.Handle("POST /api/documents", authn(http.HandlerFunc(h.CreateDocument)))
+	mux.Handle("GET /api/admin/users", bossOnly(http.HandlerFunc(h.ListUsers)))
+	mux.Handle("POST /api/admin/users", bossOnly(http.HandlerFunc(h.CreateUser)))
 
 	var app http.Handler = mux
 	app = httpx.SecurityHeaders(app)

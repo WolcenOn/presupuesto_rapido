@@ -127,11 +127,13 @@ func (h Handler) ListDocuments(w http.ResponseWriter, r *http.Request) {
 	docs := []domain.Document{}
 	for rows.Next() {
 		var d domain.Document
+		var docType string
 		var sent sql.NullTime
-		if err := rows.Scan(&d.ID, &d.Ref, &d.Type, &d.EmployeeID, &d.ClientName, &d.ClientCIF, &d.ClientPhone, &d.ClientAddress, &d.WorkOrder, &d.PaymentMethod, &d.Base, &d.IVA, &d.Total, &d.PDFPath, &sent, &d.CreatedAt, &d.UpdatedAt); err != nil {
+		if err := rows.Scan(&d.ID, &d.Ref, &docType, &d.EmployeeID, &d.ClientName, &d.ClientCIF, &d.ClientPhone, &d.ClientAddress, &d.WorkOrder, &d.PaymentMethod, &d.Base, &d.IVA, &d.Total, &d.PDFPath, &sent, &d.CreatedAt, &d.UpdatedAt); err != nil {
 			httpx.Error(w, http.StatusInternalServerError, "could not read documents")
 			return
 		}
+		d.Type = domain.DocumentType(docType)
 		if sent.Valid {
 			d.SentToBossAt = &sent.Time
 		}

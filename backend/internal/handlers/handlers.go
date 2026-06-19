@@ -3,10 +3,12 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"presupuesto-rapido/backend/internal/domain"
@@ -65,6 +67,29 @@ func (h Handler) ListPrices(w http.ResponseWriter, r *http.Request) {
 	httpx.JSON(w, http.StatusOK, map[string]any{"items": items})
 }
 
+func (h Handler) GetPrice(w http.ResponseWriter, r *http.Request) {
+	if !h.requireDB(w) {
+		return
+	}
+	id := strings.TrimSpace(r.PathValue("id"))
+	if id == "" {
+		httpx.Error(w, http.StatusBadRequest, "price id is required")
+		return
+	}
+	var it domain.PriceItem
+	err := h.DB.QueryRow(r.Context(), `select id::text, name, base_price, iva_rate, active, coalesce(updated_by::text, ''), updated_at from price_items where id = $1`, id).
+		Scan(&it.ID, &it.Name, &it.BasePrice, &it.IVARate, &it.Active, &it.UpdatedBy, &it.UpdatedAt)
+	if errors.Is(err, pgx.ErrNoRows) || errors.Is(err, sql.ErrNoRows) {
+		httpx.Error(w, http.StatusNotFound, "price item not found")
+		return
+	}
+	if err != nil {
+		httpx.Error(w, http.StatusInternalServerError, "could not read price item")
+		return
+	}
+	httpx.JSON(w, http.StatusOK, it)
+}
+
 func (h Handler) CreatePrice(w http.ResponseWriter, r *http.Request) {
 	if !h.requireDB(w) {
 		return
@@ -98,6 +123,77 @@ func (h Handler) CreatePrice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	httpx.JSON(w, http.StatusCreated, map[string]string{"id": id})
+}
+
+func (h Handler) UpdatePrice(w http.ResponseWriter, r *http.Request) {
+	if !h.requireDB(w) {
+		return
+	}
+	user, ok := httpx.UserFromContext(r.Context())
+	if !ok || user.Role != domain.RoleBoss {
+		httpx.Error(w, http.StatusForbidden, "only boss can modify standard prices")
+		return
+	}
+	id := strings.TrimSpace(r.PathValue("id"))
+	if id == "" {
+		httpx.Error(w, http.StatusBadRequest, "price id is required")
+		return
+	}
+	var input struct {
+		Name      string  `json:"name"`
+		BasePrice float64 `json:"basePrice"`
+		IVARate   float64 `json:"ivaRate"`
+		Active    *bool   `json:"active"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		httpx.Error(w, http.StatusBadRequest, "invalid json")
+		return
+	}
+	input.Name = strings.TrimSpace(input.Name)
+	if input.Name == "" || input.BasePrice < 0 || input.IVARate < 0 {
+		httpx.Error(w, http.StatusBadRequest, "name, non-negative basePrice and non-negative ivaRate are required")
+		return
+	}
+	active := true
+	if input.Active != nil {
+		active = *input.Active
+	}
+	cmd, err := h.DB.Exec(r.Context(), `update price_items set name = $1, base_price = $2, iva_rate = $3, active = $4, updated_by = $5, updated_at = now() where id = $6`, input.Name, input.BasePrice, input.IVARate, active, user.ID, id)
+	if err != nil {
+		httpx.Error(w, http.StatusInternalServerError, "could not update price item")
+		return
+	}
+	if cmd.RowsAffected() == 0 {
+		httpx.Error(w, http.StatusNotFound, "price item not found")
+		return
+	}
+	httpx.JSON(w, http.StatusOK, map[string]bool{"ok": true})
+}
+
+func (h Handler) DisablePrice(w http.ResponseWriter, r *http.Request) {
+	if !h.requireDB(w) {
+		return
+	}
+	user, ok := httpx.UserFromContext(r.Context())
+	if !ok || user.Role != domain.RoleBoss {
+		httpx.Error(w, http.StatusForbidden, "only boss can modify standard prices")
+		return
+	}
+	id := strings.TrimSpace(r.PathValue("id"))
+	if id == "" {
+		httpx.Error(w, http.StatusBadRequest, "price id is required")
+		return
+	}
+	cmd, err := h.DB.Exec(r.Context(), `update price_items set active = false, updated_by = $1, updated_at = now() where id = $2`, user.ID, id)
+	if err != nil {
+		httpx.Error(w, http.StatusInternalServerError, "could not disable price item")
+		return
+	}
+	if cmd.RowsAffected() == 0 {
+		httpx.Error(w, http.StatusNotFound, "price item not found")
+		return
+	}
+	httpx.JSON(w, http.StatusOK, map[string]bool{"ok": true})
 }
 
 func (h Handler) ListDocuments(w http.ResponseWriter, r *http.Request) {
@@ -140,6 +236,36 @@ func (h Handler) ListDocuments(w http.ResponseWriter, r *http.Request) {
 		docs = append(docs, d)
 	}
 	httpx.JSON(w, http.StatusOK, map[string]any{"items": docs})
+}
+
+func (h Handler) GetDocument(w http.ResponseWriter, r *http.Request) {
+	if !h.requireDB(w) {
+		return
+	}
+	user, ok := httpx.UserFromContext(r.Context())
+	if !ok {
+		httpx.Error(w, http.StatusUnauthorized, "authentication required")
+		return
+	}
+	id := strings.TrimSpace(r.PathValue("id"))
+	if id == "" {
+		httpx.Error(w, http.StatusBadRequest, "document id is required")
+		return
+	}
+	doc, err := h.loadDocument(r, id)
+	if errors.Is(err, pgx.ErrNoRows) || errors.Is(err, sql.ErrNoRows) {
+		httpx.Error(w, http.StatusNotFound, "document not found")
+		return
+	}
+	if err != nil {
+		httpx.Error(w, http.StatusInternalServerError, "could not read document")
+		return
+	}
+	if user.Role != domain.RoleBoss && doc.EmployeeID != user.ID {
+		httpx.Error(w, http.StatusForbidden, "document does not belong to this user")
+		return
+	}
+	httpx.JSON(w, http.StatusOK, doc)
 }
 
 func (h Handler) CreateDocument(w http.ResponseWriter, r *http.Request) {
@@ -205,8 +331,69 @@ func (h Handler) CreateDocument(w http.ResponseWriter, r *http.Request) {
 		httpx.Error(w, http.StatusInternalServerError, "could not save document")
 		return
 	}
-	// TODO: enqueue PDF generation and email copy to boss for albaran/factura.
+	if input.Type == string(domain.DocumentDelivery) || input.Type == string(domain.DocumentInvoice) {
+		_ = h.queueBossEmail(r, id)
+	}
 	httpx.JSON(w, http.StatusCreated, map[string]any{"id": id, "synced": true})
+}
+
+func (h Handler) QueueDocumentForBoss(w http.ResponseWriter, r *http.Request) {
+	if !h.requireDB(w) {
+		return
+	}
+	user, ok := httpx.UserFromContext(r.Context())
+	if !ok {
+		httpx.Error(w, http.StatusUnauthorized, "authentication required")
+		return
+	}
+	id := strings.TrimSpace(r.PathValue("id"))
+	if id == "" {
+		httpx.Error(w, http.StatusBadRequest, "document id is required")
+		return
+	}
+	doc, err := h.loadDocument(r, id)
+	if errors.Is(err, pgx.ErrNoRows) || errors.Is(err, sql.ErrNoRows) {
+		httpx.Error(w, http.StatusNotFound, "document not found")
+		return
+	}
+	if err != nil {
+		httpx.Error(w, http.StatusInternalServerError, "could not read document")
+		return
+	}
+	if user.Role != domain.RoleBoss && doc.EmployeeID != user.ID {
+		httpx.Error(w, http.StatusForbidden, "document does not belong to this user")
+		return
+	}
+	if doc.Type != domain.DocumentDelivery && doc.Type != domain.DocumentInvoice {
+		httpx.Error(w, http.StatusBadRequest, "only albaran and factura can be queued for boss email")
+		return
+	}
+	if err := h.queueBossEmail(r, id); err != nil {
+		httpx.Error(w, http.StatusInternalServerError, "could not queue boss email")
+		return
+	}
+	httpx.JSON(w, http.StatusAccepted, map[string]bool{"queued": true})
+}
+
+func (h Handler) loadDocument(r *http.Request, id string) (domain.Document, error) {
+	var d domain.Document
+	var docType string
+	var sent sql.NullTime
+	err := h.DB.QueryRow(r.Context(), `select id::text, ref, type, employee_id::text, client_name, client_cif, client_phone, client_address, coalesce(work_order, ''), coalesce(payment_method, ''), base_amount, iva_amount, total_amount, document_json, coalesce(pdf_path, ''), sent_to_boss_at, created_at, updated_at from documents where id = $1`, id).
+		Scan(&d.ID, &d.Ref, &docType, &d.EmployeeID, &d.ClientName, &d.ClientCIF, &d.ClientPhone, &d.ClientAddress, &d.WorkOrder, &d.PaymentMethod, &d.Base, &d.IVA, &d.Total, &d.DocumentJSON, &d.PDFPath, &sent, &d.CreatedAt, &d.UpdatedAt)
+	d.Type = domain.DocumentType(docType)
+	if sent.Valid {
+		d.SentToBossAt = &sent.Time
+	}
+	return d, err
+}
+
+func (h Handler) queueBossEmail(r *http.Request, documentID string) error {
+	if strings.TrimSpace(h.BossEmail) == "" {
+		return nil
+	}
+	_, err := h.DB.Exec(r.Context(), `insert into document_email_logs (document_id, recipient, status) values ($1, $2, 'queued')`, documentID, h.BossEmail)
+	return err
 }
 
 func (h Handler) requireDB(w http.ResponseWriter) bool {

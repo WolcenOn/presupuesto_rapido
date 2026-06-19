@@ -69,10 +69,27 @@ export async function ampListPrices() {
   return ampApiRequest("/api/prices");
 }
 
+export async function ampGetPrice(id) {
+  return ampApiRequest(`/api/prices/${encodeURIComponent(id)}`);
+}
+
 export async function ampCreatePrice(item) {
   return ampApiRequest("/api/prices", {
     method: "POST",
     body: JSON.stringify(item)
+  });
+}
+
+export async function ampUpdatePrice(id, item) {
+  return ampApiRequest(`/api/prices/${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify(item)
+  });
+}
+
+export async function ampDisablePrice(id) {
+  return ampApiRequest(`/api/prices/${encodeURIComponent(id)}`, {
+    method: "DELETE"
   });
 }
 
@@ -98,6 +115,16 @@ export async function ampSyncDocument(doc) {
 
 export async function ampListDocuments() {
   return ampApiRequest("/api/documents");
+}
+
+export async function ampGetDocument(id) {
+  return ampApiRequest(`/api/documents/${encodeURIComponent(id)}`);
+}
+
+export async function ampQueueDocumentForBoss(id) {
+  return ampApiRequest(`/api/documents/${encodeURIComponent(id)}/send-to-boss`, {
+    method: "POST"
+  });
 }
 
 export async function ampListUsers() {

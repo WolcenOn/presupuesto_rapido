@@ -49,6 +49,17 @@ Convertir la app actual, que funciona como herramienta rápida local, en una sol
 - Cifrado de credenciales SMTP de empleados si se almacenan.
 - No registrar datos completos de clientes en logs.
 
+## Estado implementado en la rama
+
+- Backend Go inicial.
+- Dockerfile y configuración Railway.
+- Migraciones PostgreSQL para usuarios, refresh tokens, precios, documentos, auditoría y cola de envíos.
+- Login JWT y refresh token HttpOnly.
+- Endpoints de precios, documentos y administración de usuarios.
+- Control de propiedad de documentos por empleado.
+- Encolado de albaranes/facturas para envío al jefe.
+- Cliente JS con sesión, sincronización manual, cola local y limpieza de documentos sincronizados antiguos.
+
 ## Despliegue Railway
 
 Servicios previstos:
@@ -59,8 +70,9 @@ Servicios previstos:
 
 ## Pendiente antes de producción
 
-- Sustituir autenticación temporal `X-Dev-*` por JWT/cookies.
+- Resolver creación cómoda y segura del primer jefe.
 - Añadir migrador automático o paso documentado de migraciones.
+- Implementar envío real de correos y adjuntos PDF.
 - Añadir tests de permisos.
 - Añadir política de backups.
-- Añadir proveedor de email o SMTP cifrado por empleado.
+- Integrar gradualmente el cliente JS en `index.html`.

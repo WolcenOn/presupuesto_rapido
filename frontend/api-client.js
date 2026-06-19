@@ -2,16 +2,32 @@
 // De momento no se importa desde index.html para no romper la app actual.
 
 const AMP_API_BASE_URL = window.AMP_API_BASE_URL || "http://localhost:8080";
+let ampAccessToken = window.localStorage.getItem("amp_access_token") || "";
 
 async function ampApiRequest(path, options = {}) {
-  const res = await fetch(`${AMP_API_BASE_URL}${path}`, {
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {})
+  };
+  if (ampAccessToken) headers.Authorization = `Bearer ${ampAccessToken}`;
+
+  let res = await fetch(`${AMP_API_BASE_URL}${path}`, {
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {})
-    },
-    ...options
+    ...options,
+    headers
   });
+
+  if (res.status === 401 && path !== "/api/auth/login" && path !== "/api/auth/refresh") {
+    const refreshed = await ampRefreshSession().catch(() => null);
+    if (refreshed?.accessToken) {
+      headers.Authorization = `Bearer ${ampAccessToken}`;
+      res = await fetch(`${AMP_API_BASE_URL}${path}`, {
+        credentials: "include",
+        ...options,
+        headers
+      });
+    }
+  }
 
   const text = await res.text();
   const data = text ? JSON.parse(text) : null;
@@ -22,8 +38,43 @@ async function ampApiRequest(path, options = {}) {
   return data;
 }
 
+export async function ampLogin(email, password) {
+  const data = await ampApiRequest("/api/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password })
+  });
+  ampSetSession(data);
+  return data;
+}
+
+export async function ampRefreshSession() {
+  const data = await ampApiRequest("/api/auth/refresh", { method: "POST" });
+  ampSetSession(data);
+  return data;
+}
+
+export async function ampLogout() {
+  try {
+    await ampApiRequest("/api/auth/logout", { method: "POST" });
+  } finally {
+    ampAccessToken = "";
+    window.localStorage.removeItem("amp_access_token");
+  }
+}
+
+export async function ampMe() {
+  return ampApiRequest("/api/me");
+}
+
 export async function ampListPrices() {
   return ampApiRequest("/api/prices");
+}
+
+export async function ampCreatePrice(item) {
+  return ampApiRequest("/api/prices", {
+    method: "POST",
+    body: JSON.stringify(item)
+  });
 }
 
 export async function ampSyncDocument(doc) {
@@ -48,4 +99,11 @@ export async function ampSyncDocument(doc) {
 
 export async function ampListDocuments() {
   return ampApiRequest("/api/documents");
+}
+
+function ampSetSession(data) {
+  if (data?.accessToken) {
+    ampAccessToken = data.accessToken;
+    window.localStorage.setItem("amp_access_token", ampAccessToken);
+  }
 }

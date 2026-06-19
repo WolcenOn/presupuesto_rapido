@@ -9,21 +9,21 @@ import (
 )
 
 type Config struct {
-	Env              string
-	Port             string
-	DatabaseURL      string
-	JWTSecret        string
-	CORSAllowed      []string
-	BossEmail        string
-	LocalRetention   time.Duration
-	AccessTokenTTL   time.Duration
-	RefreshTokenTTL  time.Duration
-	SMTPHost         string
-	SMTPPort         int
-	SMTPUsername     string
-	SMTPPassword     string
-	SMTPFromEmail    string
-	SMTPFromName     string
+	Env               string
+	Port              string
+	DatabaseURL       string
+	JWTSecret         string
+	CORSAllowed       []string
+	BossEmail         string
+	LocalRetention    time.Duration
+	AccessTokenTTL    time.Duration
+	RefreshTokenTTL   time.Duration
+	SMTPHost          string
+	SMTPPort          int
+	SMTPUsername      string
+	SMTPPassword      string
+	SMTPFromEmail     string
+	SMTPFromName      string
 	MailWorkerEnabled bool
 }
 

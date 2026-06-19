@@ -129,6 +129,10 @@ SMTP_FROM_EMAIL=
 SMTP_FROM_NAME=AntenaManager PRO
 ```
 
+## Limitaciones encontradas
+
+El conector ha bloqueado la subida de algunos archivos nuevos relacionados con bootstrap inicial y envío SMTP real. Por eso esta rama deja preparados los modelos, configuración y cola, pero no incluye todavía el worker que envía correos ni el comando cómodo para crear el primer jefe.
+
 ## Siguientes pasos técnicos
 
 1. Añadir una vía cómoda y segura para generar el primer usuario jefe.

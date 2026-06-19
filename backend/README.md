@@ -14,6 +14,7 @@ Incluye una primera base para:
 - Hashing de credenciales con Argon2id.
 - Refresh token en cookie HttpOnly.
 - Cola inicial de correo al jefe para albaranes y facturas usando `document_email_logs`.
+- Variables de configuración preparadas para un worker de correo futuro.
 
 ## Ejecutar en local
 
@@ -97,6 +98,16 @@ POST /api/admin/users        solo jefe
 
 El campo de creación de credencial de usuario se transforma en hash Argon2id en el servidor antes de guardarse.
 
+## Cliente frontend auxiliar
+
+`frontend/api-client.js` todavía no está conectado al `index.html`, pero ya incluye helpers para:
+
+- Sesión: login, refresh, logout y restauración.
+- Precios: listar, crear, consultar, actualizar y desactivar.
+- Documentos: sincronizar, listar, consultar y reencolar envío al jefe.
+- Usuarios: listar y crear.
+- Offline: guardar documentos pendientes, sincronizar pendientes y limpiar documentos sincronizados antiguos.
+
 ## Variables de entorno Railway
 
 ```txt
@@ -109,6 +120,13 @@ BOSS_EMAIL=<correo-del-jefe>
 LOCAL_RETENTION_DAYS=60
 ACCESS_TOKEN_MINUTES=15
 REFRESH_TOKEN_DAYS=30
+MAIL_WORKER_ENABLED=false
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USERNAME=
+SMTP_PASSWORD=
+SMTP_FROM_EMAIL=
+SMTP_FROM_NAME=AntenaManager PRO
 ```
 
 ## Siguientes pasos técnicos

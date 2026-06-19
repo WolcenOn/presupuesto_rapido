@@ -2,7 +2,7 @@
 // De momento no se importa desde index.html para no romper la app actual.
 
 const AMP_API_BASE_URL = window.AMP_API_BASE_URL || "http://localhost:8080";
-let ampAccessToken = window.localStorage.getItem("amp_access_token") || "";
+let ampAccessToken = "";
 
 async function ampApiRequest(path, options = {}) {
   const headers = {
@@ -58,7 +58,6 @@ export async function ampLogout() {
     await ampApiRequest("/api/auth/logout", { method: "POST" });
   } finally {
     ampAccessToken = "";
-    window.localStorage.removeItem("amp_access_token");
   }
 }
 
@@ -101,9 +100,12 @@ export async function ampListDocuments() {
   return ampApiRequest("/api/documents");
 }
 
+export async function ampRestoreSession() {
+  return ampRefreshSession();
+}
+
 function ampSetSession(data) {
   if (data?.accessToken) {
     ampAccessToken = data.accessToken;
-    window.localStorage.setItem("amp_access_token", ampAccessToken);
   }
 }

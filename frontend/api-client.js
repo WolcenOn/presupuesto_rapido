@@ -100,6 +100,17 @@ export async function ampListDocuments() {
   return ampApiRequest("/api/documents");
 }
 
+export async function ampListUsers() {
+  return ampApiRequest("/api/admin/users");
+}
+
+export async function ampCreateUser(user) {
+  return ampApiRequest("/api/admin/users", {
+    method: "POST",
+    body: JSON.stringify(user)
+  });
+}
+
 export async function ampRestoreSession() {
   return ampRefreshSession();
 }

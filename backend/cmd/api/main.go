@@ -46,8 +46,13 @@ func main() {
 	mux.Handle("GET /api/me", authn(http.HandlerFunc(h.Me)))
 	mux.Handle("GET /api/prices", authn(http.HandlerFunc(h.ListPrices)))
 	mux.Handle("POST /api/prices", bossOnly(http.HandlerFunc(h.CreatePrice)))
+	mux.Handle("GET /api/prices/{id}", authn(http.HandlerFunc(h.GetPrice)))
+	mux.Handle("PATCH /api/prices/{id}", bossOnly(http.HandlerFunc(h.UpdatePrice)))
+	mux.Handle("DELETE /api/prices/{id}", bossOnly(http.HandlerFunc(h.DisablePrice)))
 	mux.Handle("GET /api/documents", authn(http.HandlerFunc(h.ListDocuments)))
 	mux.Handle("POST /api/documents", authn(http.HandlerFunc(h.CreateDocument)))
+	mux.Handle("GET /api/documents/{id}", authn(http.HandlerFunc(h.GetDocument)))
+	mux.Handle("POST /api/documents/{id}/send-to-boss", authn(http.HandlerFunc(h.QueueDocumentForBoss)))
 	mux.Handle("GET /api/admin/users", bossOnly(http.HandlerFunc(h.ListUsers)))
 	mux.Handle("POST /api/admin/users", bossOnly(http.HandlerFunc(h.CreateUser)))
 

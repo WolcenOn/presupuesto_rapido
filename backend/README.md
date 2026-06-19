@@ -9,7 +9,7 @@ Incluye una primera base para:
 - Despliegue en Railway con Docker.
 - Conexión a PostgreSQL usando `DATABASE_URL`.
 - Migraciones para usuarios, refresh tokens, precios, documentos, ajustes SMTP, auditoría y logs de correo.
-- Endpoints iniciales de autenticación, documentos y precios.
+- Endpoints iniciales de autenticación, documentos, precios y administración de usuarios.
 - Middleware de seguridad HTTP, CORS, timeout y autenticación JWT.
 - Hashing de contraseñas con Argon2id.
 - Refresh token en cookie HttpOnly.
@@ -53,6 +53,8 @@ insert into users (name, email, password_hash, role, is_active)
 values ('Jefe', 'jefe@example.com', '<argon2id_hash>', 'boss', true);
 ```
 
+Una vez que el jefe pueda iniciar sesión, podrá crear empleados o más jefes desde la API.
+
 ## Autenticación
 
 Login:
@@ -78,6 +80,26 @@ Refresh:
 curl -i -X POST http://localhost:8080/api/auth/refresh \
   --cookie "amp_refresh_token=<cookie>"
 ```
+
+## Administración de usuarios
+
+Listar usuarios, solo jefe:
+
+```bash
+curl http://localhost:8080/api/admin/users \
+  -H "Authorization: Bearer <accessToken>"
+```
+
+Crear empleado, solo jefe:
+
+```bash
+curl -X POST http://localhost:8080/api/admin/users \
+  -H "Authorization: Bearer <accessToken>" \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Empleado 1","email":"empleado@example.com","secret":"cambia-esta-clave","role":"employee"}'
+```
+
+El campo `secret` se transforma en hash Argon2id en el servidor antes de guardarse.
 
 ## Variables de entorno Railway
 

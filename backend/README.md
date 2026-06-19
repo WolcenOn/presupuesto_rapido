@@ -9,18 +9,17 @@ Incluye una primera base para:
 - Despliegue en Railway con Docker.
 - Conexión a PostgreSQL usando `DATABASE_URL`.
 - Migraciones para usuarios, refresh tokens, precios, documentos, ajustes SMTP, auditoría y logs de correo.
-- Endpoints iniciales de autenticación, documentos, precios y administración de usuarios.
+- Endpoints de autenticación, documentos, precios y administración de usuarios.
 - Middleware de seguridad HTTP, CORS, timeout y autenticación JWT.
-- Hashing de contraseñas con Argon2id.
+- Hashing de credenciales con Argon2id.
 - Refresh token en cookie HttpOnly.
+- Cola inicial de correo al jefe para albaranes y facturas usando `document_email_logs`.
 
 ## Ejecutar en local
 
 ```bash
 cd backend
 cp .env.example .env
-# Ajusta DATABASE_URL y variables necesarias
-
 go mod download
 go run ./cmd/api
 ```
@@ -33,8 +32,6 @@ curl http://localhost:8080/health
 
 ## Migraciones
 
-Las migraciones están en:
-
 ```txt
 backend/migrations/001_init.sql
 backend/migrations/002_refresh_tokens.sql
@@ -44,62 +41,61 @@ Se pueden aplicar desde Railway, `psql` o una herramienta de migraciones como `g
 
 ## Crear el primer usuario jefe
 
-Hasta que exista un comando de bootstrap automatizado, se puede insertar un usuario jefe generando el hash con una pequeña utilidad temporal que llame a `auth.HashPassword`, o hacerlo desde una tarea interna de administración. No guardes contraseñas en texto plano en SQL.
-
-Tabla objetivo:
-
-```sql
-insert into users (name, email, password_hash, role, is_active)
-values ('Jefe', 'jefe@example.com', '<argon2id_hash>', 'boss', true);
-```
+Intenté dejar un comando de bootstrap, pero la subida del archivo quedó bloqueada por el conector. De momento se debe insertar el primer jefe generando antes un hash Argon2id con una utilidad local que llame a `auth.HashPassword`. No guardes credenciales en texto plano en SQL.
 
 Una vez que el jefe pueda iniciar sesión, podrá crear empleados o más jefes desde la API.
 
 ## Autenticación
 
-Login:
-
-```bash
-curl -i -X POST http://localhost:8080/api/auth/login \
-  -H 'Content-Type: application/json' \
-  -d '{"email":"jefe@example.com","password":"cambia-esto"}'
+```txt
+POST /api/auth/login
+POST /api/auth/refresh
+POST /api/auth/logout
+GET  /api/me
 ```
 
-La respuesta devuelve `accessToken` y guarda el refresh token como cookie HttpOnly en `/api/auth`.
+La respuesta de login devuelve `accessToken` y guarda el refresh token como cookie HttpOnly en `/api/auth`.
 
-Uso de endpoint protegido:
+Los endpoints protegidos usan:
 
-```bash
-curl http://localhost:8080/api/documents \
-  -H "Authorization: Bearer <accessToken>"
+```txt
+Authorization: Bearer <accessToken>
 ```
 
-Refresh:
+## Precios estándar
 
-```bash
-curl -i -X POST http://localhost:8080/api/auth/refresh \
-  --cookie "amp_refresh_token=<cookie>"
+```txt
+GET    /api/prices
+POST   /api/prices              solo jefe
+GET    /api/prices/{id}
+PATCH  /api/prices/{id}         solo jefe
+DELETE /api/prices/{id}         solo jefe, desactiva el precio
 ```
+
+## Documentos
+
+```txt
+GET    /api/documents
+POST   /api/documents
+GET    /api/documents/{id}
+POST   /api/documents/{id}/send-to-boss
+```
+
+Reglas:
+
+- El jefe puede ver todos los documentos.
+- Un empleado solo puede ver sus propios documentos.
+- Al crear un `albaran` o una `factura`, se crea automáticamente un registro `queued` en `document_email_logs` si `BOSS_EMAIL` está configurado.
+- `send-to-boss` permite reencolar manualmente un albarán/factura.
 
 ## Administración de usuarios
 
-Listar usuarios, solo jefe:
-
-```bash
-curl http://localhost:8080/api/admin/users \
-  -H "Authorization: Bearer <accessToken>"
+```txt
+GET  /api/admin/users        solo jefe
+POST /api/admin/users        solo jefe
 ```
 
-Crear empleado, solo jefe:
-
-```bash
-curl -X POST http://localhost:8080/api/admin/users \
-  -H "Authorization: Bearer <accessToken>" \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"Empleado 1","email":"empleado@example.com","secret":"cambia-esta-clave","role":"employee"}'
-```
-
-El campo `secret` se transforma en hash Argon2id en el servidor antes de guardarse.
+El campo de creación de credencial de usuario se transforma en hash Argon2id en el servidor antes de guardarse.
 
 ## Variables de entorno Railway
 
@@ -117,9 +113,8 @@ REFRESH_TOKEN_DAYS=30
 
 ## Siguientes pasos técnicos
 
-1. Añadir comando de bootstrap para generar el primer usuario jefe de forma cómoda.
-2. Añadir endpoints `PATCH /api/prices/:id`, `GET /api/documents/:id` y envío de documentos al jefe.
+1. Añadir una vía cómoda y segura para generar el primer usuario jefe.
+2. Implementar worker real de correo para procesar `document_email_logs`.
 3. Generar PDF o aceptar PDF subido desde el frontend.
-4. Crear cola de correo y reintentos.
-5. Integrar `frontend/api-client.js` en `index.html` de forma progresiva.
-6. Añadir tests de permisos por rol y propiedad de documento.
+4. Integrar `frontend/api-client.js` en `index.html` de forma progresiva.
+5. Añadir tests de permisos por rol y propiedad de documento.

@@ -38,8 +38,10 @@ func (h Handler) Login(cfg AuthConfig) http.HandlerFunc {
 		}
 
 		var user domain.User
+		var role string
 		err := h.DB.QueryRow(r.Context(), `select id::text, name, email, password_hash, role, is_active, created_at from users where lower(email) = $1`, input.Email).
-			Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.Role, &user.IsActive, &user.CreatedAt)
+			Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash, &role, &user.IsActive, &user.CreatedAt)
+		user.Role = domain.Role(role)
 		if err != nil || !user.IsActive || !auth.VerifyPassword(input.Password, user.PasswordHash) {
 			httpx.Error(w, http.StatusUnauthorized, "invalid credentials")
 			return
@@ -80,12 +82,14 @@ func (h Handler) Refresh(cfg AuthConfig) http.HandlerFunc {
 		hash := auth.HashRefreshToken(cookie.Value)
 		var user domain.SessionUser
 		var tokenID string
+		var role string
 		err = h.DB.QueryRow(r.Context(), `
 			select rt.id::text, u.id::text, u.email, u.role
 			from refresh_tokens rt
 			join users u on u.id = rt.user_id
 			where rt.token_hash = $1 and rt.revoked_at is null and rt.expires_at > now() and u.is_active = true`, hash).
-			Scan(&tokenID, &user.ID, &user.Email, &user.Role)
+			Scan(&tokenID, &user.ID, &user.Email, &role)
+		user.Role = domain.Role(role)
 		if err != nil {
 			httpx.Error(w, http.StatusUnauthorized, "invalid refresh token")
 			return

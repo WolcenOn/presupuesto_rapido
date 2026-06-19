@@ -10,6 +10,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgxpool"
+
 	"presupuesto-rapido/backend/internal/config"
 	"presupuesto-rapido/backend/internal/database"
 	"presupuesto-rapido/backend/internal/domain"
@@ -22,7 +24,7 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	var db = mustConnectDatabase(ctx, cfg.DatabaseURL)
+	db := connectDatabase(ctx, cfg.DatabaseURL)
 	if db != nil {
 		defer db.Close()
 	}
@@ -66,7 +68,7 @@ func main() {
 	}
 }
 
-func mustConnectDatabase(ctx context.Context, databaseURL string) anyDB {
+func connectDatabase(ctx context.Context, databaseURL string) *pgxpool.Pool {
 	if databaseURL == "" {
 		return nil
 	}
@@ -77,8 +79,6 @@ func mustConnectDatabase(ctx context.Context, databaseURL string) anyDB {
 	}
 	return db
 }
-
-type anyDB interface{ Close() }
 
 func devAuth(next http.HandlerFunc, fallbackRole domain.Role) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

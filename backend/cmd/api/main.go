@@ -16,6 +16,7 @@ import (
 	"presupuesto-rapido/backend/internal/database"
 	"presupuesto-rapido/backend/internal/handlers"
 	"presupuesto-rapido/backend/internal/httpx"
+	"presupuesto-rapido/backend/internal/mail"
 )
 
 func main() {
@@ -26,6 +27,19 @@ func main() {
 	db := connectDatabase(ctx, cfg.DatabaseURL)
 	if db != nil {
 		defer db.Close()
+	}
+	if cfg.MailWorkerEnabled {
+		mail.Worker{
+			DB: db,
+			Config: mail.Config{
+				Host:      cfg.SMTPHost,
+				Port:      cfg.SMTPPort,
+				Username:  cfg.SMTPUsername,
+				Password:  cfg.SMTPPassword,
+				FromEmail: cfg.SMTPFromEmail,
+				FromName:  cfg.SMTPFromName,
+			},
+		}.Start(ctx)
 	}
 
 	h := handlers.Handler{DB: db, BossEmail: cfg.BossEmail}

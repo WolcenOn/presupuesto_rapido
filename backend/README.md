@@ -13,6 +13,7 @@ Incluye una primera base para:
 - Middleware de seguridad HTTP, CORS, timeout y autenticación JWT.
 - Hashing de credenciales con Argon2id.
 - Refresh token en cookie HttpOnly.
+- Setup inicial de un solo uso para crear el primer jefe.
 - Cola inicial de correo al jefe para albaranes y facturas usando `document_email_logs`.
 - Variables de configuración preparadas para un worker de correo futuro.
 
@@ -42,7 +43,16 @@ Se pueden aplicar desde Railway, `psql` o una herramienta de migraciones como `g
 
 ## Crear el primer usuario jefe
 
-Intenté dejar un comando de bootstrap, pero la subida del archivo quedó bloqueada por el conector. De momento se debe insertar el primer jefe generando antes un hash Argon2id con una utilidad local que llame a `auth.HashPassword`. No guardes credenciales en texto plano en SQL.
+Configura `BOOTSTRAP_SECRET` en Railway o en `.env`. Mientras no exista ningún usuario con rol `boss`, puedes crear el primer jefe con:
+
+```bash
+curl -X POST http://localhost:8080/api/setup/boss \
+  -H 'Content-Type: application/json' \
+  -H 'X-Setup-Token: <BOOTSTRAP_SECRET>' \
+  -d '{"name":"Jefe","email":"jefe@example.com","secret":"cambia-esta-clave"}'
+```
+
+Después de crear el primer jefe, el endpoint responderá conflicto si se intenta usar otra vez porque ya existe un jefe. Aun así, conviene borrar `BOOTSTRAP_SECRET` de Railway tras completar el alta inicial.
 
 Una vez que el jefe pueda iniciar sesión, podrá crear empleados o más jefes desde la API.
 
@@ -102,6 +112,7 @@ El campo de creación de credencial de usuario se transforma en hash Argon2id en
 
 `frontend/api-client.js` todavía no está conectado al `index.html`, pero ya incluye helpers para:
 
+- Setup: creación del primer jefe.
 - Sesión: login, refresh, logout y restauración.
 - Precios: listar, crear, consultar, actualizar y desactivar.
 - Documentos: sincronizar, listar, consultar y reencolar envío al jefe.
@@ -115,6 +126,7 @@ APP_ENV=production
 PORT=8080
 DATABASE_URL=<inyectada por Railway PostgreSQL>
 JWT_SECRET=<secreto largo aleatorio>
+BOOTSTRAP_SECRET=<token temporal para crear el primer jefe>
 CORS_ALLOWED_ORIGINS=https://tu-dominio.com
 BOSS_EMAIL=<correo-del-jefe>
 LOCAL_RETENTION_DAYS=60
@@ -131,12 +143,11 @@ SMTP_FROM_NAME=AntenaManager PRO
 
 ## Limitaciones encontradas
 
-El conector ha bloqueado la subida de algunos archivos nuevos relacionados con bootstrap inicial y envío SMTP real. Por eso esta rama deja preparados los modelos, configuración y cola, pero no incluye todavía el worker que envía correos ni el comando cómodo para crear el primer jefe.
+El worker que envía correos reales queda pendiente. Esta rama ya deja preparada la cola `document_email_logs`, la configuración SMTP y el reencolado manual, pero todavía no procesa los registros `queued`.
 
 ## Siguientes pasos técnicos
 
-1. Añadir una vía cómoda y segura para generar el primer usuario jefe.
-2. Implementar worker real de correo para procesar `document_email_logs`.
-3. Generar PDF o aceptar PDF subido desde el frontend.
-4. Integrar `frontend/api-client.js` en `index.html` de forma progresiva.
-5. Añadir tests de permisos por rol y propiedad de documento.
+1. Implementar worker real de correo para procesar `document_email_logs`.
+2. Generar PDF o aceptar PDF subido desde el frontend.
+3. Integrar `frontend/api-client.js` en `index.html` de forma progresiva.
+4. Añadir tests de permisos por rol y propiedad de documento.

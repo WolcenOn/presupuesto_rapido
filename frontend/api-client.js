@@ -40,6 +40,14 @@ async function ampApiRequest(path, options = {}) {
   return data;
 }
 
+export async function ampSetupBoss(setupToken, boss) {
+  return ampApiRequest("/api/setup/boss", {
+    method: "POST",
+    headers: { "X-Setup-Token": setupToken },
+    body: JSON.stringify(boss)
+  });
+}
+
 export async function ampLogin(email, password) {
   const data = await ampApiRequest("/api/auth/login", {
     method: "POST",

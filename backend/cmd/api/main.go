@@ -31,6 +31,7 @@ func main() {
 	h := handlers.Handler{DB: db, BossEmail: cfg.BossEmail}
 	authCfg := handlers.AuthConfig{
 		JWTSecret:       cfg.JWTSecret,
+		BootstrapSecret: cfg.BootstrapSecret,
 		AccessTokenTTL:  cfg.AccessTokenTTL,
 		RefreshTokenTTL: cfg.RefreshTokenTTL,
 		CookieSecure:    cfg.Env == "production",
@@ -40,6 +41,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", h.Health)
+	mux.HandleFunc("POST /api/setup/boss", h.SetupBoss(authCfg))
 	mux.HandleFunc("POST /api/auth/login", h.Login(authCfg))
 	mux.HandleFunc("POST /api/auth/refresh", h.Refresh(authCfg))
 	mux.HandleFunc("POST /api/auth/logout", h.Logout(authCfg))

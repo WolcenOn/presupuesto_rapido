@@ -13,6 +13,7 @@ type Config struct {
 	Port              string
 	DatabaseURL       string
 	JWTSecret         string
+	BootstrapSecret   string
 	CORSAllowed       []string
 	BossEmail         string
 	LocalRetention    time.Duration
@@ -33,6 +34,7 @@ func Load() Config {
 		Port:              getEnv("PORT", "8080"),
 		DatabaseURL:       os.Getenv("DATABASE_URL"),
 		JWTSecret:         os.Getenv("JWT_SECRET"),
+		BootstrapSecret:   os.Getenv("BOOTSTRAP_SECRET"),
 		CORSAllowed:       splitCSV(getEnv("CORS_ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:8080")),
 		BossEmail:         os.Getenv("BOSS_EMAIL"),
 		LocalRetention:    time.Duration(getEnvInt("LOCAL_RETENTION_DAYS", 60)) * 24 * time.Hour,
@@ -52,6 +54,9 @@ func Load() Config {
 	}
 	if cfg.JWTSecret == "" {
 		log.Println("warning: JWT_SECRET is empty; set a strong random secret before production")
+	}
+	if cfg.Env == "production" && cfg.BootstrapSecret == "" {
+		log.Println("warning: BOOTSTRAP_SECRET is empty; first boss bootstrap endpoint will be disabled")
 	}
 	return cfg
 }

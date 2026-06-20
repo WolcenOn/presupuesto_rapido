@@ -13,6 +13,7 @@ import (
 
 type AuthConfig struct {
 	JWTSecret       string
+	BootstrapSecret string
 	AccessTokenTTL  time.Duration
 	RefreshTokenTTL time.Duration
 	CookieSecure    bool

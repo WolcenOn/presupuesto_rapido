@@ -15,7 +15,7 @@ Incluye una primera base para:
 - Refresh token en cookie HttpOnly.
 - Setup inicial de un solo uso para crear el primer jefe.
 - Cola inicial de correo al jefe para albaranes y facturas usando `document_email_logs`.
-- Variables de configuración preparadas para un worker de correo futuro.
+- Worker SMTP básico para procesar correos `queued`.
 
 ## Ejecutar en local
 
@@ -99,6 +99,24 @@ Reglas:
 - Al crear un `albaran` o una `factura`, se crea automáticamente un registro `queued` en `document_email_logs` si `BOSS_EMAIL` está configurado.
 - `send-to-boss` permite reencolar manualmente un albarán/factura.
 
+## Worker de correo
+
+El worker se activa con:
+
+```txt
+MAIL_WORKER_ENABLED=true
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USERNAME=<usuario smtp>
+SMTP_PASSWORD=<clave smtp>
+SMTP_FROM_EMAIL=notificaciones@example.com
+SMTP_FROM_NAME=AntenaManager PRO
+```
+
+Cada 30 segundos busca hasta 10 correos `queued`, envía un correo de texto al jefe y actualiza el log a `sent` o `failed`. Cuando el envío se completa, también marca `documents.sent_to_boss_at`.
+
+De momento el correo incluye datos básicos del documento. El adjunto PDF queda para la siguiente fase.
+
 ## Administración de usuarios
 
 ```txt
@@ -132,7 +150,7 @@ BOSS_EMAIL=<correo-del-jefe>
 LOCAL_RETENTION_DAYS=60
 ACCESS_TOKEN_MINUTES=15
 REFRESH_TOKEN_DAYS=30
-MAIL_WORKER_ENABLED=false
+MAIL_WORKER_ENABLED=true
 SMTP_HOST=
 SMTP_PORT=587
 SMTP_USERNAME=
@@ -143,11 +161,11 @@ SMTP_FROM_NAME=AntenaManager PRO
 
 ## Limitaciones encontradas
 
-El worker que envía correos reales queda pendiente. Esta rama ya deja preparada la cola `document_email_logs`, la configuración SMTP y el reencolado manual, pero todavía no procesa los registros `queued`.
+El worker SMTP actual envía un correo de texto, pero todavía no genera ni adjunta PDF. Para producción también conviene añadir control de reintentos con contador y evitar reintentos infinitos.
 
 ## Siguientes pasos técnicos
 
-1. Implementar worker real de correo para procesar `document_email_logs`.
-2. Generar PDF o aceptar PDF subido desde el frontend.
-3. Integrar `frontend/api-client.js` en `index.html` de forma progresiva.
-4. Añadir tests de permisos por rol y propiedad de documento.
+1. Generar PDF o aceptar PDF subido desde el frontend.
+2. Integrar `frontend/api-client.js` en `index.html` de forma progresiva.
+3. Añadir tests de permisos por rol y propiedad de documento.
+4. Mejorar el worker con contador de intentos, backoff y adjuntos.

@@ -23,7 +23,7 @@ func (h Handler) UpdateCompany(w http.ResponseWriter, r *http.Request) {
 	if !h.requireDB(w) { return }
 	user, ok := httpx.UserFromContext(r.Context())
 	if !ok || user.CompanyID == "" { httpx.Error(w, http.StatusUnauthorized, "authentication required"); return }
-	if user.Role != domain.RoleBoss { httpx.Error(w, http.StatusForbidden, "only boss can update company"); return }
+	if !user.Role.CanManageCompany() { httpx.Error(w, http.StatusForbidden, "only owner can update company"); return }
 	var input domain.Company
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil { httpx.Error(w, http.StatusBadRequest, "invalid json"); return }
 	input.Name = strings.TrimSpace(input.Name)

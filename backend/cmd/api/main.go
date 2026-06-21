@@ -29,27 +29,11 @@ func main() {
 		defer db.Close()
 	}
 	if cfg.MailWorkerEnabled {
-		mail.Worker{
-			DB: db,
-			Config: mail.Config{
-				Host:      cfg.SMTPHost,
-				Port:      cfg.SMTPPort,
-				Username:  cfg.SMTPUsername,
-				Password:  cfg.SMTPPassword,
-				FromEmail: cfg.SMTPFromEmail,
-				FromName:  cfg.SMTPFromName,
-			},
-		}.Start(ctx)
+		mail.Worker{DB: db, Config: mail.Config{Host: cfg.SMTPHost, Port: cfg.SMTPPort, Username: cfg.SMTPUsername, Password: cfg.SMTPPassword, FromEmail: cfg.SMTPFromEmail, FromName: cfg.SMTPFromName}}.Start(ctx)
 	}
 
 	h := handlers.Handler{DB: db, BossEmail: cfg.BossEmail}
-	authCfg := handlers.AuthConfig{
-		JWTSecret:       cfg.JWTSecret,
-		BootstrapSecret: cfg.BootstrapSecret,
-		AccessTokenTTL:  cfg.AccessTokenTTL,
-		RefreshTokenTTL: cfg.RefreshTokenTTL,
-		CookieSecure:    cfg.Env == "production",
-	}
+	authCfg := handlers.AuthConfig{JWTSecret: cfg.JWTSecret, BootstrapSecret: cfg.BootstrapSecret, AccessTokenTTL: cfg.AccessTokenTTL, RefreshTokenTTL: cfg.RefreshTokenTTL, CookieSecure: cfg.Env == "production"}
 	authn := httpx.Authenticate(cfg.JWTSecret)
 	bossOnly := chain(authn, httpx.RequireRole("boss"))
 
@@ -60,6 +44,8 @@ func main() {
 	mux.HandleFunc("POST /api/auth/refresh", h.Refresh(authCfg))
 	mux.HandleFunc("POST /api/auth/logout", h.Logout(authCfg))
 	mux.Handle("GET /api/me", authn(http.HandlerFunc(h.Me)))
+	mux.Handle("GET /api/company", authn(http.HandlerFunc(h.GetCompany)))
+	mux.Handle("PATCH /api/company", bossOnly(http.HandlerFunc(h.UpdateCompany)))
 	mux.Handle("GET /api/prices", authn(http.HandlerFunc(h.ListPrices)))
 	mux.Handle("POST /api/prices", bossOnly(http.HandlerFunc(h.CreatePrice)))
 	mux.Handle("GET /api/prices/{id}", authn(http.HandlerFunc(h.GetPrice)))
@@ -77,47 +63,27 @@ func main() {
 	app = httpx.CORS(cfg.CORSAllowed)(app)
 	app = httpx.RequestTimeout(15 * time.Second)(app)
 
-	server := &http.Server{
-		Addr:              ":" + cfg.Port,
-		Handler:           app,
-		ReadHeaderTimeout: 5 * time.Second,
-		ReadTimeout:       15 * time.Second,
-		WriteTimeout:      30 * time.Second,
-		IdleTimeout:       60 * time.Second,
-	}
-
+	server := &http.Server{Addr: ":" + cfg.Port, Handler: app, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 15 * time.Second, WriteTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second}
 	go func() {
 		log.Printf("api listening on :%s (%s)", cfg.Port, cfg.Env)
-		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("server error: %v", err)
-		}
+		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) { log.Fatalf("server error: %v", err) }
 	}()
-
 	<-ctx.Done()
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	if err := server.Shutdown(shutdownCtx); err != nil {
-		log.Printf("graceful shutdown failed: %v", err)
-	}
+	if err := server.Shutdown(shutdownCtx); err != nil { log.Printf("graceful shutdown failed: %v", err) }
 }
 
 func connectDatabase(ctx context.Context, databaseURL string) *pgxpool.Pool {
-	if databaseURL == "" {
-		return nil
-	}
+	if databaseURL == "" { return nil }
 	db, err := database.Connect(ctx, databaseURL)
-	if err != nil {
-		log.Printf("database unavailable: %v", err)
-		return nil
-	}
+	if err != nil { log.Printf("database unavailable: %v", err); return nil }
 	return db
 }
 
 func chain(middlewares ...func(http.Handler) http.Handler) func(http.Handler) http.Handler {
 	return func(final http.Handler) http.Handler {
-		for i := len(middlewares) - 1; i >= 0; i-- {
-			final = middlewares[i](final)
-		}
+		for i := len(middlewares) - 1; i >= 0; i-- { final = middlewares[i](final) }
 		return final
 	}
 }

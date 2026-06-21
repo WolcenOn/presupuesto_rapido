@@ -14,9 +14,10 @@ import (
 )
 
 type TokenClaims struct {
-	UserID string      `json:"uid"`
-	Email  string      `json:"email"`
-	Role   domain.Role `json:"role"`
+	UserID    string      `json:"uid"`
+	CompanyID string      `json:"cid"`
+	Email     string      `json:"email"`
+	Role      domain.Role `json:"role"`
 	jwt.RegisteredClaims
 }
 
@@ -26,9 +27,10 @@ func CreateAccessToken(user domain.SessionUser, secret string, ttl time.Duration
 	}
 	now := time.Now().UTC()
 	claims := TokenClaims{
-		UserID: user.ID,
-		Email:  user.Email,
-		Role:   user.Role,
+		UserID:    user.ID,
+		CompanyID: user.CompanyID,
+		Email:     user.Email,
+		Role:      user.Role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Subject:   user.ID,
 			IssuedAt:  jwt.NewNumericDate(now),
@@ -55,7 +57,7 @@ func ParseAccessToken(tokenString, secret string) (domain.SessionUser, error) {
 	if !ok || !token.Valid {
 		return domain.SessionUser{}, errors.New("invalid token")
 	}
-	return domain.SessionUser{ID: claims.UserID, Email: claims.Email, Role: claims.Role}, nil
+	return domain.SessionUser{ID: claims.UserID, CompanyID: claims.CompanyID, Email: claims.Email, Role: claims.Role}, nil
 }
 
 func NewRefreshToken() (plain string, hash []byte, err error) {

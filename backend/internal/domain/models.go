@@ -5,9 +5,34 @@ import "time"
 type Role string
 
 const (
+	RoleOwner    Role = "owner"
 	RoleBoss     Role = "boss"
 	RoleEmployee Role = "employee"
 )
+
+func (r Role) CanManageCompany() bool {
+	return r == RoleOwner
+}
+
+func (r Role) CanManageUsers() bool {
+	return r == RoleOwner || r == RoleBoss
+}
+
+func (r Role) CanManagePrices() bool {
+	return r == RoleOwner || r == RoleBoss
+}
+
+func (r Role) CanCreateDocuments() bool {
+	return r == RoleOwner || r == RoleBoss || r == RoleEmployee
+}
+
+func (r Role) CanReadCompanyDocuments() bool {
+	return r == RoleOwner || r == RoleBoss
+}
+
+func (r Role) CanDeleteBusinessData() bool {
+	return false
+}
 
 type DocumentType string
 
@@ -44,14 +69,14 @@ type User struct {
 }
 
 type UserInvitation struct {
-	ID        string    `json:"id"`
-	CompanyID string    `json:"companyId"`
-	Email     string    `json:"email"`
-	Role      Role      `json:"role"`
-	Token     string    `json:"-"`
-	ExpiresAt time.Time `json:"expiresAt"`
+	ID         string     `json:"id"`
+	CompanyID  string     `json:"companyId"`
+	Email      string     `json:"email"`
+	Role       Role       `json:"role"`
+	Token      string     `json:"-"`
+	ExpiresAt  time.Time  `json:"expiresAt"`
 	AcceptedAt *time.Time `json:"acceptedAt,omitempty"`
-	CreatedAt time.Time `json:"createdAt"`
+	CreatedAt  time.Time  `json:"createdAt"`
 }
 
 type PriceItem struct {

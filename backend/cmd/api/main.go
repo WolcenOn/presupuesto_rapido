@@ -43,16 +43,16 @@ func main() {
 	mux.Handle("GET /api/me", authn(http.HandlerFunc(h.Me)))
 	mux.Handle("GET /api/company", authn(http.HandlerFunc(h.GetCompany)))
 	mux.Handle("PATCH /api/company", ownerOnly(http.HandlerFunc(h.UpdateCompany)))
-	mux.Handle("GET /api/prices", authn(http.HandlerFunc(h.ListPrices)))
-	mux.Handle("POST /api/prices", managerOnly(http.HandlerFunc(h.CreatePrice)))
-	mux.Handle("GET /api/prices/{id}", authn(http.HandlerFunc(h.GetPrice)))
-	mux.Handle("PATCH /api/prices/{id}", managerOnly(http.HandlerFunc(h.UpdatePrice)))
+	mux.Handle("GET /api/prices", authn(http.HandlerFunc(h.TenantListPrices)))
+	mux.Handle("POST /api/prices", managerOnly(http.HandlerFunc(h.TenantCreatePrice)))
+	mux.Handle("GET /api/prices/{id}", authn(http.HandlerFunc(h.TenantGetPrice)))
+	mux.Handle("PATCH /api/prices/{id}", managerOnly(http.HandlerFunc(h.TenantUpdatePrice)))
 	mux.Handle("GET /api/documents", authn(http.HandlerFunc(h.ListDocuments)))
 	mux.Handle("POST /api/documents", authn(http.HandlerFunc(h.CreateDocument)))
 	mux.Handle("GET /api/documents/{id}", authn(http.HandlerFunc(h.GetDocument)))
 	mux.Handle("POST /api/documents/{id}/send-to-boss", authn(http.HandlerFunc(h.QueueDocumentForBoss)))
-	mux.Handle("GET /api/admin/users", managerOnly(http.HandlerFunc(h.ListUsers)))
-	mux.Handle("POST /api/admin/users", managerOnly(http.HandlerFunc(h.CreateUser)))
+	mux.Handle("GET /api/admin/users", managerOnly(http.HandlerFunc(h.TenantListUsers)))
+	mux.Handle("POST /api/admin/users", managerOnly(http.HandlerFunc(h.TenantCreateUser)))
 
 	var app http.Handler = mux
 	app = httpx.SecurityHeaders(app)
@@ -68,4 +68,4 @@ func main() {
 }
 
 func connectDatabase(ctx context.Context, databaseURL string) *pgxpool.Pool { if databaseURL == "" { return nil }; db, err := database.Connect(ctx, databaseURL); if err != nil { log.Printf("database unavailable: %v", err); return nil }; return db }
-func chain(middlewares ...func(http.Handler) http.Handler) func(http.Handler) http.Handler { return func(final http.Handler) http.Handler { for i := len(middlewares) - 1; i >= 0; i-- { final = middlewares[i](final) }; return final } }
+func chain(middlewares ...func(http.Handler) http.Handler) func(http.Handler) { return func(final http.Handler) http.Handler { for i := len(middlewares) - 1; i >= 0; i-- { final = middlewares[i](final) }; return final } }

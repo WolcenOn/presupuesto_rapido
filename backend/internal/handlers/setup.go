@@ -14,8 +14,8 @@ func (h Handler) SetupBoss(cfg AuthConfig) http.HandlerFunc {
 		if !h.requireDB(w) { return }
 		if cfg.BootstrapSecret == "" || r.Header.Get("X-Setup-Token") != cfg.BootstrapSecret { httpx.Error(w, http.StatusForbidden, "setup not allowed"); return }
 		var count int
-		if err := h.DB.QueryRow(r.Context(), `select count(*) from users where role = 'boss'`).Scan(&count); err != nil { httpx.Error(w, http.StatusInternalServerError, "could not check users"); return }
-		if count > 0 { httpx.Error(w, http.StatusConflict, "boss already exists"); return }
+		if err := h.DB.QueryRow(r.Context(), `select count(*) from users where role = 'owner'`).Scan(&count); err != nil { httpx.Error(w, http.StatusInternalServerError, "could not check users"); return }
+		if count > 0 { httpx.Error(w, http.StatusConflict, "owner already exists"); return }
 		var input struct {
 			Name string `json:"name"`
 			Email string `json:"email"`
@@ -39,7 +39,7 @@ func (h Handler) SetupBoss(cfg AuthConfig) http.HandlerFunc {
 		var companyID string
 		if err = tx.QueryRow(r.Context(), `insert into companies (name, tax_id, email, phone, address) values ($1,$2,$3,$4,$5) returning id::text`, input.CompanyName, input.CompanyTaxID, input.CompanyEmail, input.CompanyPhone, input.CompanyAddress).Scan(&companyID); err != nil { httpx.Error(w, http.StatusInternalServerError, "could not create company"); return }
 		var userID string
-		if err = tx.QueryRow(r.Context(), `insert into users (company_id, name, email, password_hash, role, is_active) values ($1, $2, $3, $4, 'boss', true) returning id::text`, companyID, input.Name, input.Email, hash).Scan(&userID); err != nil { httpx.Error(w, http.StatusInternalServerError, "could not create user"); return }
+		if err = tx.QueryRow(r.Context(), `insert into users (company_id, name, email, password_hash, role, is_active) values ($1, $2, $3, $4, 'owner', true) returning id::text`, companyID, input.Name, input.Email, hash).Scan(&userID); err != nil { httpx.Error(w, http.StatusInternalServerError, "could not create user"); return }
 		if err = tx.Commit(r.Context()); err != nil { httpx.Error(w, http.StatusInternalServerError, "could not finish setup"); return }
 		httpx.JSON(w, http.StatusCreated, map[string]string{"id": userID, "companyId": companyID})
 	}

@@ -17,8 +17,24 @@ const (
 	DocumentInvoice  DocumentType = "factura"
 )
 
+type Company struct {
+	ID        string    `json:"id"`
+	Name      string    `json:"name"`
+	TaxID     string    `json:"taxId"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Address   string    `json:"address"`
+	City      string    `json:"city"`
+	Postal    string    `json:"postal"`
+	Province  string    `json:"province"`
+	Country   string    `json:"country"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+}
+
 type User struct {
 	ID           string    `json:"id"`
+	CompanyID    string    `json:"companyId"`
 	Name         string    `json:"name"`
 	Email        string    `json:"email"`
 	PasswordHash string    `json:"-"`
@@ -27,8 +43,20 @@ type User struct {
 	CreatedAt    time.Time `json:"createdAt"`
 }
 
+type UserInvitation struct {
+	ID        string    `json:"id"`
+	CompanyID string    `json:"companyId"`
+	Email     string    `json:"email"`
+	Role      Role      `json:"role"`
+	Token     string    `json:"-"`
+	ExpiresAt time.Time `json:"expiresAt"`
+	AcceptedAt *time.Time `json:"acceptedAt,omitempty"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
 type PriceItem struct {
 	ID        string    `json:"id"`
+	CompanyID string    `json:"companyId"`
 	Name      string    `json:"name"`
 	BasePrice float64   `json:"basePrice"`
 	IVARate   float64   `json:"ivaRate"`
@@ -39,6 +67,7 @@ type PriceItem struct {
 
 type Document struct {
 	ID             string       `json:"id"`
+	CompanyID      string       `json:"companyId"`
 	Ref            string       `json:"ref"`
 	Type           DocumentType `json:"type"`
 	EmployeeID     string       `json:"employeeId"`
@@ -59,7 +88,8 @@ type Document struct {
 }
 
 type SessionUser struct {
-	ID    string `json:"id"`
-	Email string `json:"email"`
-	Role  Role   `json:"role"`
+	ID        string `json:"id"`
+	CompanyID string `json:"companyId"`
+	Email     string `json:"email"`
+	Role      Role   `json:"role"`
 }

@@ -5,7 +5,7 @@ create table if not exists users (
   name text not null,
   email text not null unique,
   password_hash text not null,
-  role text not null check (role in ('boss', 'employee')),
+  role text not null check (role in ('owner', 'boss', 'employee')),
   is_active boolean not null default true,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -24,11 +24,10 @@ create table if not exists employee_mail_settings (
 create table if not exists price_items (
   id uuid primary key default gen_random_uuid(),
   name text not null,
-  base_price numeric(12,2) not null check (base_price >= 0),
-  iva_rate numeric(5,2) not null default 21 check (iva_rate >= 0),
+  base_price numeric(12,2) not null,
+  iva_rate numeric(5,2) not null default 21,
   active boolean not null default true,
   updated_by uuid references users(id),
-  created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
@@ -38,15 +37,15 @@ create table if not exists documents (
   type text not null check (type in ('presupuesto', 'albaran', 'factura')),
   employee_id uuid not null references users(id),
   client_name text not null,
-  client_cif text not null default '',
-  client_phone text not null default '',
-  client_address text not null default '',
+  client_cif text,
+  client_phone text,
+  client_address text,
   work_order text,
   payment_method text,
   base_amount numeric(12,2) not null default 0,
   iva_amount numeric(12,2) not null default 0,
   total_amount numeric(12,2) not null default 0,
-  document_json jsonb not null default '{}'::jsonb,
+  document_json jsonb not null,
   pdf_path text,
   sent_to_boss_at timestamptz,
   created_at timestamptz not null default now(),

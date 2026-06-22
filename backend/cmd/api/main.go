@@ -68,4 +68,4 @@ func main() {
 }
 
 func connectDatabase(ctx context.Context, databaseURL string) *pgxpool.Pool { if databaseURL == "" { return nil }; db, err := database.Connect(ctx, databaseURL); if err != nil { log.Printf("database unavailable: %v", err); return nil }; return db }
-func chain(middlewares ...func(http.Handler) http.Handler) func(http.Handler) { return func(final http.Handler) http.Handler { for i := len(middlewares) - 1; i >= 0; i-- { final = middlewares[i](final) }; return final } }
+func chain(middlewares ...func(http.Handler) http.Handler) func(http.Handler) http.Handler { return func(final http.Handler) http.Handler { for i := len(middlewares) - 1; i >= 0; i-- { final = middlewares[i](final) }; return final } }

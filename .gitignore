@@ -1,0 +1,14 @@
+# Local environment files
+.env
+backend/.env
+*.local
+
+# Go build outputs
+backend/bin/
+backend/tmp/
+*.test
+
+# OS/editor files
+.DS_Store
+.vscode/
+.idea/
